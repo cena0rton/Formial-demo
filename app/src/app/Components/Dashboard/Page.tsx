@@ -1,16 +1,23 @@
-import React from 'react'
+'use client'
+import React, { useRef, useState } from 'react'
 import Sidebar from './Sidebar'
 
 import Dash from './Dash'
 import DashHome from './Dash-Items/DashHome'
+import SkinProgress from './Dash-Items/SkinProgress'
+
 
 const Page = () => {
+
+  const [activeItem, setActiveItem] = useState(0);
+  const ref  = useRef<number>(0);
   return (
     <div>
     
-    <Sidebar/>
+    <Sidebar activeItem={activeItem} setActiveItem={setActiveItem} ref={ref}/>
     <Dash className={``}>
-     <DashHome/>
+     {ref.current === 0 && <DashHome/>}
+     {ref.current === 1 && <SkinProgress/>}
     </Dash>
        
 </div>  
