@@ -12,6 +12,7 @@ import {
   IconBell,
   IconUser,
   IconMessageCircle,
+  IconSend,
 } from '@tabler/icons-react'
 import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconShoppingBagCheck } from '@tabler/icons-react'
 import Image from 'next/image'
@@ -59,7 +60,7 @@ const DashHome = () => {
   ]
 
   return (
-    <div className="p-6 bg-[#e5e1d2] min-h-screen">
+    <div className="md:p-6 overflow-x-hidden bg-[#e5e1d2] min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header Row */}
         <div className="flex items-center justify-between mb-8 space-x-4 bg-[#90C494]/20 rounded-xl px-4 py-2">
@@ -73,11 +74,11 @@ const DashHome = () => {
                 className="rounded-full"
               />
             </div>
-            <h1 className="text-3xl font-bold text-[#1E3F2B] tracking-tight">
-              Good Evening, Jeet!
+            <h1 className="md:text-3xl text-xl font-bold text-[#1E3F2B] tracking-tight">
+              Welcome, Jeet!
             </h1>
           </div>
-          <div className="flex items-center justify-end space-x-4">
+          <div className="md:flex hidden items-center justify-end space-x-4">
             {Notifications.map((notification, index) => (
               <button
                 onMouseEnter={() => setShowNotification(index)}
@@ -111,8 +112,9 @@ const DashHome = () => {
 
             <div className="mb-4">
               <p className="text-sm text-[#1E3F2B]/80 mb-1">Treatment Plan:</p>
-              <p className="font-bold text-[#1E3F2B]">
-                0.025% tretinoin cream
+              <p className="font-bold text-[#1E3F2B] flex items-center space-x-2 justify-between">
+                0.025% tretinoin cream 
+                <p className="text-sm text-green-500 px-2 py-1 bg-green-500/10 rounded-full flex items-center gap-2"><p className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></p>active</p>
               </p>
             </div>
 
@@ -132,9 +134,9 @@ const DashHome = () => {
                 )}
               </div>
             </div>
-            
-            <div className="bg-[#1E3F2B]/80 text-white border border-[#1E3F2B]/50 border-dashed rounded-lg p-3 flex justify-center items-center space-x-2">
-              <IconInfoCircle className="text-white h-5 w-5 mt-0.5" />
+
+            <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-center items-center space-x-2">
+              <IconInfoCircle className="text-white h-5 w-5 " />
               <p className="text-sm text-white">
                 Possible dryness and peeling
               </p>
@@ -240,6 +242,10 @@ const DashHome = () => {
                 <IconPlayerPlay className="text-[#1E3F2B] h-6 w-6" />
                 <span className="text-sm font-medium">Skincare basics</span>
               </div>
+              <div className="flex items-center space-x-3 p-3 bg-[#1E3F2B]/10 rounded-lg">
+                <IconPlayerPlay className="text-[#1E3F2B] h-6 w-6" />
+                <span className="text-sm font-medium">Morning routine explained</span>
+              </div>
             </div>
           </div>
 
@@ -265,12 +271,15 @@ const DashHome = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end">
-                <div className="bg-[#1E3F2B] text-white rounded-lg p-3 max-w-xs flex items-center space-x-2">
-                  <span className="text-sm">
-                    I will upload a photo
-                  </span>
-                  <IconCamera className="h-4 w-4" />
+              <div className="flex justify-center">
+                <div className="bg-[#f8f6ee] border border-[#1E3F2B]/50 text-[#1E3F2B] rounded-lg p-3  flex items-center justify-between space-x-2 w-full">
+                  <input 
+                  placeholder="Type your message here..."
+                  className="text-sm  outline-none w-full">
+                    
+                  </input>
+                  <IconCamera className="h-4 w-4 text-black" />
+                  <IconSend className="h-4 w-4 text-black" />
                 </div>
               </div>
             </div>

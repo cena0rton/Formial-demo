@@ -1,15 +1,10 @@
 'use client'
 import React, { useState } from 'react'
-import { motion, AnimatePresence, Variants } from 'framer-motion'
+import { motion, } from 'framer-motion'
 import { 
-  IconCamera, 
-  IconChevronLeft, 
-  IconChevronRight, 
+  
   IconUpload,
-  IconCalendar,
-  IconTrendingUp,
-  IconEye,
-  IconStar,
+
   IconProgress
 } from '@tabler/icons-react'
 import Image from 'next/image'
@@ -25,9 +20,12 @@ interface ProgressPhoto {
 }
 
 const SkinProgress = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+ 
   const [isUploading, setIsUploading] = useState(false)
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  }
 
   // Mock data for skin progress photos
   const progressPhotos: ProgressPhoto[] = [
@@ -69,13 +67,7 @@ const SkinProgress = () => {
     }
   ]
 
-  const nextPhoto = () => {
-    setCurrentIndex((prev) => (prev + 1) % progressPhotos.length)
-  }
 
-  const prevPhoto = () => {
-    setCurrentIndex((prev) => (prev - 1 + progressPhotos.length) % progressPhotos.length)
-  }
 
   const handleUpload = () => {
     setIsUploading(true)
@@ -84,50 +76,7 @@ const SkinProgress = () => {
     }, 2000)
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  }
-
-  const cardVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
-    }
-  }
-
-  const carouselVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
-  }
-
-  const swipeConfidenceThreshold = 10000
-  const swipePower = (offset: number, velocity: number) => {
-    return Math.abs(offset) * velocity
-  }
-
+  
   return (
     <div className="p-6 bg-[#e5e1d2] min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -160,8 +109,19 @@ const SkinProgress = () => {
 
         
         <div>
-            <motion.div>
-                
+            <motion.div className="flex items-center justify-start space-x-2">
+
+            <motion.div variants={itemVariants} initial="hidden" animate="visible" transition={{ duration: 0.5 }}>
+                <Image src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop&crop=face" alt="Skin Progress" width={100} height={100}/>
+               </motion.div>
+
+                <motion.div variants={itemVariants} initial="hidden" animate="visible" transition={{ duration: 0.5 }}>
+                <Image src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop&crop=face" alt="Skin Progress" width={100} height={100}/>
+                </motion.div>
+
+                <motion.div variants={itemVariants} initial="hidden" animate="visible" transition={{ duration: 0.5 }}>
+                <Image src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop&crop=face" alt="Skin Progress" width={100} height={100}/>
+            </motion.div>
             </motion.div>
         </div>
      
