@@ -114,7 +114,7 @@ const DashHome = () => {
               <p className="text-sm text-[#1E3F2B]/80 mb-1">Treatment Plan:</p>
               <p className="font-bold text-[#1E3F2B] flex items-center space-x-2 justify-between">
                 0.025% tretinoin cream 
-                <p className="text-sm text-green-500 px-2 py-1 bg-green-500/10 rounded-full flex items-center gap-2"><p className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></p>active</p>
+                <span className="text-sm text-green-500 px-2 py-1 bg-green-500/10 rounded-full flex items-center gap-2"><span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>active</span>
               </p>
             </div>
 
