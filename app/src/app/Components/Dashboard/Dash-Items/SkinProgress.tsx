@@ -118,26 +118,195 @@ const SkinProgress = () => {
         {/* Progress Overview Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
           {[
-            { label: 'Total Weeks', value: '12', icon: IconCalendar, color: 'bg-blue-500' },
-            { label: 'Photos Taken', value: '4', icon: IconCamera, color: 'bg-green-500' },
-            { label: 'Improvement', value: '+67%', icon: IconTrendingUp, color: 'bg-purple-500' },
-            { label: 'Overall Rating', value: '4.5/5', icon: IconStar, color: 'bg-yellow-500' }
+            { 
+              label: 'Total Weeks', 
+              value: '12', 
+              icon: IconCalendar, 
+              color: 'bg-blue-500',
+              gradient: 'from-blue-500/20 to-blue-600/10',
+              description: 'Treatment duration',
+              trend: '+2 weeks'
+            },
+            { 
+              label: 'Photos Taken', 
+              value: '4', 
+              icon: IconCamera, 
+              color: 'bg-green-500',
+              gradient: 'from-green-500/20 to-green-600/10',
+              description: 'Progress captured',
+              trend: '+1 this week'
+            },
+            { 
+              label: 'Improvement', 
+              value: '+67%', 
+              icon: IconTrendingUp, 
+              color: 'bg-purple-500',
+              gradient: 'from-purple-500/20 to-purple-600/10',
+              description: 'Skin quality boost',
+              trend: '+12% this month'
+            },
+            { 
+              label: 'Overall Rating', 
+              value: '4.5/5', 
+              icon: IconStar, 
+              color: 'bg-yellow-500',
+              gradient: 'from-yellow-500/20 to-yellow-600/10',
+              description: 'Average score',
+              trend: '+0.3 this week'
+            }
           ].map((stat, index) => (
             <motion.div
               key={index}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -2, scale: 1.02 }}
-              className="bg-[#f8f6ee] rounded-xl p-4 md:p-6 shadow-sm border border-[#1E3F2B]/50 hover:shadow-lg transition-shadow"
+              initial={{ y: 30, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              transition={{ 
+                delay: index * 0.1,
+                duration: 0.6,
+                ease: [0.25, 0.46, 0.45, 0.94]
+              }}
+              whileHover={{ 
+                y: -8, 
+                scale: 1.03,
+                transition: { duration: 0.3, ease: "easeOut" }
+              }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative bg-[#f8f6ee] rounded-2xl p-5 md:p-6 shadow-sm border border-[#1E3F2B]/20 hover:shadow-xl hover:border-[#1E3F2B]/40 transition-all duration-500 overflow-hidden backdrop-blur-sm"
             >
-              <div className="flex items-center justify-between mb-2">
-                <div className={`p-2 rounded-lg ${stat.color}`}>
-                  <stat.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
+              {/* Animated background gradient */}
+              <motion.div 
+                className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileHover={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4 }}
+              />
+              
+              {/* Subtle border glow effect */}
+              <div className="absolute inset-0 rounded-2xl border border-transparent group-hover:border-[#1E3F2B]/10 transition-colors duration-500" />
+              
+              {/* Content */}
+              <div className="relative z-10">
+                {/* Header with icon and value */}
+                <div className="flex items-start justify-between mb-4">
+                  <motion.div 
+                    className={`p-3 rounded-xl ${stat.color} shadow-lg group-hover:shadow-xl transition-all duration-300 relative overflow-hidden`}
+                    whileHover={{ 
+                      rotate: [0, -2, 2, 0],
+                      scale: 1.1,
+                      transition: { duration: 0.4 }
+                    }}
+                  >
+                    {/* Icon background shimmer */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <stat.icon className="h-5 w-5 md:h-6 md:w-6 text-white relative z-10" />
+                  </motion.div>
+                  
+                  <div className="text-right">
+                    <motion.span 
+                      className="text-2xl md:text-3xl font-bold text-[#1E3F2B] block leading-none"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: index * 0.1 + 0.2, duration: 0.4 }}
+                    >
+                      {stat.value}
+                    </motion.span>
+                    <motion.div
+                      className="text-xs text-green-600 font-medium mt-1"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 + 0.4 }}
+                    >
+                      {stat.trend}
+                    </motion.div>
+                  </div>
                 </div>
-                <span className="text-lg md:text-2xl font-bold text-[#1E3F2B]">{stat.value}</span>
+
+                {/* Label and description */}
+                <div className="space-y-2">
+                  <motion.h3 
+                    className="text-sm md:text-base font-semibold text-[#1E3F2B] group-hover:text-[#1E3F2B]/90 transition-colors duration-300"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.3 }}
+                  >
+                    {stat.label}
+                  </motion.h3>
+                  <motion.p 
+                    className="text-xs text-[#1E3F2B]/60 font-medium"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.4 }}
+                  >
+                    {stat.description}
+                  </motion.p>
+                </div>
+
+                {/* Progress indicator for improvement */}
+                {stat.label === 'Improvement' && (
+                  <motion.div 
+                    className="mt-4"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.5 }}
+                  >
+                    <div className="flex items-center justify-between text-xs text-[#1E3F2B]/70 mb-2">
+                      <span>Progress</span>
+                      <span className="font-semibold">67%</span>
+                    </div>
+                    <div className="w-full bg-[#1E3F2B]/10 rounded-full h-2 overflow-hidden">
+                      <motion.div 
+                        className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full relative"
+                        initial={{ width: 0 }}
+                        animate={{ width: '67%' }}
+                        transition={{ delay: index * 0.1 + 0.6, duration: 1, ease: "easeOut" }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Rating stars for overall rating */}
+                {stat.label === 'Overall Rating' && (
+                  <motion.div 
+                    className="mt-4 flex items-center space-x-1"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.5 }}
+                  >
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <motion.div
+                        key={star}
+                        initial={{ scale: 0, opacity: 0, rotate: -180 }}
+                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                        transition={{ 
+                          delay: index * 0.1 + 0.3 + star * 0.1,
+                          duration: 0.3,
+                          ease: "backOut"
+                        }}
+                        whileHover={{ scale: 1.2, rotate: 10 }}
+                      >
+                        <IconStar
+                          className={`h-3 w-3 transition-colors duration-200 ${
+                            star <= 4
+                              ? 'text-yellow-400 fill-current'
+                              : star === 5
+                              ? 'text-yellow-400 fill-current opacity-50'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+
+                {/* Subtle accent line */}
+                <motion.div 
+                  className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-transparent via-[#1E3F2B]/20 to-transparent w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.6 }}
+                />
               </div>
-              <p className="text-xs md:text-sm text-[#1E3F2B]/70 font-medium">{stat.label}</p>
             </motion.div>
           ))}
         </div>

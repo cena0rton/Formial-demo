@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconUser, IconShoppingBagCheck } from '@tabler/icons-react'
+import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconUser, IconShoppingBagCheck, IconLogout } from '@tabler/icons-react'
 import Image from 'next/image'
 
 const Sidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiveItem: (item: number) => void, ref: React.RefObject<number | null>}) => {
@@ -41,6 +41,10 @@ const Sidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActi
                 </button>
               ))}
             </nav>
+            <div className='absolute bottom-4 left-0 w-full h-12 bg-[#1E3F2B] text-white flex items-center justify-between px-4'>
+              <span className='text-sm font-medium'>Logout</span>
+              <IconLogout className='text-white h-5 w-5' />
+            </div>
         </div>
     </div>
   )
