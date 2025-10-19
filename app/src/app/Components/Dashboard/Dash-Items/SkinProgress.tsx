@@ -236,7 +236,7 @@ const SkinProgress = () => {
                 <div className="flex items-center justify-start space-x-3">
                   <stat.icon className={`h-5 w-5 text-[#1E3F2B]`} />
                   <div>
-                    <div className="text-lg font-semibold text-[#1E3F2B]">{stat.value}</div>
+                    <div className="md:text-lg text-md font-semibold text-[#1E3F2B]">{stat.value}</div>
                     <div className="text-xs text-[#1E3F2B]/60">{stat.label}</div>
                   </div>
                 </div>
