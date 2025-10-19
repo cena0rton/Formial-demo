@@ -3,25 +3,25 @@ import React from 'react'
 import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconUser, IconShoppingBagCheck } from '@tabler/icons-react'
 import Image from 'next/image'
 
-const Sidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiveItem: (item: number) => void, ref: React.RefObject<number | null>}) => {
-  const menuItems = [
-    { icon: <IconHome className='text-[#f8f6ee] h-5 w-5'/>, text: 'Home',  },
-    { icon: <IconProgress className='text-[#f8f6ee] h-5 w-5'/>, text: 'Skin Progress' },
-    { icon: <IconQuestionMark className='text-[#f8f6ee] h-5 w-5'/>, text: 'Learn & FAQs' },
-    { icon: <IconVideo className='text-[#f8f6ee] h-5 w-5'/>, text: 'Videos' },
-    { icon: <IconMessage className='text-[#f8f6ee] h-5 w-5'/>, text: 'Conversations / Chat' },
-    { icon: <IconUser className='text-[#f8f6ee] h-5 w-5'/>, text: 'Support' },
-    { icon: <IconShoppingBagCheck className='text-[#f8f6ee] h-5 w-5'/>, text: 'Orders & Subscriptions' }
-  ]
+const MobileSidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiveItem: (item: number) => void, ref: React.RefObject<number | null>}) => {
+    const menuItems = [
+        { icon: <IconHome className='text-[#f8f6ee] h-5 w-5'/>, text: 'Home',  },
+        { icon: <IconProgress className='text-[#f8f6ee] h-5 w-5'/>, text: 'Skin Progress' },
+        { icon: <IconQuestionMark className='text-[#f8f6ee] h-5 w-5'/>, text: 'Learn & FAQs' },
+        { icon: <IconVideo className='text-[#f8f6ee] h-5 w-5'/>, text: 'Videos' },
+        { icon: <IconMessage className='text-[#f8f6ee] h-5 w-5'/>, text: 'Conversations / Chat' },
+        { icon: <IconUser className='text-[#f8f6ee] h-5 w-5'/>, text: 'Support' },
+        { icon: <IconShoppingBagCheck className='text-[#f8f6ee] h-5 w-5'/>, text: 'Orders & Subscriptions' }
+      ]
 
-  const handleClick = (index: number) => {
-    setActiveItem(index)
-    ref.current = index
-  }
-
+      const handleClick = (index: number) => {
+        setActiveItem(index)
+        ref.current = index
+      }
+    
   return (
     <div>
-        <div className='bg-[#1E3F2B]/40  py-4 px-2 w-74 fixed left-0  top-2 h-screen border-[#1E3F2B] hidden md:block'>
+         <div className='bg-[#1E3F2B]/40  py-4 px-2 w-74 fixed left-0  top-2 h-screen border-[#1E3F2B] block md:hidde'>
             <div className='flex justify-start items-center px-2 mb-8'>
                 <h1 className='text-xl font-medium'>
                     <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial Logo" height={150} width={150}/>
@@ -46,4 +46,4 @@ const Sidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActi
   )
 }
 
-export default Sidebar
+export default MobileSidebar
