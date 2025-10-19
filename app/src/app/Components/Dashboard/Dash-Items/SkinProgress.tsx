@@ -382,7 +382,7 @@ const SkinProgress = () => {
                   whileHover={{ scale: 1.02 }}
                   onClick={() => setCurrentIndex(index)}
                   className={`relative overflow-hidden rounded-lg cursor-pointer transition-all duration-300 ${
-                    index === currentIndex ? 'ring-2 ring-[#1E3F2B] bg-[#1E3F2B]/5' : 'hover:bg-[#1E3F2B]/5'
+                    index === currentIndex ? 'ring-1 ring-[#1E3F2B] bg-[#1E3F2B]/5' : 'hover:bg-[#1E3F2B]/5'
                   }`}
                 >
                   <div className="flex items-center space-x-4 p-3">
