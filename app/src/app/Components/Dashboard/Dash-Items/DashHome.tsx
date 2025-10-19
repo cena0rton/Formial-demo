@@ -135,7 +135,7 @@ const DashHome = () => {
               </div>
             </div>
 
-            <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-center items-center space-x-2">
+            <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-center items-center space-x-2 mt-8">
               <IconInfoCircle className="text-white h-5 w-5 " />
               <p className="text-sm text-white">
                 Possible dryness and peeling

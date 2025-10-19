@@ -39,7 +39,7 @@ const SkinProgress = () => {
       id: 1,
       week: 0,
       date: '2024-01-15',
-      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop&crop=face',
+      image:  "https://cdn.shopify.com/s/files/1/0410/9608/5665/t/3/assets/pf-4645773e--cover-image-3.jpg?v=1611040721",
       notes: 'Initial baseline photo - starting treatment',
       improvements: ['Baseline established'],
       rating: 3
@@ -48,7 +48,7 @@ const SkinProgress = () => {
       id: 2,
       week: 4,
       date: '2024-02-12',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_hlzybvaZIvGOm9Oij7FVsxxKHsdiGxxHMw&s',
       notes: 'First month progress - some initial purging',
       improvements: ['Texture improvement', 'Reduced inflammation'],
       rating: 4
@@ -89,10 +89,10 @@ const SkinProgress = () => {
   }
 
   return (
-    <div className="md:p-6 overflow-x-hidden bg-[#e5e1d2] min-h-screen">
+    <div className="md:p-6 overflow-x-hidden bg-[#e5e1d2] min-h-screen tracking-tight">
       <div className="max-w-7xl mx-auto">
         {/* Header Row */}
-        <div className="flex items-center justify-between mb-8 space-x-4 bg-[#90C494]/20 rounded-xl px-4 py-2">
+        <div className="flex items-center justify-between mb-8 space-x-4 bg-[#90C494]/20 rounded-xl px-4 py-4">
           <div className="flex items-center justify-start space-x-4">
             <div className="p-2 rounded-full bg-[#1E3F2B]/10">
               <IconProgress className="text-[#1E3F2B] h-6 w-6" />
@@ -115,97 +115,134 @@ const SkinProgress = () => {
           </div>
         </div>
 
-        {/* Progress Overview Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
-          {[
-            { 
-              label: 'Total Weeks', 
-              value: '12', 
-              icon: IconCalendar, 
-              color: 'bg-blue-500',
-              description: 'Treatment duration'
-            },
-            { 
-              label: 'Photos Taken', 
-              value: '4', 
-              icon: IconCamera, 
-              color: 'bg-green-500',
-              description: 'Progress captured'
-            },
-            { 
-              label: 'Improvement', 
-              value: '+67%', 
-              icon: IconTrendingUp, 
-              color: 'bg-purple-500',
-              description: 'Skin quality boost'
-            },
-            { 
-              label: 'Overall Rating', 
-              value: '4.5/5', 
-              icon: IconStar, 
-              color: 'bg-yellow-500',
-              description: 'Average score'
-            }
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1, duration: 0.4 }}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="group bg-[#f8f6ee] rounded-xl p-5 md:p-6 shadow-sm border border-[#1E3F2B]/20 hover:shadow-md hover:border-[#1E3F2B]/30 transition-all duration-300"
-            >
-              {/* Icon and Value */}
-              <div className="flex items-center justify-between mb-3">
-                <div className={`p-2.5 rounded-lg ${stat.color} shadow-sm`}>
-                  <stat.icon className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-2xl md:text-3xl font-bold text-[#1E3F2B]">
-                  {stat.value}
-                </span>
-              </div>
+        {/* Progress Overview - New Design */}
+        <div className="mb-6">
+          {/* Main Stats Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 ">
+            {/* Treatment Progress */}
+            <div className="bg-[#f8f6ee] rounded-2xl p-6 border border-[#1E3F2B]/50">
+              <div className="flex items-center justify-between mb-4 border-b border-[#1E3F2B]/50 pb-4">
 
-              {/* Label and Description */}
-              <div>
-                <h3 className="text-sm md:text-base font-semibold text-[#1E3F2B] mb-1">
-                  {stat.label}
-                </h3>
-                <p className="text-xs text-[#1E3F2B]/60">
-                  {stat.description}
-                </p>
-              </div>
-
-              {/* Progress bar for improvement */}
-              {stat.label === 'Improvement' && (
-                <div className="mt-3">
-                  <div className="w-full bg-[#1E3F2B]/10 rounded-full h-1.5">
-                    <motion.div 
-                      className="bg-purple-500 h-1.5 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: '67%' }}
-                      transition={{ delay: index * 0.1 + 0.3, duration: 0.8 }}
-                    />
+                <div className="flex items-center space-x-3 h-full ">
+                  <div className="p-3 bg-[#1E3F2B]/90 rounded-xl">
+                    <IconCalendar className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-[#1E3F2B]">Treatment Progress</h3>
+                    <p className="text-sm text-[#1E3F2B]/60">Week 12 of 16</p>
                   </div>
                 </div>
-              )}
-
-              {/* Stars for rating */}
-              {stat.label === 'Overall Rating' && (
-                <div className="mt-3 flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <IconStar
-                      key={star}
-                      className={`h-3 w-3 ${
-                        star <= 4
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
+                <div className="text-right">
+                  <div className="text-xl font-semibold text-[#1E3F2B]">75%</div>
+                  <div className="text-xs text-green-600">+3% this week</div>
                 </div>
-              )}
-            </motion.div>
-          ))}
+              </div>
+              <div className="w-full bg-[#1E3F2B]/10 rounded-full h-2 my-6">
+                <motion.div 
+                  className="bg-green-800 h-2 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: '75%' }}
+                  transition={{ delay: 0.2, duration: 1 }}
+                />
+             
+              </div>
+              <p className="text-sm text-[#1E3F2B]/80 mt-6">Treatment Plan:</p>
+              <p className="font-bold text-[#1E3F2B] flex items-center space-x-2 justify-between">
+                0.025% tretinoin cream 
+                <span className="text-sm text-green-500 px-2 py-1 bg-green-500/10 rounded-full flex items-center gap-2"><span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>active</span>
+              </p>
+            </div>
+
+            {/* Skin Quality Score */}
+            <div className="bg-[#f8f6ee] rounded-2xl p-6 border border-[#1E3F2B]/50">
+              <div className="flex items-center justify-between mb-4 border-b border-[#1E3F2B]/50 pb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="p-3 bg-[#1E3F2B]/90 rounded-xl">
+                    <IconTrendingUp className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-[#1E3F2B]">Skin Quality</h3>
+                    <p className="text-sm text-[#1E3F2B]/60">Overall improvement</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xl font-semibold text-[#1E3F2B]">8.2</div>
+                  <div className="text-xs text-green-600">+0.8 this month</div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 my-6">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                  <div
+                    key={num}
+                    className={`w-2 h-2 rounded-full ${
+                      num <= 8 ? 'bg-green-800' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+                
+                <span className="text-xs text-[#1E3F2B]/60 ml-2">/10</span>
+                
+                
+              </div>
+              <p className="text-sm text-[#1E3F2B]/80 mt-6">Skin Type</p>
+              <p className="font-bold text-[#1E3F2B] flex items-center space-x-2 justify-between">
+                Oily 
+                <span className="text-sm text-yellow-500 px-2 py-1 bg-yellow-500/10 rounded-full flex items-center gap-2"><span className="h-2 w-2 bg-yellow-500 rounded-full animate-pulse"></span>Treating</span>
+              </p>
+            </div>
+
+            {/* Photo Collection */}
+            <div className="bg-[#f8f6ee] rounded-2xl p-6 border border-[#1E3F2B]/50">
+              <div className="flex items-center justify-between mb-4 border-b border-[#1E3F2B]/50 pb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="p-3 bg-[#1E3F2B]/90 rounded-xl">
+                    <IconCamera className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-[#1E3F2B]">Photo Collection</h3>
+                    <p className="text-sm text-[#1E3F2B]/60">Progress documented</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xl font-semibold text-[#1E3F2B]">4</div>
+                  <div className="text-xs text-green-600">+1 this week</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 gap-2 mt-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-xs text-gray-500">W{i * 3}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Insights Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'Days Active', value: '84', icon: IconCalendar, },
+              { label: 'Consistency', value: '92%', icon: IconCheck, },
+              { label: 'Side Effects', value: 'Minimal', icon: IconInfoCircle, },
+              { label: 'Next Check', value: 'Week 16', icon: IconStar, }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white/50 rounded-xl p-4 border border-[#1E3F2B]/10"
+              >
+                <div className="flex items-center justify-start space-x-3">
+                  <stat.icon className={`h-5 w-5 text-[#1E3F2B]`} />
+                  <div>
+                    <div className="text-lg font-semibold text-[#1E3F2B]">{stat.value}</div>
+                    <div className="text-xs text-[#1E3F2B]/60">{stat.label}</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* Main Progress Section */}
@@ -268,7 +305,7 @@ const SkinProgress = () => {
                   <IconStar
                     className={`h-4 w-4 ${
                       star <= progressPhotos[currentIndex].rating
-                        ? 'text-yellow-400 fill-current'
+                        ? 'text-[#1E3F2B] fill-current'
                         : 'text-gray-300'
                     }`}
                   />
@@ -370,7 +407,7 @@ const SkinProgress = () => {
                               key={star}
                               className={`h-3 w-3 ${
                                 star <= photo.rating
-                                  ? 'text-yellow-400 fill-current'
+                                  ? 'text-[#1E3F2B] fill-current'
                                   : 'text-gray-300'
                               }`}
                             />
