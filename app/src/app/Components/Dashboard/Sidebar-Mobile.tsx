@@ -21,10 +21,10 @@ const MobileSidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, s
     
   return (
     <div>
-         <div className='bg-[#1E3F2B]/40  py-4 px-2 w-74 fixed left-0  top-2 h-screen border-[#1E3F2B] block md:hidde'>
+         <div className='bg-[#1E3F2B] py-4 px-2 w-74 fixed right-0 h-screen border-[#1E3F2B] block md:hidden'>
             <div className='flex justify-start items-center px-2 mb-8'>
                 <h1 className='text-xl font-medium'>
-                    <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial Logo" height={150} width={150}/>
+                    <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial Logo" height={75} width={75}/>
                    
                 </h1>
             </div>

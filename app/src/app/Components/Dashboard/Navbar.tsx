@@ -2,8 +2,10 @@
 import {  IconMenu2, IconX } from '@tabler/icons-react'
 import React, { useState } from 'react'
 import Image from 'next/image'
+import MobileSidebar from './Sidebar-Mobile'
+import { AnimatePresence, motion } from 'framer-motion'
 
-const Navbar = () => {
+const Navbar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiveItem: (item: number) => void, ref: React.RefObject<number | null>}) => {
 
   const [isOpen, setIsOpen] = useState(false)
   return (
@@ -24,14 +26,24 @@ const Navbar = () => {
             <button onClick={() => setIsOpen(!isOpen)}>
             {!isOpen ? <IconMenu2 className='text-[#1E3F2B] h-6 w-6 cursor-pointer'/> : <IconX className='text-[#1E3F2B] h-6 w-6 cursor-pointer'/>}
             </button>
+            <AnimatePresence>
+            {isOpen && 
+            
+        <motion.div
+        initial={{ opacity: 0, x: 100 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 100 }}
+        transition={{ duration: 0.3 }}
+        className='fixed top-20 right-0 w-fit  bg-[#1E3F2B] z-20'>
+        <MobileSidebar activeItem={activeItem} setActiveItem={setActiveItem} ref={ref}/>
+        </motion.div>
+        
+        }
+        </AnimatePresence>
             
         </div>
 
-        {isOpen && 
-        <div className='absolute top-120 left-0 w-full h-full bg-[#1E3F2B]/40'>
-        
-        </div>
-        }
+      
     </div>
     </div>
   )

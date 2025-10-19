@@ -15,7 +15,7 @@ const Page = () => {
     <div className="flex flex-col">
     
     <Sidebar activeItem={activeItem} setActiveItem={setActiveItem} ref={ref}/>
-    <Navbar/>
+    <Navbar activeItem={activeItem} setActiveItem={setActiveItem} ref={ref}/>
     <Dash className={``}>
      {ref.current === 0 && <DashHome/>}
      {ref.current === 1 && <SkinProgress/>}
