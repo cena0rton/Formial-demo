@@ -37,8 +37,8 @@ const OnboardingModal = () => {
       ctaLabel: "Start Tour",
       successMessage: "Perfect! Let's show you everything you need to know.",
       helpText: [
-        "We'll guide you through the key features of your dashboard.",
-        "This will help you make the most of your skincare journey."
+        "We'll guide you through the key features.",
+        "This will help you make the most of your dashboard."
       ],
       icon: IconHeart,
       type: 'welcome'
@@ -50,8 +50,8 @@ const OnboardingModal = () => {
       ctaLabel: "Next: Get Insights",
       successMessage: "Great! You now know how to track your progress effectively.",
       helpText: [
-        "Upload photos regularly to see your skin improvement with AI analysis.",
-        "View detailed progress reports and celebrate your skincare milestones."
+        "Upload photos weekly to track your transformation.",
+        "View progress reports and celebrate milestones."
       ],
       icon: IconTarget,
       type: 'form'
@@ -63,8 +63,8 @@ const OnboardingModal = () => {
       ctaLabel: "Next: Chat Support",
       successMessage: "Excellent! You can now access AI-powered skin analysis.",
       helpText: [
-        "Our AI analyzes your skin photos to provide personalized recommendations.",
-        "Get instant feedback on your skin condition and improvement suggestions."
+        "Get personalized skin analysis from your photos.",
+        "Receive product recommendations and track health scores."
       ],
       icon: IconSparkles,
       type: 'form'
@@ -76,8 +76,8 @@ const OnboardingModal = () => {
       ctaLabel: "Next: Upload Photos",
       successMessage: "Awesome! You can now chat with your care team anytime.",
       helpText: [
-        "Ask any skincare questions and get instant, personalized answers.",
-        "Get product recommendations, routine advice, and expert guidance 24/7."
+        "Ask questions about your treatment routine.",
+        "Get instant answers from AI and care team."
       ],
       icon: IconCamera,
       type: 'photo'
@@ -89,8 +89,8 @@ const OnboardingModal = () => {
       ctaLabel: "Upload My First Photo",
       successMessage: "Welcome to Formial! Your dashboard is ready for your skincare journey.",
       helpText: [
-        "Upload your first progress photo to start tracking your transformation.",
-        "Or jump into chat to ask questions about your treatment routine."
+        "Upload your first progress photo to start tracking.",
+        "Or jump into chat to ask questions about your routine."
       ],
       icon: IconShield,
       type: 'results'
@@ -151,7 +151,7 @@ const OnboardingModal = () => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-hidden"
+          className="bg-white rounded-2xl shadow-2xl max-w-xl w-full h-[600px] overflow-hidden flex flex-col"
         >
           {/* Header */}
           <div className="relative bg-gradient-to-r from-[#1E3F2B] to-[#1E3F2B]/90 p-6 text-white">
@@ -163,8 +163,8 @@ const OnboardingModal = () => {
             </button>
             
             <div className="flex items-center space-x-3 mb-4">
-              <div className="p-3 rounded-xl bg-white/20">
-                {React.createElement(currentStepData.icon, { className: "h-6 w-6 text-white" })}
+              <div className="p-3 rounded-xl bg-transparent">
+                {React.createElement(currentStepData.icon, { className: "h-6 w-6 text-green-900" })}
               </div>
               <div>
                 <h2 className="text-xl font-bold">{currentStepData.title}</h2>
@@ -184,8 +184,8 @@ const OnboardingModal = () => {
           </div>
 
           {/* Content */}
-          <div className="p-8">
-            <div className="space-y-6">
+          <div className="p-6 flex-1 overflow-y-auto">
+            <div className="space-y-4">
               {/* Subtitle */}
               <p className="text-gray-600 text-lg leading-relaxed text-center">
                 {currentStepData.subtitle}
@@ -214,10 +214,9 @@ const OnboardingModal = () => {
                       </div>
                       <h4 className="font-semibold text-gray-900">Progress Tracking</h4>
                     </div>
-                    <ul className="text-sm text-gray-700 space-y-2">
-                      <li>• Upload photos weekly to track your transformation</li>
-                      <li>• View side-by-side comparisons of your progress</li>
-                      <li>• Get AI-powered analysis of your skin improvement</li>
+                    <ul className="text-sm text-gray-700 space-y-1">
+                      <li>• Upload photos weekly to track transformation</li>
+                      <li>• View progress comparisons and AI analysis</li>
                       <li>• Celebrate milestones and achievements</li>
                     </ul>
                   </div>
@@ -233,11 +232,10 @@ const OnboardingModal = () => {
                       </div>
                       <h4 className="font-semibold text-gray-900">AI Insights</h4>
                     </div>
-                    <ul className="text-sm text-gray-700 space-y-2">
-                      <li>• Get personalized skin analysis from your photos</li>
-                      <li>• Receive product recommendations based on your progress</li>
-                      <li>• Track skin health scores and improvement metrics</li>
-                      <li>• Get alerts for routine adjustments</li>
+                    <ul className="text-sm text-gray-700 space-y-1">
+                      <li>• Get personalized skin analysis from photos</li>
+                      <li>• Receive product recommendations</li>
+                      <li>• Track skin health scores and metrics</li>
                     </ul>
                   </div>
                 </div>
@@ -252,11 +250,10 @@ const OnboardingModal = () => {
                       </div>
                       <h4 className="font-semibold text-gray-900">Chat Support</h4>
                     </div>
-                    <ul className="text-sm text-gray-700 space-y-2">
+                    <ul className="text-sm text-gray-700 space-y-1">
                       <li>• Ask questions about your treatment routine</li>
                       <li>• Get instant answers from AI and care team</li>
-                      <li>• Share concerns or side effects</li>
-                      <li>• Get product recommendations and usage tips</li>
+                      <li>• Share concerns and get usage tips</li>
                     </ul>
                   </div>
                 </div>
@@ -285,7 +282,7 @@ const OnboardingModal = () => {
               )}
 
               {/* Help Text */}
-              <div className="space-y-2 text-sm text-gray-500">
+              <div className="space-y-1 text-sm text-gray-500">
                 <p>{currentStepData.helpText[0]}</p>
                 <p>{currentStepData.helpText[1]}</p>
               </div>
@@ -306,51 +303,54 @@ const OnboardingModal = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+          </div>
 
-              {/* CTA Button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleNext}
-                className="w-full bg-[#1E3F2B] text-white px-8 py-4 rounded-xl font-medium hover:bg-[#1E3F2B]/90 transition-colors text-lg"
+          {/* Footer */}
+          <div className="p-6 border-t border-gray-100 bg-gray-50">
+            {/* CTA Button */}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleNext}
+              className="w-full bg-[#1E3F2B] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#1E3F2B]/90 transition-colors text-lg mb-4"
+            >
+              {currentStepData.ctaLabel}
+            </motion.button>
+
+            {/* Navigation */}
+            <div className="flex items-center justify-between">
+              <button
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                  currentStep === 0
+                    ? 'text-gray-400 cursor-not-allowed'
+                    : 'text-[#1E3F2B] hover:bg-[#1E3F2B]/10'
+                }`}
               >
-                {currentStepData.ctaLabel}
-              </motion.button>
+                <IconArrowLeft className="h-4 w-4" />
+                <span>Previous</span>
+              </button>
 
-              {/* Navigation */}
-              <div className="flex items-center justify-between pt-4">
-                <button
-                  onClick={handlePrevious}
-                  disabled={currentStep === 0}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
-                    currentStep === 0
-                      ? 'text-gray-400 cursor-not-allowed'
-                      : 'text-[#1E3F2B] hover:bg-[#1E3F2B]/10'
-                  }`}
-                >
-                  <IconArrowLeft className="h-4 w-4" />
-                  <span>Previous</span>
-                </button>
-
-                <div className="flex space-x-1">
-                  {steps.map((_, index) => (
-                    <div
-                      key={index}
-                      className={`w-2 h-2 rounded-full transition-colors ${
-                        index === currentStep ? 'bg-[#1E3F2B]' : 'bg-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  onClick={handleNext}
-                  className="flex items-center space-x-2 text-[#1E3F2B] hover:bg-[#1E3F2B]/10 px-4 py-2 rounded-lg transition-colors"
-                >
-                  <span>{currentStep === steps.length - 1 ? 'Complete' : 'Next'}</span>
-                  <IconArrowRight className="h-4 w-4" />
-                </button>
+              <div className="flex space-x-1">
+                {steps.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-2 h-2 rounded-full transition-colors ${
+                      index === currentStep ? 'bg-[#1E3F2B]' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
               </div>
+
+              <button
+                onClick={handleNext}
+                className="flex items-center space-x-2 text-[#1E3F2B] hover:bg-[#1E3F2B]/10 px-4 py-2 rounded-lg transition-colors"
+              >
+                <span>{currentStep === steps.length - 1 ? 'Complete' : 'Next'}</span>
+                <IconArrowRight className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </motion.div>

@@ -70,16 +70,10 @@ const DashHome = () => {
 
       <div className="mx-auto">
         {/* Header Row */}
-        <div className="flex items-center justify-between mb-8 space-x-4 bg-[#90C494]/20 rounded-xl px-4 py-2">
+        <div className="flex items-center justify-between mb-8 space-x-4 bg-[#90C494]/20 rounded-xl px-6 py-4">
           <div className="flex items-center justify-start space-x-4">
-            <div className="p-1 rounded-full bg-white">
-              <Image
-                src="https://formial.in/cdn/shop/files/dr.jeet-colored.png?v=1760612748&width=800"
-                alt="Formial Logo"
-                height={50}
-                width={50}
-                className="rounded-full"
-              />
+            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+              <IconUser className="h-6 w-6 text-gray-600" />
             </div>
             <h1 className="md:text-3xl text-xl font-bold text-[#1E3F2B] tracking-tight">
               Welcome, Jeet!
@@ -118,13 +112,13 @@ const DashHome = () => {
         </div>
 
         {/* Top Row */}
-<div className="flex items-start justify-start max-w-[1440px] mx-auto gap-4 rounded-xl">
+<div className="flex items-start justify-start max-w-[1440px] mx-auto gap-0 rounded-xl">
 
         <div className=" mr-auto flex-1 max-w-5xl">
         {/* Top Row */}
-        <div className="grid grid-cols-1 gap-6 mb-6 ">
+        <div className="grid grid-cols-1 gap-0 mb-6 ">
           {/* Home Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-lg border border-gray-300">
+          <div className="bg-[#f8f6ee] rounded-tl-xl p-6 shadow-lg border border-gray-300">
 
             <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
           <IconHome className="text-[#1E3F2B] h-5 w-5" />
@@ -156,7 +150,7 @@ const DashHome = () => {
               </div>
             </div>
 
-            <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-center items-center space-x-2 mt-8">
+            <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-start w-fit items-center space-x-2 mt-8">
               <IconInfoCircle className="text-white h-5 w-5 " />
               <p className="text-sm text-white">
                 Possible dryness and peeling
@@ -165,7 +159,7 @@ const DashHome = () => {
           </div>
 
           {/* Skin Progress Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-lg border border-gray-300">
+          <div className="bg-[#f8f6ee] rounded-bl-xl p-6 shadow-lg border border-gray-300">
 
              <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
           <IconProgress className="text-[#1E3F2B] h-5 w-5" />
@@ -201,47 +195,7 @@ const DashHome = () => {
           </div>
 
           {/* Learn & FAQs Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-lg border border-gray-300">
-
-            <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
-          <IconQuestionMark className="text-[#1E3F2B] h-5 w-5" />
-            <h2 className="text-xl font-semibold text-[#1E3F2B] ">Learn & FAQs</h2>
-            </div>
-
-            <div className="space-y-2 mb-4">
-              {['Side effects', 'Purging', 'What to expect'].map(
-                (item, index) => (
-                  <div
-                    key={index}
-                    className="border border-[#1E3F2B]/50 rounded-lg"
-                  >
-                    <button
-                      onClick={() => toggleAccordion(item)}
-                      className="w-full flex items-center justify-between p-3 text-left transition-colors"
-                    >
-                      <span className="text-sm font-medium">{item}</span>
-                      <IconChevronDown
-                        className={`h-4 w-4 transition-transform ${
-                          activeAccordion === item ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </button>
-                    {activeAccordion === item && (
-                      <div className="px-3 pb-3 text-sm text-gray-600">
-                        Content for {item} would go here...
-                      </div>
-                    )}
-                  </div>
-                )
-              )}
-            </div>
-            <a
-              href="#"
-              className="text-[#1E3F2B] text-sm hover:underline"
-            >
-              Essential readings
-            </a>
-          </div>
+        
         </div>
 
         {/* Bottom Row */}
@@ -252,7 +206,7 @@ const DashHome = () => {
         
 {/* Chat Section */}
 
-         <div className="h-screen w-full bg-[#f8f6ee] rounded-2xl shadow-lg border border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight">
+         <div className="h-200 w-full bg-[#f8f6ee] rounded-tr-xl rounded-br-xl shadow-lg border border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight scroll-none">
            {/* Chat Header */}
            <div className="flex items-center justify-between p-6 border-b border-gray-300">
              <div className="flex items-center space-x-3">
