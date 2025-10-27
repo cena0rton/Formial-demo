@@ -1,21 +1,22 @@
 'use client'
 import React, { useState } from 'react'
+import { motion } from 'framer-motion'
 import {
-  IconCheck,
   IconInfoCircle,
   IconCamera,
   IconChevronDown,
-  IconPlayerPlay,
   IconTruck,
-  IconRefresh,
-  IconHelp,
   IconBell,
   IconUser,
   IconMessageCircle,
   IconSend,
+  IconPlus,
+  IconCheck,
+  IconTrendingUp,
 } from '@tabler/icons-react'
-import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconShoppingBagCheck } from '@tabler/icons-react'
+import { IconHome, IconProgress , IconQuestionMark, IconMessage } from '@tabler/icons-react'
 import Image from 'next/image'
+import OnboardingModal from './OnboardingModal'
 
 const DashHome = () => {
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null)
@@ -61,7 +62,13 @@ const DashHome = () => {
 
   return (
     <div className="md:p-6 overflow-x-hidden bg-[#e5e1d2] min-h-screen">
-      <div className="max-w-7xl mx-auto">
+      {/* Onboarding Modal */}
+      <OnboardingModal />
+      
+      {/* Onboarding Guide Modal */}
+      
+
+      <div className="mx-auto">
         {/* Header Row */}
         <div className="flex items-center justify-between mb-8 space-x-4 bg-[#90C494]/20 rounded-xl px-4 py-2">
           <div className="flex items-center justify-start space-x-4">
@@ -79,6 +86,16 @@ const DashHome = () => {
             </h1>
           </div>
           <div className="md:flex hidden items-center justify-end space-x-4">
+            <button
+              onClick={() => {
+                localStorage.removeItem('formial-onboarding-completed')
+                window.location.reload()
+              }}
+              className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+            >
+              <IconInfoCircle className="h-4 w-4" />
+              <span>Test Onboarding</span>
+            </button>
             {Notifications.map((notification, index) => (
               <button
                 onMouseEnter={() => setShowNotification(index)}
@@ -101,9 +118,13 @@ const DashHome = () => {
         </div>
 
         {/* Top Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+<div className="flex items-start justify-start max-w-[1440px] mx-auto gap-4 rounded-xl">
+
+        <div className=" mr-auto flex-1 max-w-5xl">
+        {/* Top Row */}
+        <div className="grid grid-cols-1 gap-6 mb-6 ">
           {/* Home Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-sm border border-[#1E3F2B]/50">
+          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-lg border border-gray-300">
 
             <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
           <IconHome className="text-[#1E3F2B] h-5 w-5" />
@@ -144,7 +165,7 @@ const DashHome = () => {
           </div>
 
           {/* Skin Progress Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-sm border border-[#1E3F2B]/50">
+          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-lg border border-gray-300">
 
              <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
           <IconProgress className="text-[#1E3F2B] h-5 w-5" />
@@ -180,7 +201,7 @@ const DashHome = () => {
           </div>
 
           {/* Learn & FAQs Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-sm border border-[#1E3F2B]/50">
+          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-lg border border-gray-300">
 
             <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
           <IconQuestionMark className="text-[#1E3F2B] h-5 w-5" />
@@ -224,95 +245,165 @@ const DashHome = () => {
         </div>
 
         {/* Bottom Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Videos Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-sm border border-[#1E3F2B]/50">
-            <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
-          <IconVideo className="text-[#1E3F2B] h-5 w-5" />
-            <h2 className="text-xl font-semibold text-[#1E3F2B] ">Videos</h2>
+       
+
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 bg-[#1E3F2B]/10 rounded-lg">
-                <IconPlayerPlay className="text-[#1E3F2B] h-6 w-6" />
-                <span className="text-sm font-medium">
-                  How to apply Formial
-                </span>
+
+        
+{/* Chat Section */}
+
+         <div className="h-screen w-full bg-[#f8f6ee] rounded-2xl shadow-lg border border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight">
+           {/* Chat Header */}
+           <div className="flex items-center justify-between p-6 border-b border-gray-300">
+             <div className="flex items-center space-x-3">
+               <div className="w-10 h-10  rounded-xl flex items-center justify-center">
+                 <IconMessage className="h-6 w-6 text-[#1E3F2B]" />
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-[#1E3F2B]/10 rounded-lg">
-                <IconPlayerPlay className="text-[#1E3F2B] h-6 w-6" />
-                <span className="text-sm font-medium">Skincare basics</span>
+               <div>
+                 <h3 className="text-lg font-semibold text-gray-900">Formial Assistant</h3>
+                 <p className="text-sm text-gray-500">Your skincare companion</p>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-[#1E3F2B]/10 rounded-lg">
-                <IconPlayerPlay className="text-[#1E3F2B] h-6 w-6" />
-                <span className="text-sm font-medium">Morning routine explained</span>
-              </div>
+            </div>
+             <div className="flex items-center space-x-2">
+               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+               <span className="text-xs text-gray-500">Online</span>
             </div>
           </div>
 
-          {/* Conversations / Chat Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-sm border border-[#1E3F2B]/50">
-            <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
-          <IconMessage className="text-[#1E3F2B] h-5 w-5" />
-            <h2 className="text-xl font-semibold text-[#1E3F2B] ">Conversations / Chat</h2>
+           {/* Chat Messages Area */}
+           <div className="flex-1 p-6 overflow-y-auto">
+             <div className="space-y-6">
+               {/* Welcome Message */}
+               <div className="text-center py-8">
+                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Formial Chat</h2>
+                 <p className="text-gray-600 mb-8">Get started by asking about your skincare routine, treatment progress, or any questions you have. Not sure where to start?</p>
+               
+                 {/* Quick Action Cards */}
+                 <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                   <motion.button
+                     whileHover={{ scale: 1.02 }}
+                     whileTap={{ scale: 0.98 }}
+                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                   >
+                     <div className="flex items-center justify-between">
+                       <div className="flex items-center space-x-3">
+                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
+                           <IconCamera className="h-4 w-4 text-white" />
+                         </div>
+                         <span className="text-sm font-medium text-gray-900">Track Progress</span>
+                       </div>
+                       <IconPlus className="h-4 w-4 text-gray-400" />
+                     </div>
+                   </motion.button>
+
+                   <motion.button
+                     whileHover={{ scale: 1.02 }}
+                     whileTap={{ scale: 0.98 }}
+                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                   >
+                     <div className="flex items-center justify-between">
+                       <div className="flex items-center space-x-3">
+                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
+                           <IconTrendingUp className="h-4 w-4 text-white" />
+                         </div>
+                         <span className="text-sm font-medium text-gray-900">Skin Analysis</span>
+                       </div>
+                       <IconPlus className="h-4 w-4 text-gray-400" />
+                     </div>
+                   </motion.button>
+
+                   <motion.button
+                     whileHover={{ scale: 1.02 }}
+                     whileTap={{ scale: 0.98 }}
+                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                   >
+                     <div className="flex items-center justify-between">
+                       <div className="flex items-center space-x-3">
+                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
+                           <IconUser className="h-4 w-4 text-white" />
+                         </div>
+                         <span className="text-sm font-medium text-gray-900">Ask Doctor</span>
+                       </div>
+                       <IconPlus className="h-4 w-4 text-gray-400" />
+                     </div>
+                   </motion.button>
+
+                   <motion.button
+                     whileHover={{ scale: 1.02 }}
+                     whileTap={{ scale: 0.98 }}
+                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                   >
+                     <div className="flex items-center justify-between">
+                       <div className="flex items-center space-x-3">
+                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
+                           <IconInfoCircle className="h-4 w-4 text-white" />
+                         </div>
+                         <span className="text-sm font-medium text-gray-900">Get Help</span>
+                       </div>
+                       <IconPlus className="h-4 w-4 text-gray-400" />
             </div>
-            <div className="space-y-3">
-              <div className="flex justify-end">
-                <div className="bg-[#1E3F2B] text-white rounded-lg p-3 max-w-xs">
-                  <p className="text-sm">
-                    Hi, I have some questions
-                  </p>
-                  <p className="text-xs opacity-75 mt-1">04:20 PM</p>
+                   </motion.button>
                 </div>
               </div>
 
-              <div className="flex justify-start">
-                <div className="bg-[#1E3F2B]/10 text-[#1E3F2B] rounded-lg p-3 max-w-xs">
-                  <p className="text-sm">Sure, please go ahead!</p>
+               {/* Sample Messages */}
+               <div className="space-y-4">
+                 <div className="flex justify-end">
+                   <div className="bg-[#90C494] text-white rounded-2xl rounded-br-md px-4 py-3 max-w-xs">
+                     <p className="text-sm">How is my skin progress looking?</p>
+                     <p className="text-xs opacity-75 mt-1">2:30 PM</p>
                 </div>
               </div>
 
-              <div className="flex justify-center">
-                <div className="bg-[#f8f6ee] border border-[#1E3F2B]/50 text-[#1E3F2B] rounded-lg p-3  flex items-center justify-between space-x-2 w-full">
-                  <input 
-                  placeholder="Type your message here..."
-                  className="text-sm  outline-none w-full">
-                    
-                  </input>
-                  <IconCamera className="h-4 w-4 text-black" />
-                  <IconSend className="h-4 w-4 text-black" />
+                 <div className="flex justify-start">
+                   <div className="bg-[#1F3F2A] text-gray-100 rounded-2xl rounded-bl-md px-4 py-3 max-w-xs">
+                     <p className="text-sm">Your skin is showing great improvement! Based on your latest photos, I can see a 67% improvement in texture and clarity. Keep up with your current routine!</p>
+                     <p className="text-xs text-gray-400 mt-1">2:31 PM</p>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Support Section */}
-          <div className="bg-[#f8f6ee] rounded-xl p-6 shadow-sm border border-[#1E3F2B]/50">
-            <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
-          <IconUser className="text-[#1E3F2B] h-5 w-5" />
-            <h2 className="text-xl font-semibold text-[#1E3F2B] ">Support</h2>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                <IconTruck className="text-gray-600 h-5 w-5" />
-                <span className="text-sm font-medium">
-                  Delivery status
-                </span>
+
+           {/* Chat Input Area */}
+           <div className="p-6 border-t border-gray-100">
+             <div className="relative">
+               <input
+                 type="text"
+                 placeholder="Ask about your skincare routine, treatment progress, or any questions..."
+                 className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E3F2B]/20 focus:border-[#1E3F2B] transition-colors"
+               />
+               <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#1E3F2B] text-white p-2 rounded-xl hover:bg-[#1E3F2B]/90 transition-colors">
+                 <IconSend className="h-4 w-4" />
+               </button>
               </div>
-              <div className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                <IconRefresh className="text-gray-600 h-5 w-5" />
-                <span className="text-sm font-medium">
-                  Replace pump
-                </span>
+             
+             {/* Additional Options */}
+             <div className="flex items-center justify-between mt-4">
+               <div className="flex items-center space-x-4">
+                 <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors">
+                   <IconCamera className="h-4 w-4" />
+                   <span className="text-xs">Attach Photo</span>
+                 </button>
+                 <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors">
+                   <IconBell className="h-4 w-4" />
+                   <span className="text-xs">Voice Message</span>
+                 </button>
+                 <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors">
+                   <IconInfoCircle className="h-4 w-4" />
+                   <span className="text-xs">Browse Prompts</span>
+                 </button>
               </div>
-              <div className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors">
-                <IconHelp className="text-gray-600 h-5 w-5" />
-                <span className="text-sm font-medium">
-                  Contact support
-                </span>
+               <div className="text-xs text-gray-400">
+                 AI Assistant
               </div>
             </div>
           </div>
         </div>
+
+
+  </div>
+
       </div>
     </div>
   )
