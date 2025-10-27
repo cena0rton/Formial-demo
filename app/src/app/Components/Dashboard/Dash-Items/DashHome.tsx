@@ -206,7 +206,7 @@ const DashHome = () => {
         
 {/* Chat Section */}
 
-         <div className="h-200 w-full bg-[#f8f6ee] rounded-tr-xl rounded-br-xl shadow-lg border border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight scroll-none">
+         <div className="h-174 w-full bg-[#f8f6ee] rounded-tr-xl rounded-br-xl shadow-lg border border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight scroll-none">
            {/* Chat Header */}
            <div className="flex items-center justify-between p-6 border-b border-gray-300">
              <div className="flex items-center space-x-3">
