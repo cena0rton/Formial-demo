@@ -1,111 +1,161 @@
 'use client'
+
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  IconX,
-  IconArrowRight,
-  IconArrowLeft,
-  IconCheck,
-  IconCamera,
-  IconHeart,
-  IconTarget,
-  IconSparkles,
-  IconShield,
+import { 
+  IconHeart, 
+  IconTarget, 
+  IconSparkles, 
+  IconCamera, 
+  IconShield, 
+  IconX, 
+  IconCheck, 
+  IconArrowLeft
 } from '@tabler/icons-react'
 
-interface OnboardingStep {
+export type OnboardingStepType =
+  | "welcome"
+  | "dashboard-tour"
+  | "progress-tracking"
+  | "photo-guide"
+  | "chat-intro"
+  | "action"
+
+export interface OnboardingStep {
   id: number
   title: string
   subtitle: string
+  description?: string
   ctaLabel: string
+  secondaryCtaLabel?: string
   successMessage: string
-  helpText: [string, string]
+  helpText: string[]
   icon: React.ComponentType<{ className?: string }>
-  type: 'welcome' | 'form' | 'photo' | 'results'
+  type: OnboardingStepType
+  features?: string[]
+  imageUrl?: string
 }
 
-const OnboardingModal = () => {
+export const postTreatmentSteps: OnboardingStep[] = [
+  {
+    id: 1,
+    title: "Welcome to your treatment journey",
+    subtitle: "Your personalized skincare plan is now active",
+    description: "Let's get you set up to track progress and achieve your best skin.",
+    ctaLabel: "Get started",
+    successMessage: "Great! Let's explore your dashboard.",
+    helpText: ["This quick tour takes about 2 minutes", "You can skip anytime and return later"],
+    icon: IconHeart,
+    type: "welcome",
+  },
+  {
+    id: 2,
+    title: "Your dashboard",
+    subtitle: "Everything you need in one place",
+    description: "Here's what you'll find:",
+    ctaLabel: "Continue",
+    features: [
+      "Progress tracking - Monitor your skin improvements",
+      "Treatment plan - Your routine and recommendations",
+      "Photo timeline - Visual proof of your results",
+      "Expert chat - Get support anytime",
+    ],
+    successMessage: "Perfect! You've got the overview.",
+    helpText: ["Check your dashboard daily to stay on track", "All your data is private and secure"],
+    icon: IconTarget,
+    type: "dashboard-tour",
+  },
+  {
+    id: 3,
+    title: "Track your progress",
+    subtitle: "See real results over time",
+    description: "We measure what matters:",
+    ctaLabel: "Continue",
+    features: [
+      
+      "Goal progress - How close you are to your goals",
+      "Weekly insights - Trends and patterns",
+      "Milestones - Celebrate your wins",
+    ],
+    successMessage: "Excellent! You understand the tracking system.",
+    helpText: ["Most users see results in 4-8 weeks", "Consistency is key to success"],
+    icon: IconSparkles,
+    type: "progress-tracking",
+  },
+  {
+    id: 4,
+    title: "Upload photos",
+    subtitle: "Visual tracking shows real transformation",
+    description: "Regular photos help us provide better recommendations.",
+    ctaLabel: "Continue",
+    features: [
+      "Before & after comparison - See your transformation",
+      "AI analysis - Detailed skin assessment",
+      "Personalized insights - Tailored recommendations",
+      "Privacy protected - Your photos stay secure",
+    ],
+    successMessage: "Great! You're ready to track visually.",
+    helpText: ["Upload every 2 weeks for best results", "Natural lighting works best"],
+    icon: IconCamera,
+    type: "photo-guide",
+  },
+  {
+    id: 5,
+    title: "Get expert support",
+    subtitle: "Chat with our skincare specialists",
+    description: "Have questions? We're here 24/7.",
+    ctaLabel: "Continue",
+    features: [
+      "Instant answers - Get responses to your questions",
+      "Expert guidance - Personalized advice",
+      "Routine adjustments - Modify your plan as needed",
+      "Educational content - Learn skincare science",
+    ],
+    successMessage: "Perfect! You have all the tools to succeed.",
+    helpText: ["Don't hesitate to reach out", "The more you engage, the better our recommendations"],
+    icon: IconShield,
+    type: "chat-intro",
+  },
+  {
+    id: 6,
+    title: "You're all set",
+    subtitle: "Choose your next step",
+    description: "Ready to start your transformation.",
+    ctaLabel: "Upload first photo",
+    secondaryCtaLabel: "Go to chat",
+    successMessage: "Welcome to your personalized skincare experience!",
+    helpText: ["Start with a photo to establish your baseline", "Or jump into chat if you have questions"],
+    icon: IconCheck,
+    type: "action",
+  },
+]
+
+interface OnboardingFlowProps {
+  onComplete?: (action: "photo" | "chat") => void
+  onSkip?: () => void
+}
+
+export function OnboardingModal({ onComplete, onSkip }: OnboardingFlowProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [isCompleted, setIsCompleted] = useState(false)
 
-  const steps: OnboardingStep[] = [
-    {
-      id: 1,
-      title: "Welcome to Your Treatment Dashboard",
-      subtitle: "Let's explore how to track your skincare journey effectively",
-      ctaLabel: "Start Tour",
-      successMessage: "Perfect! Let's show you everything you need to know.",
-      helpText: [
-        "We'll guide you through the key features.",
-        "This will help you make the most of your dashboard."
-      ],
-      icon: IconHeart,
-      type: 'welcome'
-    },
-    {
-      id: 2,
-      title: "Track Your Progress",
-      subtitle: "Learn how to monitor your skin transformation over time",
-      ctaLabel: "Next: Get Insights",
-      successMessage: "Great! You now know how to track your progress effectively.",
-      helpText: [
-        "Upload photos weekly to track your transformation.",
-        "View progress reports and celebrate milestones."
-      ],
-      icon: IconTarget,
-      type: 'form'
-    },
-    {
-      id: 3,
-      title: "AI-Powered Insights",
-      subtitle: "Discover how to get personalized recommendations and analysis",
-      ctaLabel: "Next: Chat Support",
-      successMessage: "Excellent! You can now access AI-powered skin analysis.",
-      helpText: [
-        "Get personalized skin analysis from your photos.",
-        "Receive product recommendations and track health scores."
-      ],
-      icon: IconSparkles,
-      type: 'form'
-    },
-    {
-      id: 4,
-      title: "Chat with Your Care Team",
-      subtitle: "Learn how to get instant support and ask questions",
-      ctaLabel: "Next: Upload Photos",
-      successMessage: "Awesome! You can now chat with your care team anytime.",
-      helpText: [
-        "Ask questions about your treatment routine.",
-        "Get instant answers from AI and care team."
-      ],
-      icon: IconCamera,
-      type: 'photo'
-    },
-    {
-      id: 5,
-      title: "Ready to Upload & Chat",
-      subtitle: "You're all set! Start uploading photos or chat with your care team",
-      ctaLabel: "Upload My First Photo",
-      successMessage: "Welcome to Formial! Your dashboard is ready for your skincare journey.",
-      helpText: [
-        "Upload your first progress photo to start tracking.",
-        "Or jump into chat to ask questions about your routine."
-      ],
-      icon: IconShield,
-      type: 'results'
+  const step = postTreatmentSteps[currentStep]
+  const progress = ((currentStep + 1) / postTreatmentSteps.length) * 100
+  const isLastStep = currentStep === postTreatmentSteps.length - 1
+
+  useEffect(() => {
+    const hasCompleted = localStorage.getItem('formial-onboarding-completed')
+    if (!hasCompleted) {
+      setTimeout(() => {
+        setIsOpen(true)
+      }, 500)
     }
-  ]
+  }, [])
 
   const handleNext = () => {
-    if (currentStep < steps.length - 1) {
+    if (currentStep < postTreatmentSteps.length - 1) {
       setCurrentStep(currentStep + 1)
-    } else {
-      setIsCompleted(true)
-      setTimeout(() => {
-        setIsOpen(false)
-        localStorage.setItem('formial-onboarding-completed', 'true')
-      }, 2000)
     }
   }
 
@@ -115,28 +165,31 @@ const OnboardingModal = () => {
     }
   }
 
-  const handleClose = () => {
-    if (isCompleted || currentStep === 0) {
+  const handleComplete = (action?: "photo" | "chat") => {
+    setIsCompleted(true)
+    localStorage.setItem('formial-onboarding-completed', 'true')
+    
+    setTimeout(() => {
       setIsOpen(false)
-    }
+      if (action && onComplete) {
+        onComplete(action)
+      }
+    }, 1500)
   }
 
-  useEffect(() => {
-    // Check if onboarding has been completed
-    const hasCompleted = localStorage.getItem('formial-onboarding-completed')
-    if (!hasCompleted) {
-      // Small delay to ensure the page is fully loaded
-      setTimeout(() => {
-        setIsOpen(true)
-      }, 500)
+  const handleClose = () => {
+    setIsOpen(false)
+    localStorage.setItem('formial-onboarding-completed', 'true')
+  }
+
+  const handleSkip = () => {
+    if (onSkip) {
+      onSkip()
     }
-    // For testing - uncomment the line below to always show the modal
-    // setIsOpen(true)
-  }, [])
+    handleClose()
+  }
 
   if (!isOpen) return null
-
-  const currentStepData = steps[currentStep]
 
   return (
     <AnimatePresence>
@@ -144,14 +197,14 @@ const OnboardingModal = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed  inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-2xl max-w-xl w-full h-[600px] overflow-hidden flex flex-col"
+          className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col h-180"
         >
           {/* Header */}
           <div className="relative bg-gradient-to-r from-[#1E3F2B] to-[#1E3F2B]/90 p-6 text-white">
@@ -164,11 +217,11 @@ const OnboardingModal = () => {
             
             <div className="flex items-center space-x-3 mb-4">
               <div className="p-3 rounded-xl bg-transparent">
-                {React.createElement(currentStepData.icon, { className: "h-6 w-6 text-green-900" })}
+                {React.createElement(step.icon, { className: "h-6 w-6 text-green-200" })}
               </div>
               <div>
-                <h2 className="text-xl font-bold">{currentStepData.title}</h2>
-                <p className="text-sm opacity-90">Step {currentStep + 1} of {steps.length}</p>
+                <h2 className="text-xl font-zillaSlabHighlight">{step.title}</h2>
+                <p className="text-sm opacity-90">Step {currentStep + 1} of {postTreatmentSteps.length}</p>
               </div>
             </div>
 
@@ -176,8 +229,8 @@ const OnboardingModal = () => {
             <div className="w-full bg-white/20 rounded-full h-2">
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-                transition={{ duration: 0.5 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 className="bg-white rounded-full h-2"
               />
             </div>
@@ -187,105 +240,42 @@ const OnboardingModal = () => {
           <div className="p-6 flex-1 overflow-y-auto">
             <div className="space-y-4">
               {/* Subtitle */}
-              <p className="text-gray-600 text-lg leading-relaxed text-center">
-                {currentStepData.subtitle}
+              <p className="text-gray-600 text-lg leading-relaxed text-center font-bold">
+                {step.subtitle}
               </p>
 
-              {/* Dashboard Feature Explanations */}
-              {currentStep === 1 && (
-                <div className="text-center space-y-4 w-full">
-                  <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6">
-                    <p className="text-gray-700 text-sm text-center">
-                      We&apos;ll guide you through the key features of your dashboard.
-                    </p>
-                    <p className="text-gray-600 text-sm mt-2">
-                      This will help you make the most of your skincare journey.
-                    </p>
-                  </div>
-                </div>
+              {/* Description */}
+              {step.description && (
+                <p className="text-center text-gray-700 mb-6 text-sm">
+                  {step.description}
+                </p>
               )}
 
-              {currentStep === 2 && (
-                <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <IconTarget className="h-5 w-5 text-blue-300" />
-                      </div>
-                      <h4 className="font-semibold text-gray-900">Progress Tracking</h4>
+              {/* Features List */}
+              {step.features && step.features.length > 0 && (
+                <div className="space-y-3 mb-6">
+                  {step.features.map((feature, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-3 p-3 rounded-lg bg-[#1E3F2B]/10 hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="text-[#1E3F2B] font-semibold mt-0.5 text-sm">→</div>
+                      <p className="text-sm text-gray-700">{feature}</p>
                     </div>
-                    <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• Upload photos weekly to track transformation</li>
-                      <li>• View progress comparisons and AI analysis</li>
-                      <li>• Celebrate milestones and achievements</li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {currentStep === 3 && (
-                <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <IconSparkles className="h-5 w-5 text-green-600" />
-                      </div>
-                      <h4 className="font-semibold text-gray-900">AI Insights</h4>
-                    </div>
-                    <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• Get personalized skin analysis from photos</li>
-                      <li>• Receive product recommendations</li>
-                      <li>• Track skin health scores and metrics</li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {currentStep === 4 && (
-                <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                        <IconCamera className="h-5 w-5 text-yellow-600" />
-                      </div>
-                      <h4 className="font-semibold text-gray-900">Chat Support</h4>
-                    </div>
-                    <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• Ask questions about your treatment routine</li>
-                      <li>• Get instant answers from AI and care team</li>
-                      <li>• Share concerns and get usage tips</li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {currentStep === 5 && (
-                <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <IconCheck className="h-8 w-8 text-green-600" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">You&apos;re All Set!</h3>
-                      <p className="text-gray-600 text-sm mb-4">Your dashboard is ready for your skincare journey.</p>
-                      <div className="grid grid-cols-2 gap-3 mt-4">
-                        <button className="bg-[#1E3F2B] text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-[#1E3F2B]/90 transition-colors">
-                          Upload First Photo
-                        </button>
-                        <button className="bg-blue-500 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors">
-                          Start Chatting
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               )}
 
               {/* Help Text */}
-              <div className="space-y-1 text-sm text-gray-500">
-                <p>{currentStepData.helpText[0]}</p>
-                <p>{currentStepData.helpText[1]}</p>
-              </div>
+              {step.helpText && step.helpText.length > 0 && (
+                <div className="bg-[#1E3F2B]/5 border border-[#1E3F2B]/10 rounded-lg p-4 space-y-2">
+                  {step.helpText.map((text, idx) => (
+                    <p key={idx} className="text-xs text-gray-600 font-bold text-center">
+                      {text}
+                    </p>
+                  ))}
+                </div>
+              )}
 
               {/* Success Message (shown briefly after completion) */}
               <AnimatePresence>
@@ -298,7 +288,7 @@ const OnboardingModal = () => {
                   >
                     <div className="flex items-center space-x-2 text-green-700">
                       <IconCheck className="h-5 w-5" />
-                      <span className="font-medium">{currentStepData.successMessage}</span>
+                      <span className="font-medium">{step.successMessage}</span>
                     </div>
                   </motion.div>
                 )}
@@ -308,18 +298,8 @@ const OnboardingModal = () => {
 
           {/* Footer */}
           <div className="p-6 border-t border-gray-100 bg-gray-50">
-            {/* CTA Button */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleNext}
-              className="w-full bg-[#1E3F2B] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#1E3F2B]/90 transition-colors text-lg mb-4"
-            >
-              {currentStepData.ctaLabel}
-            </motion.button>
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between">
+            {/* CTA Buttons */}
+            <div className="flex gap-3 justify-between mb-4">
               <button
                 onClick={handlePrevious}
                 disabled={currentStep === 0}
@@ -330,28 +310,47 @@ const OnboardingModal = () => {
                 }`}
               >
                 <IconArrowLeft className="h-4 w-4" />
-                <span>Previous</span>
+                <span>Back</span>
               </button>
 
-              <div className="flex space-x-1">
-                {steps.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      index === currentStep ? 'bg-[#1E3F2B]' : 'bg-gray-300'
-                    }`}
-                  />
-                ))}
+              <div className="flex gap-3">
+                {isLastStep ? (
+                  <>
+                    <button
+                      onClick={() => handleComplete("chat")}
+                      className="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-300 transition-colors"
+                    >
+                      {step.secondaryCtaLabel}
+                    </button>
+                    <button
+                      onClick={() => handleComplete("photo")}
+                      className="bg-[#1E3F2B] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#1E3F2B]/90 transition-colors"
+                    >
+                      {step.ctaLabel}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={handleNext}
+                    className="bg-[#1E3F2B] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#1E3F2B]/90 transition-colors"
+                  >
+                    {step.ctaLabel}
+                  </button>
+                )}
               </div>
-
-              <button
-                onClick={handleNext}
-                className="flex items-center space-x-2 text-[#1E3F2B] hover:bg-[#1E3F2B]/10 px-4 py-2 rounded-lg transition-colors"
-              >
-                <span>{currentStep === steps.length - 1 ? 'Complete' : 'Next'}</span>
-                <IconArrowRight className="h-4 w-4" />
-              </button>
             </div>
+
+            {/* Skip Option */}
+            {currentStep < postTreatmentSteps.length - 1 && (
+              <div className="text-center">
+                <button
+                  onClick={handleSkip}
+                  className="text-xs text-gray-500 hover:text-gray-700 transition-colors font-medium"
+                >
+                  Skip tour
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
       </motion.div>

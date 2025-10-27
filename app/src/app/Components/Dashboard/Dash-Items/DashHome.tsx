@@ -61,7 +61,7 @@ const DashHome = () => {
   ]
 
   return (
-    <div className="md:p-6 overflow-x-hidden bg-[#e5e1d2] min-h-screen">
+    <div className="md:p-6 overflow-x-hidden bg-[#f8f6ee] min-h-screen rounded-xl">
       {/* Onboarding Modal */}
       <OnboardingModal />
       
@@ -117,13 +117,16 @@ const DashHome = () => {
         <div className=" mr-auto flex-1 max-w-5xl">
         {/* Top Row */}
         <div className="grid grid-cols-1 gap-0 mb-6 ">
-          {/* Home Section */}
-          <div className="bg-[#f8f6ee] rounded-tl-xl p-6 shadow-lg border border-gray-300">
 
-            <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
-          <IconHome className="text-[#1E3F2B] h-5 w-5" />
-            <h2 className="text-xl font-semibold text-[#1E3F2B] ">Home</h2>
+          {/* Home Section */}
+          <div className="bg-[#f8f6ee] rounded-tl-xl shadow-lg border border-b-0 border-gray-300">
+
+            <div className="flex items-center h-20 justify-start space-x-2 tracking-tight border-b border-gray-300  bg-[#F2EEE0] rounded-tl-xl px-6">
+          <IconHome className="text-gray-800 h-5 w-5" />
+            <h2 className="text-xl font-semibold text-gray-800 ">Your Treatment Plan</h2>
             </div>
+
+<div className="p-6">
 
             <div className="mb-4">
               <p className="text-sm text-[#1E3F2B]/80 mb-1">Treatment Plan:</p>
@@ -156,16 +159,17 @@ const DashHome = () => {
                 Possible dryness and peeling
               </p>
             </div>
+            </div>
           </div>
 
           {/* Skin Progress Section */}
-          <div className="bg-[#f8f6ee] rounded-bl-xl p-6 shadow-lg border border-gray-300">
+            <div className="bg-[#f8f6ee] rounded-bl-xl shadow-lg border border-gray-300">
 
-             <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-[#1E3F2B]/50 pb-2">
-          <IconProgress className="text-[#1E3F2B] h-5 w-5" />
-            <h2 className="text-xl font-semibold text-[#1E3F2B] ">Skin Progress</h2>
+             <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-gray-300 px-6 h-20 bg-[#F2EEE0]">
+          <IconProgress className="text-gray-800 h-5 w-5" />
+            <h2 className="text-xl font-semibold text-gray-800 ">Skin Progress</h2>
             </div>
-
+<div className="p-6">
             <div className="text-center mb-4">
               <div className="bg-[#1E3F2B]/20 rounded-full w-16 h-16 mx-auto flex items-center justify-center mb-2">
                 <IconCamera className="text-gray-600 h-8 w-8" />
@@ -193,39 +197,34 @@ const DashHome = () => {
               Add a journal entry
             </button>
           </div>
-
-          {/* Learn & FAQs Section */}
         
         </div>
-
-        {/* Bottom Row */}
-       
-
+  </div>
             </div>
 
         
 {/* Chat Section */}
 
-         <div className="h-174 w-full bg-[#f8f6ee] rounded-tr-xl rounded-br-xl shadow-lg border border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight scroll-none">
+         <div className="h-191 w-full bg-[#f8f6ee] rounded-tr-xl rounded-br-xl shadow-lg border border-l-0 border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight scroll-none">
            {/* Chat Header */}
-           <div className="flex items-center justify-between p-6 border-b border-gray-300">
+           <div className="flex h-20 items-center justify-between p-6 border-b border-gray-300 bg-[#F2EEE0] rounded-tr-xl">
              <div className="flex items-center space-x-3">
                <div className="w-10 h-10  rounded-xl flex items-center justify-center">
-                 <IconMessage className="h-6 w-6 text-[#1E3F2B]" />
+                 <IconMessage className="h-6 w-6 text-gray-800" />
               </div>
                <div>
-                 <h3 className="text-lg font-semibold text-gray-900">Formial Assistant</h3>
+                 <h3 className="text-lg font-semibold text-gray-800">Formial Assistant</h3>
                  <p className="text-sm text-gray-500">Your skincare companion</p>
               </div>
             </div>
              <div className="flex items-center space-x-2">
                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-               <span className="text-xs text-gray-500">Online</span>
+               <span className="text-xs text-green-500">Online</span>
             </div>
           </div>
 
            {/* Chat Messages Area */}
-           <div className="flex-1 p-6 overflow-y-auto">
+           <div className="flex-1 p-6 overflow-y-auto h-full">
              <div className="space-y-6">
                {/* Welcome Message */}
                <div className="text-center py-8">
@@ -237,14 +236,12 @@ const DashHome = () => {
                    <motion.button
                      whileHover={{ scale: 1.02 }}
                      whileTap={{ scale: 0.98 }}
-                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
                    >
                      <div className="flex items-center justify-between">
                        <div className="flex items-center space-x-3">
-                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
-                           <IconCamera className="h-4 w-4 text-white" />
-                         </div>
-                         <span className="text-sm font-medium text-gray-900">Track Progress</span>
+                        
+                         <span className="text-sm font-medium text-gray-900">Need refill</span>
                        </div>
                        <IconPlus className="h-4 w-4 text-gray-400" />
                      </div>
@@ -253,13 +250,11 @@ const DashHome = () => {
                    <motion.button
                      whileHover={{ scale: 1.02 }}
                      whileTap={{ scale: 0.98 }}
-                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
                    >
                      <div className="flex items-center justify-between">
                        <div className="flex items-center space-x-3">
-                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
-                           <IconTrendingUp className="h-4 w-4 text-white" />
-                         </div>
+                        
                          <span className="text-sm font-medium text-gray-900">Skin Analysis</span>
                        </div>
                        <IconPlus className="h-4 w-4 text-gray-400" />
@@ -269,14 +264,12 @@ const DashHome = () => {
                    <motion.button
                      whileHover={{ scale: 1.02 }}
                      whileTap={{ scale: 0.98 }}
-                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
                    >
                      <div className="flex items-center justify-between">
                        <div className="flex items-center space-x-3">
-                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
-                           <IconUser className="h-4 w-4 text-white" />
-                         </div>
-                         <span className="text-sm font-medium text-gray-900">Ask Doctor</span>
+                        
+                         <span className="text-sm font-medium text-gray-900">My skin feels dry today</span>
                        </div>
                        <IconPlus className="h-4 w-4 text-gray-400" />
                      </div>
@@ -285,13 +278,11 @@ const DashHome = () => {
                    <motion.button
                      whileHover={{ scale: 1.02 }}
                      whileTap={{ scale: 0.98 }}
-                     className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 text-left transition-colors border border-gray-200"
+                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
                    >
                      <div className="flex items-center justify-between">
                        <div className="flex items-center space-x-3">
-                         <div className="w-8 h-8 bg-[#1E3F2B] rounded-lg flex items-center justify-center">
-                           <IconInfoCircle className="h-4 w-4 text-white" />
-                         </div>
+                       
                          <span className="text-sm font-medium text-gray-900">Get Help</span>
                        </div>
                        <IconPlus className="h-4 w-4 text-gray-400" />
@@ -303,16 +294,16 @@ const DashHome = () => {
                {/* Sample Messages */}
                <div className="space-y-4">
                  <div className="flex justify-end">
-                   <div className="bg-[#90C494] text-white rounded-2xl rounded-br-md px-4 py-3 max-w-xs">
+                   <div className="bg-[#abe4e6] text-gray-800 rounded-2xl rounded-br-md px-4 py-3 max-w-xs">
                      <p className="text-sm">How is my skin progress looking?</p>
                      <p className="text-xs opacity-75 mt-1">2:30 PM</p>
                 </div>
               </div>
 
                  <div className="flex justify-start">
-                   <div className="bg-[#1F3F2A] text-gray-100 rounded-2xl rounded-bl-md px-4 py-3 max-w-xs">
+                   <div className="bg-[#b5d3d4] text-gray-800 rounded-2xl rounded-bl-md px-4 py-3 max-w-xs">
                      <p className="text-sm">Your skin is showing great improvement! Based on your latest photos, I can see a 67% improvement in texture and clarity. Keep up with your current routine!</p>
-                     <p className="text-xs text-gray-400 mt-1">2:31 PM</p>
+                     <p className="text-xs text-gray-500 mt-1">2:31 PM</p>
                 </div>
               </div>
             </div>

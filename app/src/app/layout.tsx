@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Zilla_Slab_Highlight } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,6 +17,12 @@ export const metadata: Metadata = {
   description: "Formial Dashboard",
 };
 
+const zillaSlabHighlight = Zilla_Slab_Highlight({
+  variable: "--font-zilla-slab-highlight",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${zillaSlabHighlight.variable} antialiased`}
       >
         {children}
       </body>
