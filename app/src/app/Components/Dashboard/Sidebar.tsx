@@ -1,17 +1,17 @@
 'use client'
 import React from 'react'
-import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconUser, IconShoppingBagCheck, IconLogout } from '@tabler/icons-react'
+import { IconHome, IconProgress , IconQuestionMark, IconCash, IconUser, IconShoppingBagCheck, IconLogout, IconUserCircle } from '@tabler/icons-react'
 import Image from 'next/image'
 
 const Sidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiveItem: (item: number) => void, ref: React.RefObject<number | null>}) => {
   const menuItems = [
     { icon: <IconHome className='text-[#f8f6ee] h-5 w-5'/>, text: 'Home',  },
     { icon: <IconProgress className='text-[#f8f6ee] h-5 w-5'/>, text: 'Skin Progress' },
-    { icon: <IconQuestionMark className='text-[#f8f6ee] h-5 w-5'/>, text: 'Learn & FAQs' },
-    { icon: <IconVideo className='text-[#f8f6ee] h-5 w-5'/>, text: 'Videos' },
-    { icon: <IconMessage className='text-[#f8f6ee] h-5 w-5'/>, text: 'Conversations / Chat' },
+    { icon: <IconQuestionMark className='text-[#f8f6ee] h-5 w-5'/>, text: 'FAQs and Videos' },
+    { icon: <IconCash className='text-[#f8f6ee] h-5 w-5'/>, text: 'Referral and Credits' },
     { icon: <IconUser className='text-[#f8f6ee] h-5 w-5'/>, text: 'Support' },
-    { icon: <IconShoppingBagCheck className='text-[#f8f6ee] h-5 w-5'/>, text: 'Orders & Subscriptions' }
+    { icon: <IconShoppingBagCheck className='text-[#f8f6ee] h-5 w-5'/>, text: 'Orders & Subscriptions' },
+    { icon: <IconUserCircle className='text-[#f8f6ee] h-5 w-5'/>, text: 'Personal Details' }
   ]
 
   const handleClick = (index: number) => {

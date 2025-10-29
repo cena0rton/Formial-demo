@@ -120,45 +120,80 @@ const DashHome = () => {
 
           {/* Home Section */}
           <div className="bg-[#f8f6ee] rounded-tl-xl shadow-lg border border-b-0 border-gray-300">
-
+            {/* Header */}
             <div className="flex items-center h-20 justify-start space-x-2 tracking-tight border-b border-gray-300  bg-[#F2EEE0] rounded-tl-xl px-6">
-          <IconHome className="text-gray-800 h-5 w-5" />
-            <h2 className="text-xl font-semibold text-gray-800 ">Your Treatment Plan</h2>
+              <IconHome className="text-gray-800 h-5 w-5" />
+              <h2 className="text-xl font-semibold text-gray-800">Your Current Prescription</h2>
             </div>
 
-<div className="p-6">
+            <div className="p-6">
 
-            <div className="mb-4">
-              <p className="text-sm text-[#1E3F2B]/80 mb-1">Treatment Plan:</p>
-              <p className="font-bold text-[#1E3F2B] flex items-center space-x-2 justify-between">
-                0.025% tretinoin cream 
-                <span className="text-sm text-green-500 px-2 py-1 bg-green-500/10 rounded-full flex items-center gap-2"><span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>active</span>
-              </p>
-            </div>
-
-            <div className="mb-4">
-              <p className="text-sm text-gray-600 mb-3">Daily routine:</p>
-              <div className="space-y-2">
-                {['Cleanser', 'Treatment', 'Moisturizer'].map(
-                  (item, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center space-x-2"
-                    >
-                      <IconCheck className="text-[#1E3F2B] h-5 w-5" />
-                      <span className="text-sm">{item}</span>
-                    </div>
-                  )
-                )}
+              {/* Active Prescription Details */}
+              <div className="mb-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <p className="text-sm text-[#1E3F2B]/80 mb-1">Prescription:</p>
+                    <p className="font-bold text-[#1E3F2B] flex items-center space-x-2">
+                      0.025% tretinoin cream 
+                      <span className="text-sm text-green-500 px-2 py-0.5 bg-green-500/10 rounded-full flex items-center gap-2 ml-2 border border-green-300">
+                        <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
+                        active
+                      </span>
+                    </p>
+                  </div>
+                  <div className="mt-4 md:mt-0 flex flex-col md:items-end">
+                    <p className="text-xs text-gray-500 font-medium">Expires on</p>
+                    <span className="font-medium border border-yellow-300 text-sm text-yellow-600 bg-yellow-100 px-2 py-0.5 rounded-full mt-1">
+                      12 Nov 2025
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-start w-fit items-center space-x-2 mt-8">
-              <IconInfoCircle className="text-white h-5 w-5 " />
-              <p className="text-sm text-white">
-                Possible dryness and peeling
-              </p>
-            </div>
+              {/* Ship/Next Pump Information */}
+              <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                  <p className="text-sm text-[#1E3F2B]/90 mb-1 flex items-center gap-1">
+                    <IconTruck className="inline-block text-[#1E3F2B] h-4 w-4 mr-1" />
+                    Next pump ships:
+                  </p>
+                  <span className="font-medium border border-blue-300 text-sm text-blue-500 bg-blue-100 px-2 py-1 rounded-full">
+                    29 Nov 2025
+                  </span>
+                </div>
+                <div className="flex flex-col items-end">
+                  <p className="text-xs text-gray-500 mb-1">Request changes by:</p>
+                  <span className="font-medium border border-green-300 text-sm text-green-500 bg-green-100 px-2 py-0.5 rounded-full">
+                    26 Nov 2025
+                  </span>
+                </div>
+              </div>
+
+              {/* Daily routine */}
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-3">Daily routine:</p>
+                <div className="space-y-2">
+                  {['Cleanser', 'Treatment', 'Moisturizer'].map(
+                    (item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center space-x-2"
+                      >
+                        <IconCheck className="text-[#1E3F2B] h-5 w-5" />
+                        <span className="text-sm">{item}</span>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+
+              {/* Side effect info */}
+              <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-start w-fit items-center space-x-2 mt-8">
+                <IconInfoCircle className="text-white h-5 w-5 " />
+                <p className="text-sm text-white">
+                  Facing issues with dryness and peeling?
+                </p>
+              </div>
             </div>
           </div>
 
@@ -167,7 +202,7 @@ const DashHome = () => {
 
              <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-gray-300 px-6 h-20 bg-[#F2EEE0]">
           <IconProgress className="text-gray-800 h-5 w-5" />
-            <h2 className="text-xl font-semibold text-gray-800 ">Skin Progress</h2>
+            <h2 className="text-xl font-semibold text-gray-800 ">Upload Your Photos Here</h2>
             </div>
 <div className="p-6">
             <div className="text-center mb-4">
@@ -213,7 +248,7 @@ const DashHome = () => {
                  <IconMessage className="h-6 w-6 text-gray-800" />
               </div>
                <div>
-                 <h3 className="text-lg font-semibold text-gray-800">Formial Assistant</h3>
+                 <h3 className="text-lg font-semibold text-gray-800">Formial Consultant</h3>
                  <p className="text-sm text-gray-500">Your skincare companion</p>
               </div>
             </div>

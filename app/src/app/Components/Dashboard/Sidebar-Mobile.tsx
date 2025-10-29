@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconUser, IconShoppingBagCheck } from '@tabler/icons-react'
+import { IconHome, IconProgress , IconQuestionMark, IconVideo, IconMessage, IconUser, IconShoppingBagCheck, IconUserCircle } from '@tabler/icons-react'
 import Image from 'next/image'
 
 const MobileSidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiveItem: (item: number) => void, ref: React.RefObject<number | null>}) => {
@@ -11,7 +11,8 @@ const MobileSidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, s
         { icon: <IconVideo className='text-[#f8f6ee] h-5 w-5'/>, text: 'Videos' },
         { icon: <IconMessage className='text-[#f8f6ee] h-5 w-5'/>, text: 'Conversations / Chat' },
         { icon: <IconUser className='text-[#f8f6ee] h-5 w-5'/>, text: 'Support' },
-        { icon: <IconShoppingBagCheck className='text-[#f8f6ee] h-5 w-5'/>, text: 'Orders & Subscriptions' }
+        { icon: <IconShoppingBagCheck className='text-[#f8f6ee] h-5 w-5'/>, text: 'Orders & Subscriptions' },
+        { icon: <IconUserCircle className='text-[#f8f6ee] h-5 w-5'/>, text: 'Personal Details' }
       ]
 
       const handleClick = (index: number) => {
