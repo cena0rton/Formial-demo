@@ -81,7 +81,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           transition={{ delay: 0.8, duration: 0.4 }}
           className="text-lg text-gray-500 font-light"
         >
-          Upload your skin photos for our doctor to review
+          Let&apos;s capture your starting point — this is where your transformation begins! 🌟
         </motion.p>
       </div>
 
@@ -89,8 +89,8 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         <label className="block border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-300 transition-all duration-200">
           <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
           <IconUpload size={32} className="mx-auto mb-3 text-gray-400" />
-          <p className="text-sm text-gray-600 font-medium mb-1">Drag and drop your photos here</p>
-          <p className="text-sm text-gray-500">or click to select files</p>
+          <p className="text-sm text-gray-600 font-medium mb-1">Capture your starting point</p>
+          <p className="text-sm text-gray-500">Drag photos or click to select</p>
         </label>
       </motion.div>
 

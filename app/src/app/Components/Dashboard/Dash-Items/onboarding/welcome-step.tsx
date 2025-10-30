@@ -55,7 +55,7 @@ export default function WelcomeStep({ userName, onNext, onSkip }: WelcomeStepPro
           transition={{ delay: 0.8, duration: 0.4 }}
           className="text-xl text-gray-500 font-light max-w-lg mx-auto leading-relaxed"
         >
-          We are excited to help you unlock amazing skin !
+          Welcome to your Skin-HUB — where your journey to amazing skin begins! 🚀
         </motion.p>
       </div>
 

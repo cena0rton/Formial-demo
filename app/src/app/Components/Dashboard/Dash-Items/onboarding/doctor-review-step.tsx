@@ -69,8 +69,7 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
         transition={{ delay: 0.8 }}
         className="text-gray-600 max-w-md mx-auto"
       >
-        Our board-certified dermatologists will carefully review your photos and provide personalized recommendations
-        for your unique skin type and concerns.
+        Our expert dermatologists will review your photos and create a personalized skincare plan tailored just for you. You&apos;re one step closer! 💪
       </motion.p>
 
       {/* Buttons */}

@@ -65,7 +65,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
           transition={{ delay: 0.8, duration: 0.4 }}
           className="text-lg text-gray-500 font-light max-w-lg mx-auto leading-relaxed"
         >
-          Receive a custom formulation and personalized skincare guidance based on your skin analysis and goals.
+          Your photos are saved to your <span className="font-semibold" style={{ color: '#1E3F2B' }}>Skin Progress</span> tab with date and time. Your journey to amazing skin starts now!
         </motion.p>
       </div>
 
@@ -85,7 +85,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3528'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1E3F2B'}
         >
-          Go to Dashboard
+          Go to Skin-HUB
         </button>
       </motion.div>
     </motion.div>
