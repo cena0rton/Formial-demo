@@ -16,7 +16,7 @@ import {
 } from '@tabler/icons-react'
 import { IconHome, IconProgress , IconQuestionMark, IconMessage } from '@tabler/icons-react'
 import Image from 'next/image'
-import OnboardingModal from './OnboardingModal'
+import OnboardingModal from './OnboardingModal-new'
 
 const DashHome = () => {
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null)
@@ -63,7 +63,7 @@ const DashHome = () => {
   return (
     <div className="md:p-6 overflow-x-hidden bg-[#f8f6ee] min-h-screen rounded-xl">
       {/* Onboarding Modal */}
-      <OnboardingModal />
+      <OnboardingModal/>
       
       {/* Onboarding Guide Modal */}
       

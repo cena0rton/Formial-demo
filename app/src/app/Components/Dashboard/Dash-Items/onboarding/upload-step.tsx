@@ -1,0 +1,156 @@
+"use client"
+
+import type React from "react"
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import Image from "next/image"
+import { IconUpload, IconX, IconArrowLeft } from "@tabler/icons-react"
+
+interface UploadStepProps {
+  uploadedPhotos: File[]
+  setUploadedPhotos: (photos: File[]) => void
+  onNext: () => void
+  onBack: () => void
+  onSkip: () => void
+}
+
+export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, onBack, onSkip }: UploadStepProps) {
+  const [displayedText, setDisplayedText] = useState("")
+  const [isTypingComplete, setIsTypingComplete] = useState(false)
+  const fullText = "Upload Pictures"
+
+  useEffect(() => {
+    if (displayedText.length < fullText.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(fullText.slice(0, displayedText.length + 1))
+      }, 3)
+      return () => clearTimeout(timer)
+    } else {
+      setTimeout(() => setIsTypingComplete(true), 500)
+    }
+  }, [displayedText, fullText])
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files) {
+      setUploadedPhotos([...uploadedPhotos, ...Array.from(files)])
+    }
+  }
+
+  const handleDeletePhoto = (index: number) => {
+    setUploadedPhotos(uploadedPhotos.filter((_, i) => i !== index))
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+      className="text-center space-y-8"
+    >
+      <div className="flex items-center justify-center mb-4">
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
+          className="w-16 h-16 rounded-full flex items-center justify-center"
+          style={{ backgroundColor: '#1E3F2B' }}
+        >
+          <IconUpload size={32} className="text-white" />
+        </motion.div>
+      </div>
+
+      <div className="space-y-3">
+        <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+          {displayedText}
+          {!isTypingComplete && (
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ duration: 0.6, repeat: Number.POSITIVE_INFINITY }}
+              className="ml-1 inline-block"
+            >
+              |
+            </motion.span>
+          )}
+        </h2>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.4 }}
+          className="text-lg text-gray-500 font-light"
+        >
+          Upload your skin photos for our doctor to review
+        </motion.p>
+      </div>
+
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.4 }}>
+        <label className="block border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-300 transition-all duration-200">
+          <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
+          <IconUpload size={32} className="mx-auto mb-3 text-gray-400" />
+          <p className="text-sm text-gray-600 font-medium mb-1">Drag and drop your photos here</p>
+          <p className="text-sm text-gray-500">or click to select files</p>
+        </label>
+      </motion.div>
+
+      {uploadedPhotos.length > 0 && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-3 gap-3">
+          {uploadedPhotos.map((photo, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05 }}
+              className="relative aspect-square bg-gray-100 rounded-lg border border-gray-200 group overflow-hidden"
+            >
+              <Image
+                src={URL.createObjectURL(photo)}
+                alt={`Upload ${index + 1}`}
+                fill
+                className="object-cover rounded-lg"
+                unoptimized
+              />
+              <motion.button
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                onClick={() => handleDeletePhoto(index)}
+                className="absolute top-2 right-2 w-7 h-7 bg-black/50 hover:bg-black/90 text-white rounded-full flex items-center justify-center transition-opacity"
+              >
+                <IconX size={16} />
+              </motion.button>
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.4 }}
+        className="flex gap-3 justify-center items-center"
+      >
+        <button onClick={onBack} className="p-2 rounded-md hover:bg-gray-100 transition-colors">
+          <IconArrowLeft size={20} className="text-gray-600" />
+        </button>
+        <button
+          onClick={onNext}
+          disabled={uploadedPhotos.length === 0}
+          className="px-8 py-3.5 rounded-lg font-medium text-white transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ backgroundColor: uploadedPhotos.length > 0 ? '#1E3F2B' : '#9CA3AF' }}
+          onMouseEnter={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1a3528')}
+          onMouseLeave={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1E3F2B')}
+        >
+          Continue
+        </button>
+        <button
+          onClick={onSkip}
+          className="px-8 py-3.5 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-200"
+        >
+          Skip
+        </button>
+      </motion.div>
+    </motion.div>
+  )
+}
+

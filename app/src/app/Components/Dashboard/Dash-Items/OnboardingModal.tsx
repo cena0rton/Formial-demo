@@ -1,99 +1,52 @@
-/* eslint-disable react/no-unescaped-entities */
 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { 
-  IconHeart, 
-  IconTarget, 
-  IconSparkles, 
-  IconCamera, 
   IconX, 
-  IconCheck, 
+  IconUpload,
+  IconUser,
+  IconFlask,
   IconArrowLeft
 } from '@tabler/icons-react'
 
-export type OnboardingStepType =
-  | "welcome"
-  | "dashboard-tour"
-  | "progress-tracking"
-  | "photo-guide"
-  | "chat-intro"
-  | "action"
-
-export interface OnboardingStep {
-  id: number
-  title: string
-  subtitle: string
-  description?: string
-  ctaLabel: string
-  secondaryCtaLabel?: string
-  successMessage: string
-  helpText: string[]
-  icon: React.ComponentType<{ className?: string }>
-  type: OnboardingStepType
-  features?: string[]
-  imageUrl?: string
+interface OnboardingFlowProps {
+  onComplete?: () => void
 }
 
-export const postTreatmentSteps: OnboardingStep[] = [
-  {
-    id: 1,
-    title: "Start by uploading your photos",
-    subtitle: "Your skin progress begins here",
-    description: "Taking your first photos helps us and you track real progress from day one.",
-    ctaLabel: "Upload photo",
-    successMessage: "Photo uploaded! This is your first step towards better skin.",
-    helpText: [
-      "Use good lighting for best results",
-      "Consistent, regular photos help visualize your progress",
-    ],
-    icon: IconCamera,
-    type: "photo-guide",
-  },
-  {
-    id: 2,
-    title: "Formial will take care of your skin",
-    subtitle: "We monitor and guide you",
-    description: "Let us handle the science and reminders. Just follow your plan—Formial is here to support your skin journey.",
-    ctaLabel: "Continue",
-    successMessage: "You’re in good hands. We’ll guide you each step.",
-    helpText: [
-      "Personalized treatments are always up to date",
-      "Get advice and reminders tailored just for you"
-    ],
-    icon: IconHeart,
-    type: "welcome",
-  },
-  {
-    id: 3,
-    title: "Track, improve, and celebrate",
-    subtitle: "Stay motivated as your skin transforms",
-    description: "View your progress, reflect on changes, and celebrate milestones as you achieve your goals.",
-    ctaLabel: "Let’s go",
-    successMessage: "You're ready to get started!",
-    helpText: [
-      "Check your dashboard to see your journey",
-      "Reach out to our experts anytime you need help"
-    ],
-    icon: IconSparkles,
-    type: "progress-tracking",
-  }
-]
+// Typing effect component
+const TypingText = ({ text, className = '', delay = 0 }: { text: string, className?: string, delay?: number }) => {
+  const [displayedText, setDisplayedText] = useState('')
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [showCursor, setShowCursor] = useState(true)
 
-interface OnboardingFlowProps {
-  onComplete?: (action: "photo" | "chat") => void
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex])
+        setCurrentIndex(prev => prev + 1)
+      }, delay + (currentIndex * 3)) // 30ms per character
+      return () => clearTimeout(timeout)
+    } else {
+      // Hide cursor after typing is complete
+      const cursorTimeout = setTimeout(() => setShowCursor(false), 500)
+      return () => clearTimeout(cursorTimeout)
+    }
+  }, [currentIndex, text, delay])
+
+  return (
+    <span className={className}>
+      {displayedText}
+      {showCursor && <span className="animate-pulse">|</span>}
+    </span>
+  )
 }
 
 export function OnboardingModal({ onComplete }: OnboardingFlowProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
-  const [isCompleted, setIsCompleted] = useState(false)
-
-  const step = postTreatmentSteps[currentStep]
-  const progress = ((currentStep + 1) / postTreatmentSteps.length) * 100
-  const isLastStep = currentStep === postTreatmentSteps.length - 1
+  const [photos, setPhotos] = useState<File[]>([])
 
   useEffect(() => {
     const hasCompleted = localStorage.getItem('formial-onboarding-completed')
@@ -104,33 +57,48 @@ export function OnboardingModal({ onComplete }: OnboardingFlowProps) {
     }
   }, [])
 
-  const handleNext = () => {
-    if (currentStep < postTreatmentSteps.length - 1) {
+  const handleClose = () => {
+    setIsOpen(false)
+    localStorage.setItem('formial-onboarding-completed', 'true')
+  }
+
+  const handleSkip = () => {
+    if (currentStep < 3) {
       setCurrentStep(currentStep + 1)
+    } else {
+      handleComplete()
     }
   }
 
-  const handlePrevious = () => {
+  const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
     }
   }
 
-  const handleComplete = (action?: "photo" | "chat") => {
-    setIsCompleted(true)
-    localStorage.setItem('formial-onboarding-completed', 'true')
-    
-    setTimeout(() => {
-      setIsOpen(false)
-      if (action && onComplete) {
-        onComplete(action)
-      }
-    }, 1500)
-  }
-
-  const handleClose = () => {
+  const handleComplete = () => {
     setIsOpen(false)
     localStorage.setItem('formial-onboarding-completed', 'true')
+    if (onComplete) onComplete()
+  }
+
+  const handleNext = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1)
+    } else {
+      handleComplete()
+    }
+  }
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files)
+      setPhotos(prev => [...prev, ...files])
+    }
+  }
+
+  const handleDeletePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index))
   }
 
   if (!isOpen) return null
@@ -141,439 +109,341 @@ export function OnboardingModal({ onComplete }: OnboardingFlowProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed  inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center tracking-tight"
+        transition={{ duration: 0.2 }}
+        className="fixed inset-0 z-50"
+        style={{ backgroundColor: '#F2F0E0' }}
       >
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          transition={{ type: "spring", duration: 0.5 }}
-          className="bg-gradient-to-br from-[#f8f6ee] to-[#e5e1d2] shadow-2xl w-full overflow-hidden flex flex-col h-screen"
-        >
-          {/* Header */}
-          <div className="relative bg-gradient-to-r from-[#1E3F2B] to-[#1E3F2B]/90 p-6 text-white">
+        {/* Header with Logo */}
+        <div className="absolute top-0 left-0 w-full backdrop-blur-sm z-20 border-b border-green-800/30" style={{ backgroundColor: '#F2F0E0' }}>
+          <div className="max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
+            <Image
+              src="/Formial.webp"
+              alt="Formial"
+              width={120}
+              height={40}
+              className="h-8 w-auto"
+              priority
+            />
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 p-2 hover:bg-white/20 bg-white/30 cursor-pointer rounded-full transition-colors"
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
             >
-               <span className='text-sm font-medium '> Skip for now ?</span>
+              <IconX className="h-5 w-5 text-gray-500" />
             </button>
-            
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="p-3 rounded-xl bg-transparent">
-                {React.createElement(step.icon, { className: "h-6 w-6 text-green-200" })}
-              </div>
-              <div>
-                <h2 className="text-xl font-zillaSlabHighlight">{step.title}</h2>
-                <p className="text-sm opacity-90">Step {currentStep + 1} of {postTreatmentSteps.length}</p>
               </div>
             </div>
 
-            {/* Progress Bar */}
-            <div className="w-full bg-white/20 rounded-full h-2">
+        {/* Main Content */}
+        <div className="h-full pt-24 flex items-center justify-center px-6 overflow-y-auto">
+          <div className="w-full max-w-2xl py-24">
+            <AnimatePresence mode="wait">
+              {/* Step 0 - Welcome */}
+              {currentStep === 0 && (
               <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="bg-white rounded-full h-2"
-              />
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-8 flex-1 overflow-y-auto scrollbar-thin [&::-webkit-scrollbar]:w-1
-  [&::-webkit-scrollbar-track]:bg-gray-100/20
-  [&::-webkit-scrollbar-thumb]:bg-green-900/20
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  max-w-5xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-8 w-full">
-              {/* Context/Content - Left Side */}
-              <div className="flex-1 min-w-0">
-                {/* Step-specific content */}
-{currentStep === 0 && (
-                  <div className="space-y-6">
-                    {/* Header Section */}
-                    <div className="space-y-3">
-                      <h3 className="text-3xl font-semibold text-[#1E3F2B]">Welcome to Formial!</h3>
-                      <p className="text-lg text-gray-700">To get started please <span className='bg-[#e6f7ed]  px-2'>upload your photos</span></p>
-                      <p className="text-sm text-gray-500 leading-relaxed">
-                        Your photos are visible only to the clinician dermatologist for the duration until a prescription is reached. They are securely stored and encrypted.
-                      </p>
-                    </div>
-                    
-                    {/* Progress Tracker */}
-                    <div className="inline-block bg-[#1E3F2B] text-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium">
-                      0/3 uploaded
-                    </div>
-
-                    {/* Front Image Upload Section */}
-                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6'>
-                    <div className="bg-white rounded-xl p-6 border border-gray-200 min-w-md">
-                      <div className="flex gap-6">
-                        {/* Main Image Preview */}
-                        <div className="flex-1">
-                          <div className="aspect-square bg-gray-50 rounded-lg border border-gray-200 overflow-hidden relative">
-                            <Image
-                              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop"
-                              alt="Front view"
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        </div>
-                        
-                        {/* Secondary Preview & Upload */}
-                        <div className="flex-1 flex flex-col gap-4">
-                          <div className="aspect-square bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-                            <span className="text-sm text-gray-400">No image</span>
-                          </div>
-                        </div>
-                        
-                      </div>
-                      <button className="bg-[#1E3F2B] text-white px-6 py-3 mt-4 rounded-lg font-medium hover:bg-[#1E3F2B]/90 transition-colors">
-                            Upload Front Image
-                          </button>
-                    </div>
-
-                    {/* Right Image Upload Section */}
-                    <div className="bg-white rounded-xl p-6 border border-gray-200 min-w-md">
-                      <div className="flex gap-6">
-                        {/* Main Image Preview */}
-                        <div className="flex-1">
-                          <div className="aspect-square bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden relative">
-                          <Image
-                              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop"
-                              alt="Front view"
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        </div>
-                        
-                        {/* Secondary Preview & Upload */}
-                        <div className="flex-1 flex flex-col gap-4">
-                          <div className="aspect-square bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-                            <span className="text-sm text-gray-400">No image</span>
-                          </div>
-                        </div>
-                        
-                      </div>
-                      <button className="bg-[#1E3F2B] text-white px-6 py-3 mt-4 rounded-lg font-medium hover:bg-[#1E3F2B]/90 transition-colors">
-                            Upload Right Image
-                          </button>
-                    </div>
-
-                    <div className="bg-white rounded-xl p-6 border border-gray-200 min-w-md">
-                      <div className="flex gap-6">
-                        {/* Main Image Preview */}
-                        <div className="flex-1">
-                          <div className="aspect-square bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden relative">
-                          <Image
-                              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop"
-                              alt="Front view"
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        </div>
-                        
-                        {/* Secondary Preview & Upload */}
-                        <div className="flex-1 flex flex-col gap-4">
-                          <div className="aspect-square bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center">
-                            <span className="text-sm text-gray-400">No image</span>
-                          </div>
-                        </div>
-                        
-                      </div>
-                      <button className="bg-[#1E3F2B] text-white px-6 py-3 mt-4 rounded-lg font-medium hover:bg-[#1E3F2B]/90 transition-colors">
-                            Upload Left Image
-                          </button>
-                    </div>
-                    </div>
-                  </div>
-                )}
-
- {currentStep === 1 && (
-        <div>
-         <h3 className="text-3xl font-extrabold text-[#21513a] mb-4 text-center md:text-left flex items-center justify-center md:justify-start gap-2">
-       <span>
-         <IconHeart className="inline-block h-7 w-7 text-[#70bc79] mr-1 animate-pulse" />
-       </span>
-       We&apos;re Here for You
-     </h3>
-     <p className="text-gray-600 mb-8 text-center md:text-left max-w-2xl mx-auto md:mx-0">
-       Your dedicated care team <span className="bg-[#e6f7ed] px-1.5 rounded text-[#1E3F2B] font-medium">monitors your progress</span> and provides 
-       <span className="ml-1 bg-[#e6f7ed] px-1.5 rounded text-[#1E3F2B] font-medium">personalized guidance</span>—every step of the way.
-     </p>
-     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-       <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-         <div className="absolute -top-5 -right-5 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-           <IconTarget className="h-16 w-16" />
-         </div>
-         <div className="flex items-center space-x-3 relative z-10">
-           <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-             <IconTarget className="h-7 w-7 text-green-600 drop-shadow" />
-           </div>
-           <div>
-             <span className="text-base font-bold text-[#1a3a27]">Personalized Treatment Plan</span>
-             <p className="text-xs text-[#4a6b59] mt-1">Tailored for you, always kept up-to-date</p>
-           </div>
-         </div>
-       </div>
-       <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-         <div className="absolute -bottom-7 -left-7 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-           <IconSparkles className="h-16 w-16" />
-         </div>
-         <div className="flex items-center space-x-3 relative z-10">
-           <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-             <IconSparkles className="h-7 w-7 text-green-600 drop-shadow" />
-           </div>
-           <div>
-             <span className="text-base font-bold text-[#1a3a27]">Formial Consultant</span>
-             <p className="text-xs text-[#4a6b59] mt-1">Chat anytime for support, advice &amp; motivation</p>
-           </div>
-         </div>
-       </div>
-
-       <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-         <div className="absolute -bottom-7 -left-7 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-           <IconSparkles className="h-16 w-16" />
-         </div>
-         <div className="flex items-center space-x-3 relative z-10">
-           <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-             <IconSparkles className="h-7 w-7 text-green-600 drop-shadow" />
-           </div>
-           <div>
-             <span className="text-base font-bold text-[#1a3a27]">Formial Consultant</span>
-             <p className="text-xs text-[#4a6b59] mt-1">Chat anytime for support, advice &amp; motivation</p>
-           </div>
-         </div>
-       </div>
-
-       <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-         <div className="absolute -bottom-7 -left-7 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-           <IconSparkles className="h-16 w-16" />
-         </div>
-         <div className="flex items-center space-x-3 relative z-10">
-           <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-             <IconSparkles className="h-7 w-7 text-green-600 drop-shadow" />
-           </div>
-           <div>
-             <span className="text-base font-bold text-[#1a3a27]">Formial Consultant</span>
-             <p className="text-xs text-[#4a6b59] mt-1">Chat anytime for support, advice &amp; motivation</p>
-           </div>
-         </div>
-       </div>
-
-
-     </div>
-     <div className="mt-8 flex items-center justify-center md:justify-start gap-2 mb-6">
-       <div className="flex items-center gap-1">
-         <IconCheck className="h-4 w-4 text-green-500" />
-         <span className="text-xs text-green-800 font-medium">Real humans, not bots</span>
-       </div>
-       <span className="text-[#cbd5c3] text-xl">|</span>
-       <div className="flex items-center gap-1">
-         <IconCheck className="h-4 w-4 text-green-500" />
-         <span className="text-xs text-green-800 font-medium">Daily accountability</span>
-       </div>
-     </div>
-   </div>
- )}
-
-                {currentStep === 2 && (
-                  <div>
-                    <h3 className="text-3xl font-extrabold text-[#21513a] mb-4 text-center md:text-left flex items-center justify-center md:justify-start gap-2">
-                      <span>
-                        <IconSparkles className="inline-block h-7 w-7 text-[#70bc79] mr-1 animate-pulse" />
-                      </span>
-                      You're Doing Great
-                    </h3>
-                    <p className="text-gray-600 mb-8 text-center md:text-left max-w-2xl mx-auto md:mx-0">
-                      Stay consistent and remember: every step you take is moving you closer to your <span className="bg-[#e6f7ed] px-1.5 rounded text-[#1E3F2B] font-medium">healthiest skin yet</span>. 
-                      We're here to support you with <span className="ml-1 bg-[#e6f7ed] px-1.5 rounded text-[#1E3F2B] font-medium">expert advice</span> at every stage.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                      <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-                        <div className="absolute -top-5 -right-5 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-                          <IconTarget className="h-16 w-16" />
-                        </div>
-                        <div className="flex items-center space-x-3 relative z-10">
-                          <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-                            <IconTarget className="h-7 w-7 text-green-600 drop-shadow" />
-                          </div>
-                          <div>
-                            <span className="text-base font-bold text-[#1a3a27]">Track Your Progress</span>
-                            <p className="text-xs text-[#4a6b59] mt-1">Monitor changes and celebrate milestones</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-                        <div className="absolute -bottom-7 -left-7 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-                          <IconHeart className="h-16 w-16" />
-                        </div>
-                        <div className="flex items-center space-x-3 relative z-10">
-                          <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-                            <IconHeart className="h-7 w-7 text-green-600 drop-shadow" />
-                          </div>
-                          <div>
-                            <span className="text-base font-bold text-[#1a3a27]">Stay Motivated</span>
-                            <p className="text-xs text-[#4a6b59] mt-1">Consistent care leads to amazing results</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-                        <div className="absolute -top-5 -right-5 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-                          <IconSparkles className="h-16 w-16" />
-                        </div>
-                        <div className="flex items-center space-x-3 relative z-10">
-                          <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-                            <IconSparkles className="h-7 w-7 text-green-600 drop-shadow" />
-                          </div>
-                          <div>
-                            <span className="text-base font-bold text-[#1a3a27]">Expert Support</span>
-                            <p className="text-xs text-[#4a6b59] mt-1">Our consultants are always here to help</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-gradient-to-tr from-[#eafaf0] to-[#f6fff9] rounded-2xl p-6 shadow-lg border-2 border-green-200 relative overflow-hidden group hover:shadow-xl transition-shadow">
-                        <div className="absolute -bottom-7 -left-7 opacity-10 blur-2xl text-green-300 group-hover:opacity-20 transition-all">
-                          <IconCheck className="h-16 w-16" />
-                        </div>
-                        <div className="flex items-center space-x-3 relative z-10">
-                          <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-md">
-                            <IconCheck className="h-7 w-7 text-green-600 drop-shadow" />
-                          </div>
-                          <div>
-                            <span className="text-base font-bold text-[#1a3a27]">You're Ready</span>
-                            <p className="text-xs text-[#4a6b59] mt-1">Time to start your skin transformation</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-8 flex items-center justify-center md:justify-start gap-2 mb-6">
-                      <div className="flex items-center gap-1">
-                        <IconCheck className="h-4 w-4 text-green-500" />
-                        <span className="text-xs text-green-800 font-medium">Progress starts with you</span>
-                      </div>
-                      <span className="text-[#cbd5c3] text-xl">|</span>
-                      <div className="flex items-center gap-1">
-                        <IconCheck className="h-4 w-4 text-green-500" />
-                        <span className="text-xs text-green-800 font-medium">We're here to support you</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Help Text */}
-                {step.helpText && step.helpText.length > 0 && (
-                  <div className="bg-gradient-to-r from-[#1E3F2B]/10 to-[#90C494]/10 border border-[#1E3F2B]/20 rounded-2xl p-6 space-y-3">
-                    {step.helpText.map((text, idx) => (
-                      <div key={idx} className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-[#1E3F2B] rounded-full"></div>
-                        <p className="text-sm text-gray-700 font-medium">{text}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Success Message (shown briefly after completion) */}
-                <AnimatePresence>
-                  {isCompleted && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg"
+                  key="welcome"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className="text-center space-y-8"
+                >
+                  <div className="space-y-5">
+                    <h1 className="text-5xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+                      <TypingText text="Hi Pawan!" delay={3} />
+                      <br className="block mt-2" />
+                      <TypingText text="Welcome to Formial :)" delay={3} />
+                    </h1>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8 }}
+                      className="text-xl text-gray-500 font-light max-w-lg mx-auto leading-relaxed"
                     >
-                      <div className="flex items-center space-x-3 text-green-700">
-                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                          <IconCheck className="h-5 w-5" />
+                      We are excited to help you unlock amazing skin !
+                    </motion.p>
+            </div>
+                  <div className="pt-0 space-y-3 w-full max-w-sm mx-auto">
+                    <button
+                      onClick={handleNext}
+                      className="w-full text-white py-3.5 px-6 rounded-lg transition-all duration-200 font-medium text-[15px] shadow-sm hover:shadow-md cursor-pointer" style={{ backgroundColor: '#1E3F2B' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3528'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1E3F2B'}
+                    >
+                      Get started
+                    </button>
+                    <button
+                      onClick={handleSkip}
+                      className="w-full text-gray-400 py-2.5 px-4 hover:text-gray-600 transition-colors text-sm font-medium"
+                    >
+                      Skip for now
+                    </button>
+          </div>
+                </motion.div>
+              )}
+
+              {/* Step 1 - Upload Pictures */}
+              {currentStep === 1 && (
+                <motion.div
+                  key="upload"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className="space-y-8"
+                >
+                  <div className="text-center space-y-3">
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1E3F2B' }}>
+                        <IconUpload className="h-8 w-8 text-white" />
+                      </div>
+                    </div>
+                    <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+                      <TypingText text="Upload Pictures" delay={3} />
+                    </h2>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8 }}
+                      className="text-lg text-gray-500 font-light"
+                    >
+                      Upload your skin photos for our doctor to review
+                    </motion.p>
+                    </div>
+
+                  {/* Upload Area */}
+                  <label className="block w-full">
+                    <motion.div
+                      whileHover={{ scale: 1.005 }}
+                      whileTap={{ scale: 0.995 }}
+                      className="border-2 border-dashed border-gray-200 rounded-xl p-16 text-center hover:border-gray-300 transition-all duration-200 cursor-pointer bg-white/50 hover:bg-white/80 group"
+                    >
+                      <div className="flex flex-col items-center space-y-4">
+                        <div className="w-16 h-16 rounded-full bg-gray-100 group-hover:bg-gray-200 flex items-center justify-center transition-colors">
+                          <IconUpload className="h-8 w-8 text-gray-400" />
                         </div>
-                        <span className="font-semibold text-lg">{step.successMessage}</span>
+                        <div>
+                          <p className="text-base font-medium mb-1" style={{ color: '#1E3F2B' }}>
+                            Click to upload photos
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            Take clear photos for best results
+                          </p>
+                        </div>
+                      </div>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="hidden"
+                      />
+                    </motion.div>
+                  </label>
+
+                  {/* Uploaded Photos Preview */}
+                  {photos.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="w-full"
+                    >
+                      <div className="grid grid-cols-3 gap-3">
+                        {photos.map((photo, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="relative aspect-square bg-gray-100 rounded-lg border border-gray-200 group overflow-hidden"
+                          >
+                          <Image
+                              src={URL.createObjectURL(photo)}
+                              alt={`Upload ${index + 1}`}
+                              fill
+                              className="object-cover rounded-lg"
+                            />
+                            <button
+                              onClick={() => handleDeletePhoto(index)}
+                              className="absolute top-2 right-2 w-7 h-7 bg-black/50 hover:bg-black/90 rounded-full flex items-center justify-center transition-opacity"
+                            >
+                              <IconX className="h-4 w-4 text-white" />
+                            </button>
+                          </motion.div>
+                        ))}
                       </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
-              </div>
-              {/* Images/Big Icons - Right Side */}
-              {/* <div className="hidden lg:flex flex-1 min-w-[300px] flex-col items-center justify-center">
-                {currentStep === 0 && (
-                  <div className="w-full max-w-sm">
-                    <div className="bg-white rounded-2xl p-8 border border-gray-200">
-                      <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-                        <IconCamera className="h-16 w-16 text-gray-400" />
-                      </div>
+
+                  {/* Action Buttons */}
+                  <div className="pt-4 space-y-3">
+                    <button
+                      onClick={handleNext}
+                      disabled={photos.length === 0}
+                      className="w-full bg-gray-900 text-white py-3.5 px-6 rounded-lg hover:bg-gray-800 transition-all duration-200 font-medium text-[15px] shadow-sm hover:shadow-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                      Continue
+                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleBack}
+                        className="flex-1 flex items-center justify-center text-gray-600 py-2.5 px-4 hover:bg-gray-100 transition-colors text-sm font-medium rounded-lg"
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#1E3F2B'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#4B5563'}
+                      >
+                        <IconArrowLeft className="h-4 w-4 mr-1" />
+                        Back
+                      </button>
+                      <button
+                        onClick={handleSkip}
+                        className="flex-1 text-gray-400 py-2.5 px-4 hover:text-gray-600 transition-colors text-sm font-medium"
+                      >
+                        Skip
+                          </button>
                     </div>
                   </div>
-                )}
-                {currentStep === 1 && (
-                  <div className="w-full max-w-sm">
-                    <div className="bg-white rounded-2xl p-8 border border-gray-200">
-                      <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-                        <IconHeart className="h-16 w-16 text-gray-400" />
-                      </div>
-                    </div>
-                  </div>
-                )}
+                </motion.div>
+              )}
+
+              {/* Step 2 - Doctor Review */}
                 {currentStep === 2 && (
-                  <div className="w-full max-w-sm">
-                    <div className="bg-white rounded-2xl p-8 border border-gray-200">
-                      <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-                        <IconSparkles className="h-16 w-16 text-gray-400" />
-                      </div>
+                <motion.div
+                  key="review"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className="text-center space-y-8"
+                >
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center">
+                      <IconUser className="h-8 w-8 text-white" />
                     </div>
                   </div>
-                )}
-              </div> */}
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="p-6 border-t border-gray-200 bg-white">
-            {/* CTA Buttons */}
-            <div className="flex gap-4 justify-between items-center max-w-5xl mx-auto">
-              <button
-                onClick={handlePrevious}
-                disabled={currentStep === 0}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-lg transition-colors ${
-                  currentStep === 0
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-[#1E3F2B] hover:bg-gray-50'
-                }`}
-              >
-                <IconArrowLeft className="h-5 w-5" />
-                <span className="font-medium">Back</span>
-              </button>
-
-              <div className="flex gap-4">
-                {isLastStep ? (
-                  <>
-                    <button
-                      onClick={() => handleComplete("chat")}
-                      className="bg-gray-100 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                  <div className="space-y-5">
+                    <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+                      <TypingText text="Doctor Review" delay={3} />
+                    </h2>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8 }}
+                      className="text-lg text-gray-500 font-light max-w-lg mx-auto leading-relaxed"
                     >
-                      {step.secondaryCtaLabel}
-                    </button>
+                      Our dermatologist will review your photos and assess your skin condition to provide personalized recommendations.
+                    </motion.p>
+                  </div>
+                  <div className="pt-4 space-y-3 w-full max-w-sm mx-auto">
                     <button
-                      onClick={() => handleComplete("photo")}
-                      className="bg-[#1E3F2B] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#1E3F2B]/90 transition-colors"
+                      onClick={handleNext}
+                      className="w-full text-white py-3.5 px-6 rounded-lg transition-all duration-200 font-medium text-[15px] shadow-sm hover:shadow-md" style={{ backgroundColor: '#1E3F2B' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3528'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1E3F2B'}
                     >
-                      {step.ctaLabel}
+                      Continue
                     </button>
-                  </>
-                ) : (
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleBack}
+                        className="flex-1 flex items-center justify-center text-gray-600 py-2.5 px-4 hover:bg-gray-100 transition-colors text-sm font-medium rounded-lg"
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#1E3F2B'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#4B5563'}
+                      >
+                        <IconArrowLeft className="h-4 w-4 mr-1" />
+                        Back
+                      </button>
+                      <button
+                        onClick={handleSkip}
+                        className="flex-1 text-gray-400 py-2.5 px-4 hover:text-gray-600 transition-colors text-sm font-medium"
+                      >
+                        Skip
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 3 - Formulation and Skincare Guidance */}
+              {currentStep === 3 && (
+                <motion.div
+                  key="formulation"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className="text-center space-y-8"
+                >
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center">
+                      <IconFlask className="h-8 w-8 text-white" />
+                    </div>
+                  </div>
+                  <div className="space-y-5">
+                    <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+                      <TypingText text="Formulation & Skincare Guidance" delay={3} />
+                    </h2>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.8 }}
+                      className="text-lg text-gray-500 font-light max-w-lg mx-auto leading-relaxed"
+                    >
+                      Receive a custom formulation and personalized skincare guidance based on your skin analysis and goals.
+                    </motion.p>
+                  </div>
+                  <div className="pt-4 space-y-3 w-full max-w-sm mx-auto">
+                    <button
+                      onClick={handleComplete}
+                      className="w-full text-white py-3.5 px-6 rounded-lg transition-all duration-200 font-medium text-[15px] shadow-sm hover:shadow-md" style={{ backgroundColor: '#1E3F2B' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3528'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1E3F2B'}
+                    >
+                      Go to Dashboard
+                    </button>
+                    <div className="flex gap-3">
+                    <button
+                        onClick={handleBack}
+                        className="flex-1 flex items-center justify-center text-gray-600 py-2.5 px-4 hover:bg-gray-100 transition-colors text-sm font-medium rounded-lg"
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#1E3F2B'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#4B5563'}
+                    >
+                        <IconArrowLeft className="h-4 w-4 mr-1" />
+                        Back
+                    </button>
                   <button
-                    onClick={handleNext}
-                    className="bg-[#1E3F2B] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#1E3F2B]/90 transition-colors"
+                        onClick={handleSkip}
+                        className="flex-1 text-gray-400 py-2.5 px-4 hover:text-gray-600 transition-colors text-sm font-medium"
                   >
-                    {step.ctaLabel}
+                        Skip
                   </button>
-                )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Progress Indicator */}
+        {currentStep < 3 && (
+          <div className="absolute bottom-0 left-0 w-full border-t border-green-800/30 backdrop-blur-sm" style={{ backgroundColor: '#F2F0E0' }}>
+            <div className="max-w-7xl mx-auto px-8 py-6">
+              <div className="flex items-center justify-center space-x-2">
+                {[0, 1, 2].map((step) => (
+                  <motion.div
+                    key={step}
+                    initial={false}
+                    animate={{
+                      width: step === currentStep ? 24 : 8,
+                      backgroundColor: step === currentStep ? '#1E3F2B' : '#E5E7EB',
+                    }}
+                    transition={{ duration: 0.3 }}
+                    className="h-2 rounded-full"
+                  />
+                ))}
               </div>
             </div>
           </div>
-        </motion.div>
+        )}
       </motion.div>
     </AnimatePresence>
   )
