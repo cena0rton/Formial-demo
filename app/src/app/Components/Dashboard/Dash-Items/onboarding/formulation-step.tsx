@@ -46,7 +46,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
       </div>
 
       <div className="space-y-5">
-        <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+        <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
           {displayedText}
           {!isTypingComplete && (
             <motion.span

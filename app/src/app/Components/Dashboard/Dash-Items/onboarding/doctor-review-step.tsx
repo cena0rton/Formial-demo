@@ -48,7 +48,7 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
 
       {/* Heading */}
       <div className="min-h-12 flex items-center justify-center">
-        <h2 className="text-3xl font-bold" style={{ color: "#1E3F2B" }}>
+        <h2 className="text-3xl font-bold" style={{ color: "#1E3F2B", fontFamily: 'var(--font-instrument-serif), serif' }}>
           {displayedText}
           {!isTypingComplete && (
             <motion.span

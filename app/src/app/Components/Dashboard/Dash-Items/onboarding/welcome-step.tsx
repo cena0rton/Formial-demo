@@ -35,7 +35,7 @@ export default function WelcomeStep({ userName, onNext, onSkip }: WelcomeStepPro
     >
       <div className="space-y-5">
         <div className="min-h-16 flex items-center justify-center">
-          <h1 className="md:text-5xl text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+          <h1 className="md:text-5xl text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
             {displayedText}
             {!isTypingComplete && (
               <motion.span
@@ -55,7 +55,7 @@ export default function WelcomeStep({ userName, onNext, onSkip }: WelcomeStepPro
           transition={{ delay: 0.8, duration: 0.4 }}
           className="text-xl text-gray-500 font-light max-w-lg mx-auto leading-relaxed"
         >
-          Welcome to your Skin-HUB — where your journey to amazing skin begins! 🚀
+          Welcome to your Skin Hub - where your journey to amazing skin begins! 
         </motion.p>
       </div>
 

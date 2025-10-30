@@ -62,7 +62,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
       </div>
 
       <div className="space-y-3">
-        <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+        <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
           {displayedText}
           {!isTypingComplete && (
             <motion.span
@@ -81,7 +81,9 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           transition={{ delay: 0.8, duration: 0.4 }}
           className="text-lg text-gray-500 font-light"
         >
-          Let&apos;s capture your starting point — this is where your transformation begins! 🌟
+          Let&apos;s capture your starting point - this is where your transformation begins! 
+       
+          
         </motion.p>
       </div>
 
@@ -89,7 +91,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         <label className="block border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-300 transition-all duration-200">
           <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
           <IconUpload size={32} className="mx-auto mb-3 text-gray-400" />
-          <p className="text-sm text-gray-600 font-medium mb-1">Capture your starting point</p>
+          <p className="text-sm text-gray-600 font-medium mb-1"><span className="font-medium" style={{ color: '#1E3F2B' }}>We Need 3 Photos to get started. Left, Right and Front View of your face.</span></p>
           <p className="text-sm text-gray-500">Drag photos or click to select</p>
         </label>
       </motion.div>
