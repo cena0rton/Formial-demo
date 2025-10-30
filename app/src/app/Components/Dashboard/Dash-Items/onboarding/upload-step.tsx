@@ -137,12 +137,10 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
                 unoptimized
               />
               <motion.button
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
                 onClick={() => handleDeletePhoto(index)}
-                className="absolute top-2 right-2 w-7 h-7 bg-black/50 hover:bg-black/90 text-white rounded-full flex items-center justify-center transition-opacity"
+                className="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 z-10"
               >
-                <IconX size={16} />
+                <IconX size={16} strokeWidth={2.5} />
               </motion.button>
             </motion.div>
           ))}
