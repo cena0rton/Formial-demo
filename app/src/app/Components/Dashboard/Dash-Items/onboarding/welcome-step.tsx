@@ -35,7 +35,7 @@ export default function WelcomeStep({ userName, onNext, onSkip }: WelcomeStepPro
     >
       <div className="space-y-5">
         <div className="min-h-16 flex items-center justify-center">
-          <h1 className="text-5xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
+          <h1 className="md:text-5xl text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B' }}>
             {displayedText}
             {!isTypingComplete && (
               <motion.span
