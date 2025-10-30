@@ -35,7 +35,7 @@ export default function WelcomeStep({ userName, onNext, onSkip }: WelcomeStepPro
     >
       <div className="space-y-5">
         <div className="min-h-16 flex items-center justify-center">
-          <h1 className="md:text-5xl text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
+          <h1 className="md:text-5xl text-4xl font-semibold tracking-normal" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
             {displayedText}
             {!isTypingComplete && (
               <motion.span
@@ -67,7 +67,7 @@ export default function WelcomeStep({ userName, onNext, onSkip }: WelcomeStepPro
       >
         <button
           onClick={onNext}
-          className="px-8 py-3.5 rounded-lg font-medium text-white transition-all duration-200 cursor-pointer" 
+          className="px-8 py-3.5 rounded-lg font-semibold text-white transition-all duration-200 cursor-pointer" 
           style={{ backgroundColor: '#1E3F2B' }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3528'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1E3F2B'}
@@ -75,12 +75,12 @@ export default function WelcomeStep({ userName, onNext, onSkip }: WelcomeStepPro
           Get started
         </button>
         
-        <button
+        {/* <button
           onClick={onSkip}
-          className="px-8 py-3.5 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-200"
+          className="px-8 py-3.5 rounded-lg font-semibold border-2  text-[#1E3F2B] hover:bg-gray-50 transition-all duration-200"
         >
           Skip for now
-        </button>
+        </button> */}
       </motion.div>
     </motion.div>
   )

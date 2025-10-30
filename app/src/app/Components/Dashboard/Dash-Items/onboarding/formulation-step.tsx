@@ -85,7 +85,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3528'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1E3F2B'}
         >
-          Go to Skin-HUB
+          Go to SkinHub
         </button>
       </motion.div>
     </motion.div>

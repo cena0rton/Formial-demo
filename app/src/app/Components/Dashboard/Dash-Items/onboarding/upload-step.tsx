@@ -33,7 +33,12 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files) {
-      setUploadedPhotos([...uploadedPhotos, ...Array.from(files)])
+      const newFiles = Array.from(files)
+      const remainingSlots = 3 - uploadedPhotos.length
+      if (remainingSlots > 0) {
+        const filesToAdd = newFiles.slice(0, remainingSlots)
+        setUploadedPhotos([...uploadedPhotos, ...filesToAdd])
+      }
     }
   }
 
@@ -61,8 +66,8 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         </motion.div>
       </div>
 
-      <div className="space-y-3">
-        <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
+      <div className="space-y-3 overflow-auto">
+        <h2 className="text-4xl font-semibold tracking-normal" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
           {displayedText}
           {!isTypingComplete && (
             <motion.span
@@ -88,12 +93,30 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
       </div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.4 }}>
-        <label className="block border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-300 transition-all duration-200">
-          <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
-          <IconUpload size={32} className="mx-auto mb-3 text-gray-400" />
-          <p className="text-sm text-gray-600 font-medium mb-1"><span className="font-medium" style={{ color: '#1E3F2B' }}>We Need 3 Photos to get started. Left, Right and Front View of your face.</span></p>
-          <p className="text-sm text-gray-500">Drag photos or click to select</p>
-        </label>
+        {uploadedPhotos.length < 3 ? (
+          <label className="block border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-300 transition-all duration-200">
+            <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
+            <IconUpload size={32} className="mx-auto mb-3 text-gray-400" />
+            <p className="text-sm text-gray-600 font-medium mb-1"><span className="font-medium" style={{ color: '#1E3F2B' }}>We Need 3 Photos to get started. Left, Right and Front View of your face.</span></p>
+            <p className="text-sm text-gray-500">Drag photos or click to select ({uploadedPhotos.length}/3 uploaded)</p>
+          </label>
+        ) : (
+          <div className="border-2 border-green-200 rounded-lg p-8 text-center bg-green-50/50">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold" style={{ color: '#1E3F2B' }}>All Photos Uploaded!</p>
+            </div>
+            <p className="text-sm text-gray-600">You have uploaded all 3 required photos</p>
+            <label className="inline-block mt-3">
+              <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
+              <span className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer underline">Replace photos</span>
+            </label>
+          </div>
+        )}
       </motion.div>
 
       {uploadedPhotos.length > 0 && (
@@ -138,7 +161,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         <button
           onClick={onNext}
           disabled={uploadedPhotos.length === 0}
-          className="px-8 py-3.5 rounded-lg font-medium text-white transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+          className="px-8 py-3.5 rounded-lg font-semibold text-white transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
           style={{ backgroundColor: uploadedPhotos.length > 0 ? '#1E3F2B' : '#9CA3AF' }}
           onMouseEnter={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1a3528')}
           onMouseLeave={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1E3F2B')}
@@ -147,9 +170,9 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         </button>
         <button
           onClick={onSkip}
-          className="px-8 py-3.5 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-200"
+          className="px-8 py-3.5 rounded-lg font-semibold border-2  text-[#1E3F2B] hover:bg-gray-50 transition-all duration-200"
         >
-          Skip
+          I will do it later
         </button>
       </motion.div>
     </motion.div>
