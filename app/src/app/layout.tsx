@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Zilla_Slab_Highlight } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,20 +23,6 @@ const zillaSlabHighlight = Zilla_Slab_Highlight({
   weight: "400",
 });
 
-// Note: Add Instrument Serif font file to ./fonts/ folder when available
-// For now, using a fallback to Playfair Display (similar serif font from Google Fonts)
-const instrumentSerif = localFont({
-  src: [
-    {
-      path: "./fonts/InstrumentSerif-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-  ],
-  variable: "--font-instrument-serif",
-  fallback: ["serif"],
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${zillaSlabHighlight.variable} ${instrumentSerif.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${zillaSlabHighlight.variable} antialiased`}
       >
         {children}
       </body>
