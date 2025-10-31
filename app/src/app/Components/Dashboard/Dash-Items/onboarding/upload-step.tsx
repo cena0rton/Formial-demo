@@ -40,20 +40,13 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="text-center space-y-4"
+      className="text-center space-y-4 -mt-16"
     >
-      <div className="flex items-center justify-center mb-4">
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.3 }}
-          className="w-16 h-16 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: '#1E3F2B' }}
-        >
+      <div className="flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1E3F2B' }}>
           <IconUpload size={32} className="text-white" />
-        </motion.div>
+        </div>
       </div>
-
       <div className="space-y-3">
         <h2 className="text-4xl font-semibold tracking-normal" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
           {displayedText}
@@ -72,19 +65,43 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.4 }}
-          className="text-lg text-gray-500 font-light"
+          className=" text-gray-500 font-light tracking-tight"
         >
-          Let&apos;s capture your starting point - this is where your transformation begins! 
-       
-          
-        
-    </motion.p>
+          {"Let's capture your starting point - this is where your transformation begins!".split("").map((char, idx) => (
+            <motion.span
+              key={idx}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 + idx * 0.03, duration: 0.2 }}
+            >
+              {char}
+            </motion.span>
+          ))}
+        </motion.p>
 
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch mt-6 max-w-2xl mx-auto">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mt-6 max-w-2xl mx-auto"
+        initial="hidden"
+        animate="show"
+        variants={{
+          hidden: {},
+          show: {
+            transition: {
+              staggerChildren: 0.01 // Stagger each card
+            }
+          }
+        }}
+      >
         {/* Photo Card - Left */}
-        <div className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transform transition-all group">
+        <motion.div
+          variants={{
+            hidden: { scale: 0, opacity: 0 },
+            show: { scale: 1, opacity: 1, transition: { type: "spring", duration: 0.5 } }
+          }}
+          className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transition-all group"
+        >
           <div className="bg-[#1E3F2B] py-2 text-white text-lg font-instrument-serif text-center tracking-wide">
             Left
           </div>
@@ -137,9 +154,15 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
               />
             </label>
           </div>
-        </div>
+        </motion.div>
         {/* Photo Card - Front */}
-        <div className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transform transition-all group">
+        <motion.div
+          variants={{
+            hidden: { scale: 0, opacity: 0 },
+            show: { scale: 1, opacity: 1, transition: { type: "spring", duration: 0.5 } }
+          }}
+          className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transition-all group"
+        >
           <div className="bg-[#1E3F2B] py-2 text-white text-lg font-instrument-serif text-center tracking-wide">
             Front
           </div>
@@ -192,9 +215,15 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
               />
             </label>
           </div>
-        </div>
+        </motion.div>
         {/* Photo Card - Right */}
-        <div className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transform transition-all group">
+        <motion.div
+          variants={{
+            hidden: { scale: 0, opacity: 0 },
+                show: { scale: 1, opacity: 1, transition: { type: "spring", duration: 0.5 } }
+          }}
+          className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transition-all group"
+        >
           <div className="bg-[#1E3F2B] py-2 text-white text-lg font-instrument-serif text-center tracking-wide">
             Right
           </div>
@@ -247,13 +276,13 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
               />
             </label>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="flex flex-row items-center justify-center gap-3 text-md  mt-1">
+      <div className="flex lg:flex-row flex-col lg:items-center items-start justify-center gap-3 text-md  my-8">
   {/* Step 1 */}
   <span className="flex items-center gap-2">
-    <span className="flex items-center justify-center w-6 h-6 text-md font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem] font-instrument-serif">
+    <span className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem] font-instrument-serif">
       1
     </span>
     <span className="text-sm font-medium text-gray-700 font-instrument-serif">
@@ -261,12 +290,15 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
     </span>
   </span>
   {/* Arrow */}
-  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none">
+  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none lg:hidden">
+    &darr;
+  </span>
+  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none hidden lg:inline">
     &rarr;
   </span>
   {/* Step 2 */}
   <span className="flex items-center gap-2">
-    <span className="flex items-center justify-center w-6 h-6 text-md font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem] font-instrument-serif">
+    <span className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem] font-instrument-serif">
       2
     </span>
     <span className="text-sm font-medium text-gray-700 font-instrument-serif">
@@ -274,12 +306,15 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
     </span>
   </span>
   {/* Arrow */}
-  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none">
+  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none lg:hidden">
+    &darr;
+  </span>
+  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none hidden lg:inline">
     &rarr;
   </span>
   {/* Step 3 */}
   <span className="flex items-center gap-2">
-    <span className="flex items-center justify-center w-6 h-6 text-md font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem] font-instrument-serif">
+    <span className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem] font-instrument-serif">
       3
     </span>
     <span className="text-sm font-medium text-gray-700 font-instrument-serif">
@@ -311,7 +346,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           onClick={onSkip}
           className="px-8 py-3.5 rounded-full font-semibold border-1  text-[#1E3F2B] hover:bg-gray-50 transition-all duration-200"
         >
-          I will do it later
+         Skip 
         </button>
       </motion.div>
     </motion.div>

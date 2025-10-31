@@ -31,7 +31,7 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="space-y-8 text-center"
+      className="space-y-4 text-center"
     >
       {/* Icon */}
       <div className="flex justify-center">
@@ -63,14 +63,18 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
       </div>
 
       {/* Description */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="text-gray-600 max-w-md mx-auto"
-      >
-        Our expert dermatologists will review your photos and create a personalized skincare plan tailored just for you. You&apos;re one step closer!
-      </motion.p>
+      <p className="text-gray-600 max-w-md mx-auto tracking-tight">
+        {"Our expert dermatologists will review your photos and create a personalized skincare plan tailored just for you. You're one step closer!".split("").map((char, idx) => (
+          <motion.span
+            key={idx}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 + idx * 0.03, duration: 0.2 }}
+          >
+            {char}
+          </motion.span>
+        ))}
+      </p>
 
       {/* Buttons */}
       <motion.div

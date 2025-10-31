@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { IconX } from "@tabler/icons-react"
-import WelcomeStep from "./onboarding/welcome-step"
+import WelcomeStep1 from "./onboarding/welcome-step-1"
+import WelcomeStep2 from "./onboarding/welcome-step-2"
 import UploadStep from "./onboarding/upload-step"
 import DoctorReviewStep from "./onboarding/doctor-review-step"
 import FormulationStep from "./onboarding/formulation-step"
@@ -20,7 +21,7 @@ export default function OnboardingModal() {
   }
 
   const handleNext = () => {
-    if (currentStep < 3) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -32,7 +33,7 @@ export default function OnboardingModal() {
   }
 
   const handleSkip = () => {
-    if (currentStep < 3) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -63,44 +64,53 @@ export default function OnboardingModal() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center px-8 py-12 overflow-y-auto">
-          <div className="w-full max-w-2xl">
-            <AnimatePresence mode="wait">
-              {currentStep === 0 && (
-                <WelcomeStep key="welcome" userName={userName} onNext={handleNext} onSkip={handleSkip} />
-              )}
-              {currentStep === 1 && (
-                <UploadStep
-                  key="upload"
-                  uploadedPhotos={uploadedPhotos}
-                  setUploadedPhotos={setUploadedPhotos}
-                  onNext={handleNext}
-                  onBack={handleBack}
-                  onSkip={handleSkip}
-                />
-              )}
-              {currentStep === 2 && (
-                <DoctorReviewStep key="doctor" onNext={handleNext} onBack={handleBack} onSkip={handleSkip} />
-              )}
-              {currentStep === 3 && (
-                <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
-              )}
-            </AnimatePresence>
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-8 py-12">
+            <div className="w-full max-w-2xl mx-auto">
+              <AnimatePresence mode="wait">
+                {currentStep === 0 && (
+                  <WelcomeStep1 key="welcome1" userName={userName} onNext={handleNext} />
+                )}
+                {currentStep === 1 && (
+                  <WelcomeStep2 key="welcome2" onNext={handleNext} />
+                )}
+                {currentStep === 2 && (
+                  <UploadStep
+                    key="upload"
+                    uploadedPhotos={uploadedPhotos}
+                    setUploadedPhotos={setUploadedPhotos}
+                    onNext={handleNext}
+                    onBack={handleBack}
+                    onSkip={handleSkip}
+                  />
+                )}
+                {currentStep === 3 && (
+                  <DoctorReviewStep key="doctor" onNext={handleNext} onBack={handleBack} onSkip={handleSkip} />
+                )}
+                {currentStep === 4 && (
+                  <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
         {/* Footer with Progress */}
-        <div className="flex items-center justify-center gap-3 pb-8">
-          {[1, 2, 3].map((step) => (
-            <motion.div
-              key={step}
-              className="h-2 rounded-full transition-all"
-              animate={{
-                width: currentStep >= step ? 32 : 8,
-                backgroundColor: currentStep >= step ? "#1E3F2B" : "#D1D5DB",
-              }}
-            />
-          ))}
+        <div className="flex items-center justify-center gap-3 py-4">
+          {[0, 1, 2].map((step) => {
+            // Map step indices to progress dots (0,1 are welcome, 2-4 are main steps)
+            const stepProgress = currentStep - 2
+            return (
+              <motion.div
+                key={step}
+                className="h-2 rounded-full transition-all"
+                animate={{
+                  width: stepProgress >= step ? 32 : 8,
+                  backgroundColor: stepProgress >= step ? "#1E3F2B" : "#D1D5DB",
+                }}
+              />
+            )
+          })}
         </div>
       </motion.div>
     </AnimatePresence>

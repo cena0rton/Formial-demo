@@ -31,7 +31,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="space-y-8 text-center"
+      className="space-y-4 text-center"
     >
       <div className="flex items-center justify-center mb-4">
         <motion.div
@@ -46,7 +46,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
       </div>
 
       <div className="space-y-5">
-        <h2 className="text-4xl font-semibold tracking-tight" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
+        <h2 className="text-4xl font-semibold tracking-normal" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
           {displayedText}
           {!isTypingComplete && (
             <motion.span
@@ -59,21 +59,47 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
           )}
         </h2>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.4 }}
-          className="text-lg text-gray-500 font-light max-w-lg mx-auto tracking-tight"
-        >
-          Your photos are saved to your <span className="font-semibold" style={{ color: '#1E3F2B' }}>Skin Progress</span> tab with date and time. Your journey to amazing skin starts now!
-        </motion.p>
+        <p className="text-gray-500 font-light max-w-lg mx-auto tracking-tight">
+          {"Your photos are saved to your ".split("").map((char, idx) => (
+            <motion.span
+              key={idx}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 + idx * 0.03, duration: 0.2 }}
+            >
+              {char}
+            </motion.span>
+          ))}
+          <span className="font-semibold" style={{ color: '#1E3F2B' }}>
+            {"Skin Progress".split("").map((char, idx) => (
+              <motion.span
+                key={idx}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2 + idx * 0.03, duration: 0.2 }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </span>
+          {" tab with date and time. Your journey to amazing skin starts now!".split("").map((char, idx) => (
+            <motion.span
+              key={idx + 12}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5 + idx * 0.03, duration: 0.2 }}
+            >
+              {char}
+            </motion.span>
+          ))}
+        </p>
       </div>
 
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.4 }}
-        className="flex gap-3 justify-center items-center"
+        className="flex gap-3 justify-center items-center mt-6"
       >
         <button onClick={onBack} className="p-2 rounded-md hover:bg-gray-100 transition-colors">
           <IconArrowLeft size={20} className="text-gray-600" />
