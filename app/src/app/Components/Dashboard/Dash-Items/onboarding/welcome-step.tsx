@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useState, useEffect } from "react"
@@ -12,7 +13,7 @@ interface WelcomeStepProps {
 export default function WelcomeStep({ userName, onNext }: WelcomeStepProps) {
   const [displayedText, setDisplayedText] = useState("")
   const [isTypingComplete, setIsTypingComplete] = useState(false)
-  const fullText = `Hi ${userName}! Welcome to Formial`
+  const fullText = `Welcome to Formial`
 
   useEffect(() => {
     if (displayedText.length < fullText.length) {
@@ -124,8 +125,12 @@ export default function WelcomeStep({ userName, onNext }: WelcomeStepProps) {
             transition={{ delay: 0.75, duration: 0.8, ease: "easeOut" }}
           />
         </svg>
+        
       </motion.div>
 
+<p className="font-instrument-serif text-2xl text-[#1E3F2B] mb-0">
+  Hi Pawan!
+</p>
       <div className="space-y-5">
         <div className="min-h-16 flex items-center justify-center">
           <h1 className="md:text-5xl text-4xl font-semibold tracking-normal" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
