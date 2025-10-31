@@ -77,21 +77,21 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="flex gap-4 justify-center pt-8"
+        className="flex gap-4 justify-center pt-4"
       >
         <button onClick={onBack} className="p-3 rounded-lg hover:bg-white/50 transition-colors">
           <IconArrowLeft className="h-5 w-5 text-gray-500" />
         </button>
         <button
           onClick={onNext}
-          className="flex-1 px-8 py-3 rounded-lg font-semibold text-white transition-all hover:shadow-lg"
+          className="flex-1 px-8 py-3 rounded-full font-semibold text-white transition-all hover:shadow-lg"
           style={{ backgroundColor: "#1E3F2B" }}
         >
           Continue
         </button>
         <button
           onClick={onSkip}
-          className="px-8 py-3 rounded-lg font-semibold border-2 transition-all hover:bg-white/50"
+          className="px-8 py-3 rounded-full font-semibold border-1 transition-all hover:bg-white/50"
           style={{ borderColor: "#1E3F2B", color: "#1E3F2B" }}
         >
           Skip

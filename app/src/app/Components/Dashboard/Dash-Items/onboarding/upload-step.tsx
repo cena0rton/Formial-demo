@@ -89,63 +89,215 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           Let&apos;s capture your starting point - this is where your transformation begins! 
        
           
-        </motion.p>
+        
+    </motion.p>
+<div className="flex flex-row items-center justify-center gap-3  mt-1">
+  {/* Step 1 */}
+  <span className="flex items-center gap-2">
+    <span className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem]">
+      1
+    </span>
+    <span className="text-sm font-medium text-gray-700 font-instrument-serif">
+      Ensure proper lighting
+    </span>
+  </span>
+  {/* Arrow */}
+  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none">
+    &rarr;
+  </span>
+  {/* Step 2 */}
+  <span className="flex items-center gap-2">
+    <span className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem]">
+      2
+    </span>
+    <span className="text-sm font-medium text-gray-700 font-instrument-serif">
+      No makeup
+    </span>
+  </span>
+  {/* Arrow */}
+  <span className="text-gray-400 mx-1 text-[0.9rem] font-bold select-none">
+    &rarr;
+  </span>
+  {/* Step 3 */}
+  <span className="flex items-center gap-2">
+    <span className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full shadow border bg-[#1E3F2B] text-white border-gray-300 min-w-[1.5rem] min-h-[1.5rem]">
+      3
+    </span>
+    <span className="text-sm font-medium text-gray-700 font-instrument-serif">
+      Avoid shadows & use recent image only
+    </span>
+  </span>
+</div>
       </div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.4 }}>
-        {uploadedPhotos.length < 3 ? (
-          <label className="block border-2 border-dashed border-gray-200 rounded-lg p-8 text-center cursor-pointer hover:border-gray-300 transition-all duration-200">
-            <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
-            <IconUpload size={32} className="mx-auto mb-3 text-gray-400" />
-            <p className="text-sm text-gray-600 font-medium mb-1"><span className="font-medium" style={{ color: '#1E3F2B' }}>We Need 3 Photos to get started. Left, Right and Front View of your face.</span></p>
-            <p className="text-sm text-gray-500">Drag photos or click to select ({uploadedPhotos.length}/3 uploaded)</p>
-          </label>
-        ) : (
-          <div className="border-2 border-green-200 rounded-lg p-8 text-center bg-green-50/50">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <p className="text-lg font-semibold" style={{ color: '#1E3F2B' }}>All Photos Uploaded!</p>
-            </div>
-            <p className="text-sm text-gray-600">You have uploaded all 3 required photos</p>
-            <label className="inline-block mt-3">
-              <input type="file" multiple accept="image/*" onChange={handleFileUpload} className="hidden" />
-              <span className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer underline">Replace photos</span>
-            </label>
-          </div>
-        )}
-      </motion.div>
-
-      {uploadedPhotos.length > 0 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-3 gap-3">
-          {uploadedPhotos.map((photo, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.05 }}
-              className="relative aspect-square bg-gray-100 rounded-lg border border-gray-200 group overflow-hidden"
-            >
-              <Image
-                src={URL.createObjectURL(photo)}
-                alt={`Upload ${index + 1}`}
-                fill
-                className="object-cover rounded-lg"
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+        {/* Left View */}
+        <div className="flex flex-col items-center space-y-2 border-1 border-gray-300 rounded-lg p-2">
+          <span className="font-semibold text-base mb-1" style={{ color: "#1E3F2B", fontFamily: 'var(--font-instrument-serif), serif' }}>
+            Left
+          </span>
+          <div className="grid grid-cols-2 gap-2 items-center">
+            {/* Reference image */}
+            <div className="w-24 h-24 border rounded-lg flex items-center justify-center bg-gray-100">
+              <Image 
+                src="/left.png" 
+                alt="Reference Left"
+                width={96}
+                height={96}
+                className="object-cover w-full h-full rounded-lg"
                 unoptimized
               />
-              <motion.button
-                onClick={() => handleDeletePhoto(index)}
-                className="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 z-10"
-              >
-                <IconX size={16} strokeWidth={2.5} />
-              </motion.button>
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
+            </div>
+            {/* Uploaded photo */}
+            <div className="w-24 h-24 rounded-lg border flex items-center justify-center bg-white overflow-hidden">
+              {uploadedPhotos[0] ? (
+                <Image
+                  src={URL.createObjectURL(uploadedPhotos[0])}
+                  alt="Your Left"
+                  width={96}
+                  height={96}
+                  className="object-cover rounded-lg w-full h-full"
+                  unoptimized
+                />
+              ) : (
+                <span className="text-gray-300"><IconUpload size={24} className="text-gray-500" /></span>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="mt-1 px-3 py-1.5 rounded-full text-sm font-semibold border border-[#1E3F2B]/30 text-[#1E3F2B]  hover:bg-gray-50 transition cursor-pointer"
+            onClick={() => document.getElementById('upload-left')?.click()}
+          >
+            {uploadedPhotos[0] ? "Change Photo" : "Upload Photo"}
+          </button>
+          <input
+            id="upload-left"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={e => {
+              if (e.target.files && e.target.files[0]) {
+                const filesArray = [...uploadedPhotos]
+                filesArray[0] = e.target.files[0]
+                setUploadedPhotos(filesArray)
+              }
+            }}
+          />
+        </div>
+        {/* Front View */}
+        <div className="flex flex-col items-center space-y-2 border-1 border-gray-300 rounded-lg p-2">
+          <span className="font-semibold text-base mb-1" style={{ color: "#1E3F2B", fontFamily: 'var(--font-instrument-serif), serif' }}>
+            Front
+          </span>
+          <div className="grid grid-cols-2 gap-2 items-center">
+            {/* Reference image */}
+            <div className="w-24 h-24 border rounded-lg flex items-center justify-center bg-gray-100 overflow-hidden">
+              <Image 
+                src="/front.png" 
+                alt="Reference Front"
+                width={96}
+                height={96}
+                className="object-cover w-full h-full rounded-lg"
+                unoptimized
+              />
+            </div>
+            {/* Uploaded photo */}
+            <div className="w-24 h-24 rounded-lg border flex items-center justify-center bg-white overflow-hidden">
+              {uploadedPhotos[1] ? (
+                <Image
+                  src={URL.createObjectURL(uploadedPhotos[1])}
+                  alt="Your Front"
+                  width={96}
+                  height={96}
+                  className="object-cover rounded-lg w-full h-full"
+                  unoptimized
+                />
+              ) : (
+                <span className="text-gray-300"><IconUpload size={24} className="text-gray-500" /></span>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="mt-1 px-3 py-1.5 rounded-full text-sm font-semibold border border-[#1E3F2B]/30 text-[#1E3F2B] b hover:bg-gray-50 transition cursor-pointer"
+            onClick={() => document.getElementById('upload-front')?.click()}
+          >
+            {uploadedPhotos[1] ? "Change Photo" : "Upload Photo"}
+          </button>
+          <input
+            id="upload-front"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={e => {
+              if (e.target.files && e.target.files[0]) {
+                const filesArray = [...uploadedPhotos]
+                filesArray[1] = e.target.files[0]
+                setUploadedPhotos(filesArray)
+              }
+            }}
+          />
+        </div>
+        {/* Right View */}
+        <div className="flex flex-col items-center space-y-2 border-1 border-gray-300 rounded-lg p-2">
+          <span className="font-semibold text-base mb-1" style={{ color: "#1E3F2B", fontFamily: 'var(--font-instrument-serif), serif' }}>
+            Right
+          </span>
+          <div className="grid grid-cols-2 gap-2 items-center">
+            {/* Reference image */}
+            <div className="w-24 h-24 border rounded-lg flex items-center justify-center bg-gray-100">
+              <Image 
+                src="/right.png" 
+                alt="Reference Right"
+                width={96}
+                height={96}
+                className="object-cover w-full h-full rounded-lg"
+                unoptimized
+              />
+            </div>
+            {/* Uploaded photo */}
+            <div className="w-24 h-24 rounded-lg border flex items-center justify-center bg-white overflow-hidden">
+              {uploadedPhotos[2] ? (
+                <Image
+                  src={URL.createObjectURL(uploadedPhotos[2])}
+                  alt="Your Right"
+                  width={96}
+                  height={96}
+                  className="object-cover rounded-lg w-full h-full"
+                  unoptimized
+                />
+              ) : (
+                <span className="text-gray-300"><IconUpload size={24} className="text-gray-500" /></span>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="mt-1 px-3 py-1.5 rounded-full text-sm font-semibold border border-[#1E3F2B]/30 text-[#1E3F2B]  hover:bg-gray-50 transition cursor-pointer"
+            onClick={() => document.getElementById('upload-right')?.click()}
+          >
+            {uploadedPhotos[2] ? "Change Photo" : "Upload Photo"}
+          </button>
+          <input
+            id="upload-right"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={e => {
+              if (e.target.files && e.target.files[0]) {
+                const filesArray = [...uploadedPhotos]
+                filesArray[2] = e.target.files[0]
+                setUploadedPhotos(filesArray)
+              }
+            }}
+          />
+        </div>
+      </div>
+      </motion.div>
+
+     
 
       <motion.div
         initial={{ opacity: 0 }}
@@ -159,7 +311,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         <button
           onClick={onNext}
           disabled={uploadedPhotos.length === 0}
-          className="px-8 py-3.5 rounded-lg font-semibold text-white transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+          className="px-8 py-3.5 rounded-full font-semibold text-white transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-90"
           style={{ backgroundColor: uploadedPhotos.length > 0 ? '#1E3F2B' : '#9CA3AF' }}
           onMouseEnter={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1a3528')}
           onMouseLeave={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1E3F2B')}
@@ -168,7 +320,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         </button>
         <button
           onClick={onSkip}
-          className="px-8 py-3.5 rounded-lg font-semibold border-2  text-[#1E3F2B] hover:bg-gray-50 transition-all duration-200"
+          className="px-8 py-3.5 rounded-full font-semibold border-1  text-[#1E3F2B] hover:bg-gray-50 transition-all duration-200"
         >
           I will do it later
         </button>
