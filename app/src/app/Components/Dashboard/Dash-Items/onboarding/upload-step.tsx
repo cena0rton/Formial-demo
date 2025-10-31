@@ -84,19 +84,29 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch mt-6 max-w-2xl mx-auto">
         {/* Photo Card - Left */}
-        <div className="relative bg-white shadow-xl rounded-2xl border border-green-900 flex flex-col overflow-hidden transform transition-all group">
+        <div className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transform transition-all group">
           <div className="bg-[#1E3F2B] py-2 text-white text-lg font-instrument-serif text-center tracking-wide">
             Left
           </div>
-          <div className="flex-grow flex items-center justify-center bg-[#F2EEE0] py-4 px-2 min-h-[130px]">
+          <div className="flex-grow flex items-center justify-center bg-[#F2EEE0] py-4 px-2 min-h-[130px] relative">
             {uploadedPhotos[0] ? (
-              <Image
-                src={URL.createObjectURL(uploadedPhotos[0])}
-                alt="Uploaded Left"
-                width={120}
-                height={120}
-                className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
-              />
+              <>
+                <Image
+                  src={URL.createObjectURL(uploadedPhotos[0])}
+                  alt="Uploaded Left"
+                  width={120}
+                  height={120}
+                  className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
+                />
+                <button
+                  className="absolute top-2 right-2 bg-white/90 hover:bg-white p-1 rounded-full shadow-md border transition-colors"
+                  onClick={() => handleDeletePhoto(0)}
+                  type="button"
+                  aria-label="Remove uploaded photo"
+                >
+                  <IconX size={16} className="text-gray-600" strokeWidth={2.5} />
+                </button>
+              </>
             ) : (
               <Image
                 src="/left.png"
@@ -106,19 +116,9 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
                 className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
               />
             )}
-            {uploadedPhotos[0] && (
-              <button
-                className="absolute top-3 right-3 bg-white/80 hover:bg-white p-1 rounded-full shadow border"
-                onClick={() => handleDeletePhoto(0)}
-                type="button"
-                aria-label="Remove uploaded photo"
-              >
-                <IconX size={18} className="text-gray-500" />
-              </button>
-            )}
           </div>
           <div className="p-3 text-center bg-[#F2EEE0]">
-            <label htmlFor="upload-left" className={`cursor-pointer group-hover:bg-[#21422F] inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition-colors duration-200 shadow hover:shadow-lg ${uploadedPhotos[0] ? 'bg-white/10 text-[#1E3F2B] border border-[#1E3F2B]' : 'bg-[#1E3F2B] text-white'}`}>
+            <label htmlFor="upload-left" className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition-colors duration-200 ${uploadedPhotos[0] ? 'bg-white/10 text-[#1E3F2B] border border-[#1E3F2B]' : 'bg-[#1E3F2B] text-white'}`}>
               <IconUpload size={18} className="mr-1" />
               {uploadedPhotos[0] ? 'Replace Image' : 'Upload'}
               <input
@@ -139,19 +139,29 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           </div>
         </div>
         {/* Photo Card - Front */}
-        <div className="relative bg-white shadow-xl rounded-2xl border border-green-900 flex flex-col overflow-hidden transform transition-all group">
+        <div className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transform transition-all group">
           <div className="bg-[#1E3F2B] py-2 text-white text-lg font-instrument-serif text-center tracking-wide">
             Front
           </div>
-          <div className="flex-grow flex items-center justify-center bg-[#F2EEE0] py-4 px-2 min-h-[130px]">
+          <div className="flex-grow flex items-center justify-center bg-[#F2EEE0] py-4 px-2 min-h-[130px] relative">
             {uploadedPhotos[1] ? (
-              <Image
-                src={URL.createObjectURL(uploadedPhotos[1])}
-                alt="Uploaded Front"
-                width={120}
-                height={120}
-                className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
-              />
+              <>
+                <Image
+                  src={URL.createObjectURL(uploadedPhotos[1])}
+                  alt="Uploaded Front"
+                  width={120}
+                  height={120}
+                  className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
+                />
+                <button
+                  className="absolute top-2 right-2 bg-white/90 hover:bg-white p-1 rounded-full shadow-md border transition-colors"
+                  onClick={() => handleDeletePhoto(1)}
+                  type="button"
+                  aria-label="Remove uploaded photo"
+                >
+                  <IconX size={16} className="text-gray-600" strokeWidth={2.5} />
+                </button>
+              </>
             ) : (
               <Image
                 src="/front.png"
@@ -161,19 +171,9 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
                 className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
               />
             )}
-            {uploadedPhotos[1] && (
-              <button
-                className="absolute top-3 right-3 bg-white/80 hover:bg-white p-1 rounded-full shadow border"
-                onClick={() => handleDeletePhoto(1)}
-                type="button"
-                aria-label="Remove uploaded photo"
-              >
-                <IconX size={18} className="text-gray-500" />
-              </button>
-            )}
           </div>
           <div className="p-3 text-center bg-[#F2EEE0]">
-            <label htmlFor="upload-front" className={`cursor-pointer group-hover:bg-[#21422F] inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition-colors duration-200 shadow hover:shadow-lg ${uploadedPhotos[1] ? 'bg-white/10 text-[#1E3F2B] border border-[#1E3F2B]' : 'bg-[#1E3F2B] text-white'}`}>
+            <label htmlFor="upload-front" className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition-colors duration-200 shadow hover:shadow-lg ${uploadedPhotos[1] ? 'bg-white/10 text-[#1E3F2B] border border-[#1E3F2B]' : 'bg-[#1E3F2B] text-white'}`}>
               <IconUpload size={18} className="mr-1" />
               {uploadedPhotos[1] ? 'Replace Image' : 'Upload'}
               <input
@@ -194,19 +194,29 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           </div>
         </div>
         {/* Photo Card - Right */}
-        <div className="relative bg-white shadow-xl rounded-2xl border border-green-900 flex flex-col overflow-hidden transform transition-all group">
+        <div className="relative bg-white shadow-xl rounded-2xl border-[0.1px] border-green-900 flex flex-col overflow-hidden transform transition-all group">
           <div className="bg-[#1E3F2B] py-2 text-white text-lg font-instrument-serif text-center tracking-wide">
             Right
           </div>
-          <div className="flex-grow flex items-center justify-center bg-[#F2EEE0] py-4 px-2 min-h-[130px]">
+          <div className="flex-grow flex items-center justify-center bg-[#F2EEE0] py-4 px-2 min-h-[130px] relative">
             {uploadedPhotos[2] ? (
-              <Image
-                src={URL.createObjectURL(uploadedPhotos[2])}
-                alt="Uploaded Right"
-                width={120}
-                height={120}
-                className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
-              />
+              <>
+                <Image
+                  src={URL.createObjectURL(uploadedPhotos[2])}
+                  alt="Uploaded Right"
+                  width={120}
+                  height={120}
+                  className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
+                />
+                <button
+                  className="absolute top-2 right-2 bg-white/90 hover:bg-white p-1 rounded-full shadow-md border transition-colors"
+                  onClick={() => handleDeletePhoto(2)}
+                  type="button"
+                  aria-label="Remove uploaded photo"
+                >
+                  <IconX size={16} className="text-gray-600" strokeWidth={2.5} />
+                </button>
+              </>
             ) : (
               <Image
                 src="/right.png"
@@ -216,19 +226,9 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
                 className="object-cover rounded-xl transition-shadow duration-300 shadow-inner border border-gray-100 w-[120px] h-[120px]"
               />
             )}
-            {uploadedPhotos[2] && (
-              <button
-                className="absolute top-3 right-3 bg-white/80 hover:bg-white p-1 rounded-full shadow border"
-                onClick={() => handleDeletePhoto(2)}
-                type="button"
-                aria-label="Remove uploaded photo"
-              >
-                <IconX size={18} className="text-gray-500" />
-              </button>
-            )}
           </div>
           <div className="p-3 text-center bg-[#F2EEE0]">
-            <label htmlFor="upload-right" className={`cursor-pointer group-hover:bg-[#21422F] inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition-colors duration-200 shadow hover:shadow-lg ${uploadedPhotos[2] ? 'bg-white/10 text-[#1E3F2B] border border-[#1E3F2B]' : 'bg-[#1E3F2B] text-white'}`}>
+            <label htmlFor="upload-right" className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2.5 rounded-full transition-colors duration-200 shadow hover:shadow-lg ${uploadedPhotos[2] ? 'bg-white/10 text-[#1E3F2B] border border-[#1E3F2B]' : 'bg-[#1E3F2B] text-white'}`}>
               <IconUpload size={18} className="mr-1" />
               {uploadedPhotos[2] ? 'Replace Image' : 'Upload'}
               <input
