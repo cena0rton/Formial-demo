@@ -40,7 +40,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="text-center space-y-8 overflow-auto"
+      className="text-center space-y-4"
     >
       <div className="flex items-center justify-center mb-4">
         <motion.div
@@ -54,7 +54,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
         </motion.div>
       </div>
 
-      <div className="space-y-3 overflow-auto">
+      <div className="space-y-3">
         <h2 className="text-4xl font-semibold tracking-normal" style={{ color: '#1E3F2B', fontFamily: 'var(--font-instrument-serif), serif' }}>
           {displayedText}
           {!isTypingComplete && (
@@ -301,7 +301,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           onClick={onNext}
           disabled={uploadedPhotos.length === 0}
           className="px-8 py-3.5 rounded-full font-semibold text-white transition-all duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-90"
-          style={{ backgroundColor: uploadedPhotos.length > 0 ? '#1E3F2B' : '#9CA3AF' }}
+          style={{ backgroundColor: uploadedPhotos.length > 2 ? '#1E3F2B' : '#9CA3AF' }}
           onMouseEnter={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1a3528')}
           onMouseLeave={(e) => uploadedPhotos.length > 0 && (e.currentTarget.style.backgroundColor = '#1E3F2B')}
         >

@@ -13,7 +13,7 @@ export default function OnboardingModal() {
   const [currentStep, setCurrentStep] = useState(0)
   const [isOpen, setIsOpen] = useState(true)
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
-  const [userName, setUserName] = useState("User")
+  const [userName] = useState("User")
 
   const handleClose = () => {
     setIsOpen(false)
@@ -63,7 +63,7 @@ export default function OnboardingModal() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center px-8 py-12">
+        <div className="flex-1 flex items-center justify-center px-8 py-12 overflow-y-auto">
           <div className="w-full max-w-2xl">
             <AnimatePresence mode="wait">
               {currentStep === 0 && (
