@@ -63,7 +63,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.4 }}
-          className="text-lg text-gray-500 font-light max-w-lg mx-auto leading-relaxed"
+          className="text-lg text-gray-500 font-light max-w-lg mx-auto tracking-tight"
         >
           Your photos are saved to your <span className="font-semibold" style={{ color: '#1E3F2B' }}>Skin Progress</span> tab with date and time. Your journey to amazing skin starts now!
         </motion.p>
@@ -80,7 +80,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
         </button>
         <button
           onClick={onComplete}
-          className="px-8 py-3.5 rounded-lg font-medium text-white transition-all duration-200"
+          className="px-8 py-3.5 rounded-full font-medium text-white transition-all duration-200"
           style={{ backgroundColor: '#1E3F2B' }}
           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a3528'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1E3F2B'}
