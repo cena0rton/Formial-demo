@@ -31,7 +31,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="space-y-4 text-center"
+      className="space-y-4 text-center mt-16"
     >
       <div className="flex items-center justify-center mb-4">
         <motion.div

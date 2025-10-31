@@ -40,7 +40,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="text-center space-y-4 -mt-16"
+      className="text-center space-y-4"
     >
       <div className="flex items-center justify-center">
         <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1E3F2B' }}>

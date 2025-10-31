@@ -31,7 +31,7 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="space-y-4 text-center"
+      className="space-y-4 text-center mt-16"
     >
       {/* Icon */}
       <div className="flex justify-center">

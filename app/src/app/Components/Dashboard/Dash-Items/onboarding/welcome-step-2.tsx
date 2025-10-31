@@ -21,7 +21,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="text-center space-y-8"
+      className="text-center space-y-8 mt-16"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
