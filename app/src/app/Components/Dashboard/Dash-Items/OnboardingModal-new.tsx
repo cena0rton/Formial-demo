@@ -64,34 +64,44 @@ export default function OnboardingModal() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="px-8 py-12">
-            <div className="w-full max-w-2xl mx-auto">
-              <AnimatePresence mode="wait">
-                {currentStep === 0 && (
-                  <WelcomeStep1 key="welcome1" userName={userName} onNext={handleNext} />
-                )}
-                {currentStep === 1 && (
-                  <WelcomeStep2 key="welcome2" onNext={handleNext} />
-                )}
-                {currentStep === 2 && (
-                  <UploadStep
-                    key="upload"
-                    uploadedPhotos={uploadedPhotos}
-                    setUploadedPhotos={setUploadedPhotos}
-                    onNext={handleNext}
-                    onBack={handleBack}
-                    onSkip={handleSkip}
-                  />
-                )}
-                {currentStep === 3 && (
-                  <DoctorReviewStep key="doctor" onNext={handleNext} onBack={handleBack} onSkip={handleSkip} />
-                )}
-                {currentStep === 4 && (
-                  <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
-                )}
-              </AnimatePresence>
-            </div>
+        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-w-7xl mx-auto">
+          <div className="px-0 items-center justify-center">
+            <AnimatePresence mode="wait">
+              {currentStep === 0 && (
+                <WelcomeStep1 key="welcome1" userName={userName} onNext={handleNext} />
+              )}
+              {currentStep === 1 && (
+                <WelcomeStep2 key="welcome2" onNext={handleNext} />
+              )}
+              {currentStep === 2 && (
+                <div className="px-8 mt-20">
+                  <div className="w-full max-w-4xl mx-auto">
+                    <UploadStep
+                      key="upload"
+                      uploadedPhotos={uploadedPhotos}
+                      setUploadedPhotos={setUploadedPhotos}
+                      onNext={handleNext}
+                      onBack={handleBack}
+                      onSkip={handleSkip}
+                    />
+                  </div>
+                </div>
+              )}
+              {currentStep === 3 && (
+                <div className="px-8 mt-20">
+                  <div className="w-full max-w-4xl mx-auto">
+                    <DoctorReviewStep key="doctor" onNext={handleNext} onBack={handleBack} onSkip={handleSkip} />
+                  </div>
+                </div>
+              )}
+              {currentStep === 4 && (
+                <div className="px-8 mt-20">
+                  <div className="w-full max-w-4xl mx-auto">
+                    <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
+                  </div>
+                </div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 

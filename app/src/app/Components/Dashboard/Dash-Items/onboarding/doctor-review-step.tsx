@@ -28,42 +28,39 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="space-y-4 text-center mt-16"
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+      className="text-left md:mt-50 mt-30"
     >
       {/* Icon */}
-      <div className="flex justify-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="w-20 h-20 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: "#1E3F2B" }}
-        >
-          <IconUser className="h-10 w-10 text-white" />
-        </motion.div>
-      </div>
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.2, duration: 0.3 }}
+        className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+        style={{ backgroundColor: "#1E3F2B" }}
+      >
+        <IconUser size={32} className="text-white" />
+      </motion.div>
 
       {/* Heading */}
-      <div className="min-h-12 flex items-center justify-center">
-        <h2 className="text-4xl font-bold tracking-normal"  style={{ color: "#1E3F2B", fontFamily: 'var(--font-instrument-serif), serif' }}>
-          {displayedText}
-          {!isTypingComplete && (
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.5, repeat: Number.POSITIVE_INFINITY }}
-              className="ml-1"
-            >
-              |
-            </motion.span>
-          )}
-        </h2>
-      </div>
+      <h2 className="text-4xl font-medium tracking-tight mb-6" style={{ color: "#1E3F2B" }}>
+        {displayedText}
+        {!isTypingComplete && (
+          <motion.span
+            animate={{ opacity: [1, 0] }}
+            transition={{ duration: 0.6, repeat: Infinity }}
+            className="ml-1 inline-block"
+          >
+            |
+          </motion.span>
+        )}
+      </h2>
 
       {/* Description */}
-      <p className="text-gray-600 max-w-md mx-auto tracking-tight">
+      <p className="text-base text-gray-600 font-normal max-w-lg mb-8">
         {"Our expert dermatologists will review your photos and create a personalized skincare plan tailored just for you. You're one step closer!".split("").map((char, idx) => (
           <motion.span
             key={idx}
@@ -80,23 +77,21 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="flex gap-4 justify-center pt-4"
+        transition={{ delay: 1.2, duration: 0.4 }}
+        className="flex gap-3 justify-start items-center"
       >
-        <button onClick={onBack} className="p-3 rounded-lg hover:bg-white/50 transition-colors">
-          <IconArrowLeft className="h-5 w-5 text-gray-500" />
+        <button onClick={onBack} className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <IconArrowLeft size={20} className="text-gray-600" />
         </button>
         <button
           onClick={onNext}
-          className="flex-1 px-8 py-3 rounded-full font-semibold text-white transition-all hover:shadow-lg"
-          style={{ backgroundColor: "#1E3F2B" }}
+          className="px-10 py-3.5 rounded-full font-semibold text-white transition-all duration-200 bg-[#1E3F2B] hover:bg-[#1a3528] shadow-md hover:shadow-lg"
         >
           Continue
         </button>
         <button
           onClick={onSkip}
-          className="px-8 py-3 rounded-full font-semibold border-1 transition-all hover:bg-white/50"
-          style={{ borderColor: "#1E3F2B", color: "#1E3F2B" }}
+          className="px-10 py-3.5 rounded-full font-semibold border-2 transition-all duration-200 text-[#1E3F2B] hover:bg-gray-50"
         >
           Skip
         </button>
