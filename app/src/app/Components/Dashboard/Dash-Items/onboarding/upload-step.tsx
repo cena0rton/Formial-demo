@@ -19,7 +19,7 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
   }
 
   return (
-    <div className="h-full overflow-y-auto pb-20 -mt-16 md:mt-0">
+    <div className="h-full overflow-y-auto pb-20 -mt-16 md:-mt-10">
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}

@@ -85,10 +85,10 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="h-full md:flex block"
+      className="h-full md:flex block max-w-5xl w-full mx-auto"
     >
       {/* Left Column - Content */}
-      <div className="flex-1 flex items-center justify-center p-8 md:px-16 max-w-6xl mx-auto lg:-mt-16">
+      <div className="flex-1 flex items-center justify-center p-8 md:px-16 mx-auto lg:-mt-16">
         <div className=" w-full space-y-6 overflow-hidden">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
