@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client"
 
 import { motion } from "framer-motion"
@@ -85,11 +86,11 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="h-full md:flex block max-w-5xl w-full mx-auto"
+      className="h-full md:flex block md:max-w-5xl w-full mx-auto overflow-x-hidden overflow-hidden "
     >
       {/* Left Column - Content */}
       <div className="flex-1 flex items-center justify-center p-8 md:px-16 mx-auto lg:-mt-16">
-        <div className=" w-full space-y-6 overflow-hidden">
+        <div className=" w-full md:space-y-6 space-y-4 overflow-hidden">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -97,7 +98,9 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
             className="text-2xl md:text-4xl font-medium tracking-tight"
             style={{ color: '#1E3F2B' }}
           >
-           {" Hi Pawan! Welcome to Formial.".split("").map((word, idx) => (
+           <span>Hi</span>  <span className="font-instrument-serif">Pawan!</span>
+            <br/>
+           {"Welcome to Formial.".split("").map((word, idx) => (
             <motion.span
               key={idx}
               initial={{ opacity: 0 }}
@@ -114,9 +117,9 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="text-lg text-gray-600 tracking-normal font-instrument-serif"
+            className="md:text-lg text-md text-gray-600 tracking-tight w-90 md:w-full"
           >
-            You&apos;re few step closer to real results. Let us Guide you.
+            Get ready for visible results. You're in expert hands.
           </motion.p>
 
           {/* CTA Button */}
@@ -127,7 +130,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
           >
             <button
               onClick={onNext}
-              className="w-full flex items-center justify-center gap-3 px-8 md:py-4 py-3 bg-[#1E3F2B] text-white rounded-full font-medium text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
+              className="w-fit md:w-full flex items-center justify-center gap-3 px-8 md:py-4 py-3 bg-[#1E3F2B] text-white rounded-full font-medium text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
             >
               I Agree
               <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -139,20 +142,22 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="text-sm text-gray-500"
+            className="text-gray-500 w-90 md:w-full md:-mt-2"
           >
             By clicking above you agree to our{" "}
-            <a href="#" className="underline hover:text-[#1E3F2B]">Terms & Conditions</a> and{" "}
-            <a href="#" className="underline hover:text-[#1E3F2B]">Privacy Policy</a>.
+            <a href="#" className="underline hover:text-[#1E3F2B] text-sm">Terms & Conditions</a> and{" "}
+            <a href="#" className="underline hover:text-[#1E3F2B] text-sm">Privacy Policy</a>.
           </motion.p>
         </div>
       </div>
 
       {/* Right Column - Testimonials Carousel */}
-      <div className=" md:flex md:flex-1  px-8 h-fit">
-        <div className="w-full max-h-screen max-w-xl mx-auto relative md:overflow-hidden overflow-y-auto mask-b-from-70% mask-t-from-70%">
+      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-10% md:mask-r-from-100% md:mask-b-from-50%">
+        {/* Desktop Vertical Carousel */}
+        <div className="hidden md:block w-full max-h-screen max-w-xl mx-auto relative overflow-hidden">
           {/* Gradient Overlays */}
-         
+          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#F2F0E0] to-transparent z-10 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#F2F0E0] to-transparent z-10 pointer-events-none" />
           
           {/* Scrolling Container */}
           <motion.div
@@ -170,7 +175,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
             {[...testimonials, ...testimonials].map((testimonial, idx) => (
               <div
                 key={`${idx}-${testimonial.name}`}
-                className=" border-1 border-[#1] rounded-xl p-4 shadow-md"
+                className="border-1 border-[#1] rounded-xl p-4 shadow-md bg-white/40"
               >
                 {/* Name and Duration */}
                 <div className="flex items-center justify-between mb-2">
@@ -205,6 +210,75 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
                     />
                   </div>
                   <div className="flex-1 relative h-32 rounded-lg overflow-hidden border border-gray-200">
+                    <Image
+                      src={testimonial.afterImage}
+                      alt={`${testimonial.name} after`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Mobile Horizontal Carousel */}
+        <div className="flex md:hidden mx-auto relative py-6">
+       
+         
+          
+          {/* Scrolling Container */}
+          <motion.div
+            animate={{
+              x: [0, -2400],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="flex gap-4"
+          >
+            {/* Render testimonials twice for seamless loop */}
+            {[...testimonials, ...testimonials].map((testimonial, idx) => (
+              <div
+                key={`mobile-${idx}-${testimonial.name}`}
+                className="min-w-[220px] min-h-fit border-1 border-[#1] rounded-xl p-4 shadow-md bg-white/40"
+              >
+                {/* Name and Duration */}
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-lg font-medium text-black">{testimonial.name}</span>
+                  <span className="text-xs font-semibold bg-[#1E3F2B] text-white px-2.5 py-0.5 rounded-full">
+                    {testimonial.duration}
+                  </span>
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {testimonial.tags.map((tag, tagIdx) => (
+                    <span
+                      key={tagIdx}
+                      className={`px-1.5 py-0.5 rounded-full text-xs font-semibold border ${
+                        tagColors[tag] || "bg-gray-200 text-gray-900 border-gray-300"
+                      }`}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Before and After Images */}
+                <div className="flex gap-2">
+                  <div className="flex-1 relative h-24 rounded-lg overflow-hidden border border-gray-200">
+                    <Image
+                      src={testimonial.beforeImage}
+                      alt={`${testimonial.name} before`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 relative h-24 rounded-lg overflow-hidden border border-gray-200">
                     <Image
                       src={testimonial.afterImage}
                       alt={`${testimonial.name} after`}

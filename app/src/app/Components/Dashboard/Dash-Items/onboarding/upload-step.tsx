@@ -1,9 +1,8 @@
 "use client"
-
-import type React from "react"
+import React from "react";
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { IconUpload, IconX, IconArrowLeft, IconCheck } from "@tabler/icons-react"
+import { IconUpload, IconX, IconArrowLeft, IconCheck, IconChevronDown } from "@tabler/icons-react"
 
 interface UploadStepProps {
   uploadedPhotos: File[]
@@ -17,6 +16,8 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
   const handleDeletePhoto = (index: number) => {
     setUploadedPhotos(uploadedPhotos.filter((_, i) => i !== index))
   }
+
+  const [open, setOpen] = React.useState<boolean>(false)
 
   return (
     <div className="h-full overflow-y-auto pb-20 -mt-16 md:-mt-10">
@@ -46,23 +47,36 @@ export default function UploadStep({ uploadedPhotos, setUploadedPhotos, onNext, 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
-          className="text-lg text-gray-600 font-normal max-w-2xl mb-4 font-instrument-serif"
+          className="text-lg text-gray-600 font-normal max-w-2xl mb-4 tracking-tight"
         >
           You are few steps away from getting your personalized skincare plan!
         </motion.p>
+          <motion.div
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 1 }}
+           transition={{ delay: 0.3, duration: 0.4 }}
+           className="w-full border border-green-900/10 rounded-lg mb-10 py-2 px-2">
+            <motion.button 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ delay: 0.3, duration: 0.4 }}
+             className="flex text-sm items-center justify-between gap-2 w-full"
+            onClick={() => setOpen(!open)}>
+           
+            <p>Guidelines for Uploading Photos</p>
+            <IconChevronDown size={20} className="text-gray-600" />
+            </motion.button>
 
-        <motion.ul
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
-          className="mb-10 list-disc list-inside pl-2 text-[#1E3F2B] space-y-2 text-xs font-medium tracking-tight"
+        
+{open &&        <motion.ul
+          className="mt-4 list-disc list-inside  text-[#1E3F2B] space-y-2 text-xs font-medium tracking-tight"
         >
           <li>No filters or editing – upload your RAW, unaltered photos.</li>
           <li>Use clean and bright lighting (natural daylight works best).</li>
           <li>Make sure your face is clearly visible and in focus.</li>
           <li>Remove glasses, hats, and keep hair away from the face.</li>
-        </motion.ul>
-
+        </motion.ul>}
+        </motion.div>
         {/* Photo Upload Grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

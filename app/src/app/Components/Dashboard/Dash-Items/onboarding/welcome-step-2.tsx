@@ -8,7 +8,7 @@ interface WelcomeStep2Props {
 }
 
 export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
-  const text = "We got you! We will guide you step by step"
+  const text = "We are excited to help you achieve your skin goals!"
   const steps = [
     { id: 1, label: "Upload Photos" },
     { id: 2, label: "Consultation" },
@@ -52,40 +52,41 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
             {steps.map((step, idx) => (
               <React.Fragment key={step.id}>
                 <div className="flex md:flex-row flex-col md:items-center items-start gap-2">
-                  <span className="flex items-center justify-center w-8 h-8 text-sm font-semibold rounded-full border bg-[#1E3F2B] text-white border-gray-300 shadow-inner shadow-white">
-                    {step.id}
+                  <span className="flex items-center justify-center w-fit h-fit px-2 py-1 text-sm font-medium rounded-full border bg-[#1E3F2B] text-white border-gray-300 shadow-inner shadow-white">
+                   Step {step.id}
                   </span>
                   <span className="text-sm font-medium text-gray-700">
                     {step.label}
                   </span>
                 </div>
                 {idx < steps.length - 1 && (
-                  <span className="text-gray-400 text-xl font-bold md:mx-1 md:block hidden">
-                    &rarr;
-                  </span>
+                  <svg
+                    className="md:block hidden"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                  >
+                    <path
+                      d="M 4 8 Q 16 8 24 16 Q 28 20 28 28"
+                      stroke="#1E3F2B"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      fill="none"
+                    />
+                    <path
+                      d="M 24 24 L 28 28 R 24 30"
+                      stroke="#1E3F2B"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 )}
-                {/* {idx < steps.length - 1 && (
-                  <span className="text-gray-400 text-xl font-bold md:hidden block my-1">
-                    &darr;
-                  </span>
-                )} */}
               </React.Fragment>
             ))}
           </div>
         </motion.div>
-
-        <p className="text-base text-gray-600 font-medium font-instrument-serif max-w-lg mb-8">
-          {"We are excited to help you achieve your skin goals!".split("").map((char, idx) => (
-            <motion.span
-              key={idx}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 + idx * 0.03, duration: 0.2 }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </p>
       </motion.div>
 
       <motion.div

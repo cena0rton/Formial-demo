@@ -112,7 +112,7 @@ const DashHome = () => {
         </div>
 
         {/* Top Row */}
-<div className="flex items-start justify-start max-w-[1440px] mx-auto gap-0 rounded-xl">
+<div className="flex items-start justify-start max-w-[1440px] mx-auto gap-0 rounded-xl overflow-y-auto">
 
         <div className=" mr-auto flex-1 max-w-5xl">
         {/* Top Row */}
