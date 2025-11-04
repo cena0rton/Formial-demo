@@ -7,10 +7,10 @@ import { IconUser, IconArrowLeft } from "@tabler/icons-react"
 interface DoctorReviewStepProps {
   onNext: () => void
   onBack: () => void
-  onSkip: () => void
+  onSkip?: () => void
 }
 
-export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorReviewStepProps) {
+export default function DoctorReviewStep({ onNext, onBack, }: DoctorReviewStepProps) {
   const [displayedText, setDisplayedText] = useState("")
   const [isTypingComplete, setIsTypingComplete] = useState(false)
   const fullText = "Doctor Review"
@@ -89,12 +89,7 @@ export default function DoctorReviewStep({ onNext, onBack, onSkip }: DoctorRevie
         >
           Continue
         </button>
-        <button
-          onClick={onSkip}
-          className="px-10 py-3.5 rounded-full font-semibold border-2 transition-all duration-200 text-[#1E3F2B] hover:bg-gray-50"
-        >
-          Skip
-        </button>
+      
       </motion.div>
     </motion.div>
   )

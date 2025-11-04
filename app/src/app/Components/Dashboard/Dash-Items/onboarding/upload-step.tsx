@@ -48,13 +48,13 @@ const uploadStepVariants = {
     x: "0%",
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.48, ease: [0.44, 0.12, 0, 1] },
+    transition: { duration: 0.48, ease: [0.44, 0.12, 0, 1] as [number, number, number, number] },
   },
   exit: (direction: number) => ({
     x: direction < 0 ? "100%" : "-100%",
     opacity: 0,
     scale: 0.97,
-    transition: { duration: 0.45, ease: [0.44, 0.12, 0.12, 1] },
+    transition: { duration: 0.45, ease: [0.44, 0.12, 0.12, 1] as [number, number, number, number] },
   }),
 };
 
@@ -81,11 +81,12 @@ export default function UploadStep({
 
   const handleDeletePhoto = (index: number) => {
     const newPhotos = [...uploadedPhotos];
-    newPhotos[index] = undefined as any;
-    setUploadedPhotos(newPhotos);
+    newPhotos[index] = undefined as unknown as File;
+    setUploadedPhotos(newPhotos.filter((photo): photo is File => photo !== undefined));
   };
 
   const handlePhotoChange = (idx: number, file?: File) => {
+    if (!file) return;
     const newPhotos = [...uploadedPhotos];
     newPhotos[idx] = file;
     setUploadedPhotos(newPhotos);
@@ -108,9 +109,6 @@ export default function UploadStep({
       onBack();
     }
   };
-
-  const allUploaded =
-    uploadedPhotos.filter((e) => !!e).length === UPLOADS.length;
 
   function stepLabel(n: number) {
     return (

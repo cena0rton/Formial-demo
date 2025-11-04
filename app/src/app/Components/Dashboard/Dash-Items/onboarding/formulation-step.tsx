@@ -45,7 +45,7 @@ export default function FormulationStep({ onBack, onComplete }: FormulationStepP
       </motion.div>
 
       {/* Heading */}
-      <h2 className="text-4xl font-medium tracking-tight mb-6" style={{ color: '#1E3F2B' }}>
+      <h2 className="text-2xl md:text-4xl font-medium tracking-tight mb-6" style={{ color: '#1E3F2B' }}>
         {displayedText}
         {!isTypingComplete && (
           <motion.span

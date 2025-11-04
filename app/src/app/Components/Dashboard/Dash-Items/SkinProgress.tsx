@@ -1,6 +1,6 @@
 'use client'
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState } from 'react'
+import { motion } from 'framer-motion'
 import { 
   IconCamera, 
   IconChevronLeft, 
@@ -15,10 +15,7 @@ import {
   IconInfoCircle,
   IconPlus,
   IconDownload,
-  IconShare,
-  IconX,
-  IconArrowRight,
-  IconArrowLeft
+  IconShare
 } from '@tabler/icons-react'
 import Image from 'next/image'
 
