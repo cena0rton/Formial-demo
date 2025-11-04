@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { IconX } from "@tabler/icons-react"
+
 import WelcomeStep1 from "./onboarding/welcome-step-1"
 import WelcomeStep2 from "./onboarding/welcome-step-2"
 import UploadStep from "./onboarding/upload-step"
@@ -16,9 +16,6 @@ export default function OnboardingModal() {
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
   const [userName] = useState("User")
 
-  const handleClose = () => {
-    setIsOpen(false)
-  }
 
   const handleNext = () => {
     if (currentStep < 5) {

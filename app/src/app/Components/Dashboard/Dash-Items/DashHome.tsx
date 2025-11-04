@@ -16,7 +16,7 @@ import {
 } from '@tabler/icons-react'
 import { IconHome, IconProgress , IconMessage } from '@tabler/icons-react'
 
-import OnboardingModal from './OnboardingModal-new'
+
 
 const DashHome = () => {
   
@@ -60,10 +60,7 @@ const DashHome = () => {
 
   return (
     <div className="md:p-6 overflow-x-hidden bg-[#f8f6ee] min-h-screen rounded-xl">
-      {/* Onboarding Modal */}
-      <OnboardingModal/>
-      
-      {/* Onboarding Guide Modal */}
+     
       
 
       <div className="mx-auto">

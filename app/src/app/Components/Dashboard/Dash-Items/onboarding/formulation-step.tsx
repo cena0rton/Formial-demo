@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { IconFlask, IconArrowLeft } from "@tabler/icons-react"
 
+
 interface FormulationStepProps {
   onBack: () => void
   onComplete: () => void

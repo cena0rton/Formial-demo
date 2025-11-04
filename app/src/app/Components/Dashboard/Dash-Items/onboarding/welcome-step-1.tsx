@@ -224,7 +224,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
         </div>
 
         {/* Mobile Horizontal Carousel */}
-        <div className="flex md:hidden mx-auto relative py-6">
+        <div className="flex lg:hidden mx-auto relative py-6">
        
          
           

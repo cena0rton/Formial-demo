@@ -46,42 +46,39 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.4 }}
-          className="flex items-center gap-3 mb-6"
+          className="flex flex-col items-start gap-6 mb-6"
         >
-          <div className="flex flex-row  md:items-center items-start md:gap-3 gap-8 w-full">
+          <div className="flex flex-col w-full gap-8">
             {steps.map((step, idx) => (
               <React.Fragment key={step.id}>
-                <div className="flex md:flex-row flex-col md:items-center items-start gap-2">
+                <div className="flex flex-row items-center gap-4">
                   <span className="flex items-center justify-center w-fit h-fit px-2 py-1 text-sm font-medium rounded-full border bg-[#1E3F2B] text-white border-gray-300 shadow-inner shadow-white">
-                   Step {step.id}
+                    Step {step.id}
                   </span>
                   <span className="text-sm font-medium text-gray-700">
                     {step.label}
                   </span>
                 </div>
                 {idx < steps.length - 1 && (
-                  <svg
-                    className="md:block hidden"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                  >
-                    <path
-                      d="M 4 8 Q 16 8 24 16 Q 28 20 28 28"
-                      stroke="#1E3F2B"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
+                  <div className="flex flex-col items-start ml-6">
+                    <svg
+                      className="block"
+                      width="4"
+                      height="32"
+                      viewBox="0 0 4 32"
                       fill="none"
-                    />
-                    <path
-                      d="M 24 24 L 28 28 R 24 30"
-                      stroke="#1E3F2B"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                    >
+                      <line
+                        x1="2"
+                        y1="0"
+                        x2="2"
+                        y2="32"
+                        stroke="#1E3F2B"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
                 )}
               </React.Fragment>
             ))}

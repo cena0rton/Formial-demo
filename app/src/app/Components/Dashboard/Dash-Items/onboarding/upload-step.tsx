@@ -122,16 +122,16 @@ export default function UploadStep({
   }
 
   return (
-    <div className="h-full max-w-7xl flex flex-col items-center w-full pt-6 pb-10 md:pt-0 md:pb-20">
+    <div className="h-full pb-20 max-w-7xl -mt-16 md:-mt-10 flex flex-col items-center w-full">
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -8 }}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="text-left w-full max-w-7xl px-4 md:px-0"
+        className="text-left w-full max-w-7xl"
       >
         {/* Title */}
-        <h2 className="md:text-4xl text-2xl font-medium tracking-tight text-[#1E3F2B] mb-3 md:mb-4">
+        <h2 className="md:text-4xl text-2xl font-medium tracking-tight text-[#1E3F2B] mb-4">
           {"Upload Your Photos".split("").map((char, idx) => (
             <motion.span
               key={idx}
@@ -149,7 +149,7 @@ export default function UploadStep({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.18, duration: 0.43 }}
-          className="text-base md:text-lg text-gray-600 font-normal max-w-xl md:max-w-2xl mb-5 md:mb-4 tracking-tight"
+          className="text-lg text-gray-600 font-normal max-w-2xl mb-4 tracking-tight"
         >
           You are few steps away from getting your personalized skincare plan!
         </motion.p>
@@ -160,12 +160,12 @@ export default function UploadStep({
             animate={{ opacity: 1, height: "auto" }}
             transition={{ delay: 0.32, duration: 0.13 }}
             exit={{ opacity: 0 }}
-            className="w-full border border-green-900/10 rounded-lg py-3 md:py-2 px-4 md:px-2 mb-5 md:mb-0"
+            className="w-full border border-green-900/10 rounded-lg py-2 px-2"
           >
             <motion.button
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex text-[15px] md:text-sm items-center justify-between gap-2 w-full font-medium"
+              className="flex text-sm items-center justify-between gap-2 w-full"
               onClick={() => setOpen((o) => !o)}
               type="button"
               aria-expanded={open}
@@ -189,20 +189,12 @@ export default function UploadStep({
                     height: "0",
                     marginTop: "0px",
                   }}
-                  className="list-disc list-inside text-[#1E3F2B] space-y-1.5 md:space-y-2 text-xs md:text-xs font-medium tracking-tight pl-3 md:pl-0"
+                  className="list-disc list-inside text-[#1E3F2B] space-y-2 text-xs font-medium tracking-tight"
                 >
-                  <li>
-                    No filters or editing – upload your RAW, unaltered photos.
-                  </li>
-                  <li>
-                    Use clean and bright lighting (natural daylight works best).
-                  </li>
-                  <li>
-                    Make sure your face is clearly visible and in focus.
-                  </li>
-                  <li>
-                    Remove glasses, hats, and keep hair away from the face.
-                  </li>
+                  <li>Don’t use filters.</li>
+                  <li>Good, natural light.</li>
+                  <li>Face should be clear.</li>
+                  <li>No glasses or hair on face.</li>
                 </motion.ul>
               )}
             </AnimatePresence>
@@ -210,13 +202,13 @@ export default function UploadStep({
         </AnimatePresence>
 
         {/* Photo Upload Carousel/Stepper */}
-        <div className="relative w-full flex flex-col items-center mt-7 md:mt-10 min-h-[360px] md:min-h-[390px] mb-6 md:mb-7 max-w-7xl mx-auto">
+        <div className="relative w-full flex flex-col items-center mt-10 min-h-[390px] mb-7 max-w-7xl mx-auto">
           {/* Progress dots */}
-          <div className="flex gap-2 mb-6 md:mb-7">
+          <div className="flex gap-2 mb-7">
             {UPLOADS.map((_, idx) => (
               <motion.div
                 key={idx}
-                className={`w-4 md:w-5 h-2 md:h-2.5 rounded-full transition-all ${
+                className={`w-5 h-2.5 rounded-full transition-all ${
                   idx === step
                     ? "bg-[#1E3F2B] shadow-md"
                     : "bg-gray-300"
@@ -234,7 +226,7 @@ export default function UploadStep({
               />
             ))}
           </div>
-          <div className="w-full h-[310px] md:h-[364px] relative flex items-center justify-center rounded-2xl max-w-md md:max-w-4xl mx-auto">
+          <div className="w-full h-[364px] relative flex items-center justify-center rounded-2xl max-w-4xl mx-auto">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={step}
@@ -247,16 +239,17 @@ export default function UploadStep({
                 style={{ willChange: "transform,opacity" }}
               >
                 <motion.div
-                  className="bg-[#F2F0E0] rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center gap-5 md:gap-6 justify-between py-6 px-2 sm:px-4 transition-all relative w-full max-w-xs sm:max-w-sm md:w-[97vw] md:max-w-xl mx-auto"
+                  className="bg-[#F2F0E0] rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center gap-6 justify-between py-8 px-4 transition-all relative w-[97vw] max-w-xl mx-auto"
+                  
                   transition={{ duration: 0.38, ease: [0.45, 0, 0.25, 1] }}
                   aria-label={stepLabel(step)}
                 >
-                  <div className="font-medium text-base md:text-base mb-1.5 md:mb-2 text-[#1E3F2B] tracking-tight text-center">
+                  <div className="font-Medium text-base mb-2 text-[#1E3F2B] tracking-tight">
                     {UPLOADS[step].label}
                   </div>
-                  <div className="flex flex-col md:flex-row items-center justify-center w-full gap-3 md:gap-7">
+                  <div className="flex flex-row items-center justify-center w-full gap-7">
                     {/* Reference image (left) */}
-                    <div className="w-32 h-32 md:w-40 md:h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-sm bg-white/70 mb-3 md:mb-0">
+                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-sm bg-white/70">
                       <Image
                         src={UPLOADS[step].refImg}
                         alt={UPLOADS[step].refAlt}
@@ -266,7 +259,7 @@ export default function UploadStep({
                       />
                     </div>
                     {/* Uploaded image (right) */}
-                    <div className="w-32 h-32 md:w-40 md:h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-white">
+                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-white">
                       {uploadedPhotos[step] ? (
                         <>
                           <Image
@@ -296,8 +289,7 @@ export default function UploadStep({
                     </div>
                   </div>
                   {/* Upload Button */}
-                  <label className="inline-flex items-center gap-2 px-5 md:px-6 py-2 md:py-2.5 rounded-full bg-[#1E3F2B] text-white font-medium hover:bg-[#1a3528] transition-colors cursor-pointer mt-4 md:mt-5 shadow-lg active:scale-[.98] text-sm"
-                  >
+                  <label className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#1E3F2B] text-white font-medium hover:bg-[#1a3528] transition-colors cursor-pointer mt-5 shadow-lg active:scale-[.98] text-sm">
                     <IconUpload size={18} />
                     {uploadedPhotos[step] ? "Replace Photo" : "Upload Photo"}
                     <input
@@ -323,11 +315,11 @@ export default function UploadStep({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.36 }}
-          className="flex gap-2 md:gap-3 justify-between items-center mt-1 md:mt-1.5 w-full max-w-7xl"
+          className="flex gap-3 justify-between items-center mt-1 w-full max-w-7xl"
         >
           <button
             onClick={handleBackLocal}
-            className="p-2 md:p-2.5 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
             aria-label={step === 0 ? "Back" : "Previous Photo"}
           >
             <IconArrowLeft size={20} className="text-gray-600" />
@@ -335,7 +327,7 @@ export default function UploadStep({
           <button
             onClick={handleNextLocal}
             disabled={!uploadedPhotos[step]}
-            className={`px-8 md:px-10 py-3 rounded-full bg-[#1E3F2B] text-white font-medium hover:bg-[#1a3528] disabled:bg-gray-300 disabled:cursor-not-allowed transition-all tracking-tight ml-auto`}
+            className={`px-10 py-3 rounded-full bg-[#1E3F2B] text-white font-medium hover:bg-[#1a3528] disabled:bg-gray-300 disabled:cursor-not-allowed transition-all tracking-tight ml-auto`}
             aria-label={
               step < UPLOADS.length - 1
                 ? "Next Photo"
