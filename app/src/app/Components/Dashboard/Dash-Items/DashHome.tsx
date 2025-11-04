@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import {
   IconInfoCircle,
   IconCamera,
-  IconChevronDown,
+
   IconTruck,
   IconBell,
   IconUser,
@@ -12,19 +12,17 @@ import {
   IconSend,
   IconPlus,
   IconCheck,
-  IconTrendingUp,
+
 } from '@tabler/icons-react'
-import { IconHome, IconProgress , IconQuestionMark, IconMessage } from '@tabler/icons-react'
-import Image from 'next/image'
+import { IconHome, IconProgress , IconMessage } from '@tabler/icons-react'
+
 import OnboardingModal from './OnboardingModal-new'
 
 const DashHome = () => {
-  const [activeAccordion, setActiveAccordion] = useState<string | null>(null)
+  
   const [showNotification, setShowNotification] = useState<number | null>(null)
 
-  const toggleAccordion = (item: string) => {
-    setActiveAccordion(activeAccordion === item ? null : item)
-  }
+
 
   type NotificationType = {
     id: number

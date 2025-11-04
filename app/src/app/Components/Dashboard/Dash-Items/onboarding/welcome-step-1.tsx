@@ -86,21 +86,21 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="h-full md:flex block md:max-w-5xl w-full mx-auto overflow-x-hidden overflow-hidden "
+      className="h-full md:flex block md:max-w-5xl w-full  overflow-x-hidden overflow-hidden "
     >
       {/* Left Column - Content */}
-      <div className="flex-1 flex items-center justify-center p-8 md:px-16 mx-auto lg:-mt-16">
+      <div className="flex-1 flex items-center justify-center -ml-2 md:ml-0 md:px-16 mx-auto mt-16 lg:-mt-16">
         <div className=" w-full md:space-y-6 space-y-4 overflow-hidden">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-2xl md:text-4xl font-medium tracking-tight"
+            className="text-2xl md:text-4xl font-medium tracking-tight text-center md:text-left"
             style={{ color: '#1E3F2B' }}
           >
            <span>Hi</span>  <span className="font-instrument-serif">Pawan!</span>
             <br/>
-           {"Welcome to Formial.".split("").map((word, idx) => (
+           {"Welcome to Formial".split("").map((word, idx) => (
             <motion.span
               key={idx}
               initial={{ opacity: 0 }}
@@ -117,9 +117,9 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="md:text-lg text-md text-gray-600 tracking-tight w-90 md:w-full"
+            className="md:text-lg text-md text-gray-600 text-center mx-auto md:text-left tracking-tight w-full md:w-full"
           >
-            Get ready for visible results. You're in expert hands.
+            Get ready for visible results. You're in expert hands
           </motion.p>
 
           {/* CTA Button */}
@@ -130,7 +130,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
           >
             <button
               onClick={onNext}
-              className="w-fit md:w-full flex items-center justify-center gap-3 px-8 md:py-4 py-3 bg-[#1E3F2B] text-white rounded-full font-medium text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
+              className="w-fit mx-auto md:w-full flex items-center justify-center gap-3 px-32 md:px-8 md:py-4 py-3 bg-[#1E3F2B] text-white rounded-full font-medium text-md lg:text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
             >
               I Agree
               <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -142,17 +142,17 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.5 }}
-            className="text-gray-500 w-90 md:w-full md:-mt-2"
+            className="text-gray-500 w-70 text-center mx-auto text-xs md:text-left md:w-full md:-mt-2"
           >
             By clicking above you agree to our{" "}
-            <a href="#" className="underline hover:text-[#1E3F2B] text-sm">Terms & Conditions</a> and{" "}
-            <a href="#" className="underline hover:text-[#1E3F2B] text-sm">Privacy Policy</a>.
+            <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Terms & Conditions</a> and{" "}
+            <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Privacy Policy</a>.
           </motion.p>
         </div>
       </div>
 
       {/* Right Column - Testimonials Carousel */}
-      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-10% md:mask-r-from-100% md:mask-b-from-50%">
+      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-10% md:mask-r-from-100% md:mask-b-from-50% mt-6">
         {/* Desktop Vertical Carousel */}
         <div className="hidden md:block w-full max-h-screen max-w-xl mx-auto relative overflow-hidden">
           {/* Gradient Overlays */}
