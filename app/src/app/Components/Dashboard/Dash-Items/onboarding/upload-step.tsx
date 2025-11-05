@@ -239,7 +239,7 @@ export default function UploadStep({
                 style={{ willChange: "transform,opacity" }}
               >
                 <motion.div
-                  className="bg- rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center gap-6 justify-between py-8 px-4 transition-all relative w-[97vw] max-w-xl mx-auto"
+                  className="rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center gap-6 justify-between py-8 px-4 transition-all relative w-[97vw] max-w-xl mx-auto"
                   
                   transition={{ duration: 0.38, ease: [0.45, 0, 0.25, 1] }}
                   aria-label={stepLabel(step)}
@@ -260,7 +260,7 @@ export default function UploadStep({
                       />
                     </div>
                     {/* Uploaded image (right) */}
-                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-[#F4EBDF]">
+                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-[#FEF8E6]/50">
                       {uploadedPhotos[step] ? (
                         <>
                           <Image
