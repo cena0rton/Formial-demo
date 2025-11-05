@@ -253,8 +253,9 @@ export default function UploadStep({
                       <Image
                         src={UPLOADS[step].refImg}
                         alt={UPLOADS[step].refAlt}
-                        fill
-                        className=""
+                        height={160}
+                        width={160}
+                        className="opacity-50"
                         priority
                       />
                     </div>
@@ -269,7 +270,7 @@ export default function UploadStep({
                             className="object-cover"
                           />
                           <button
-                            className="absolute top-2 right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition"
+                            className="absolute top-2 right-2 w-7 h-7 bg-red-200 rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition"
                             onClick={() => handleDeletePhoto(step)}
                             type="button"
                             aria-label="Remove uploaded photo"
@@ -283,7 +284,7 @@ export default function UploadStep({
                         </>
                       ) : (
                         <div className="w-full h-full rounded-lg flex items-center justify-center text-xs text-gray-500">
-                          No Photo
+                          Click on upload photo
                         </div>
                       )}
                     </div>
