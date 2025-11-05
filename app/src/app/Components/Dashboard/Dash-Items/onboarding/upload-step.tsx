@@ -20,19 +20,19 @@ interface UploadStepProps {
 const UPLOADS = [
   {
     label: "Upload Front View",
-    refImg: "/centerAI2.png",
+    refImg: "/frontMain.png",
     refAlt: "Front Reference",
     uploadAlt: "User uploaded front view",
   },
   {
     label: "Upload Left View",
-    refImg: "/leftAI3.png",
+    refImg: "/leftMain.png",
     refAlt: "Left Reference",
     uploadAlt: "User uploaded left view",
   },
   {
     label: "Upload Right View",
-    refImg: "/rightAI3.png",
+    refImg: "/RightMain.png",
     refAlt: "Right Reference",
     uploadAlt: "User uploaded right view",
   },
@@ -239,7 +239,7 @@ export default function UploadStep({
                 style={{ willChange: "transform,opacity" }}
               >
                 <motion.div
-                  className="bg-[#F2F0E0] rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center gap-6 justify-between py-8 px-4 transition-all relative w-[97vw] max-w-xl mx-auto"
+                  className="bg- rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center gap-6 justify-between py-8 px-4 transition-all relative w-[97vw] max-w-xl mx-auto"
                   
                   transition={{ duration: 0.38, ease: [0.45, 0, 0.25, 1] }}
                   aria-label={stepLabel(step)}
@@ -249,13 +249,13 @@ export default function UploadStep({
                   </div>
                   <div className="flex flex-row items-center justify-center w-full gap-7">
                     {/* Reference image (left) */}
-                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-sm bg-[#F4EBDF]">
+                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-sm bg-[#F9F0E1]">
                       <Image
                         src={UPLOADS[step].refImg}
                         alt={UPLOADS[step].refAlt}
                         height={200}
                         width={200}
-                        className=" object-contain w-50 h-50"
+                        className="object-cover opacity-50"
                         priority
                       />
                     </div>

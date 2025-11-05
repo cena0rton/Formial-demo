@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
 import WelcomeStep1 from "./onboarding/welcome-step-1"
@@ -10,9 +10,21 @@ import DoctorReviewStep from "./onboarding/doctor-review-step"
 import FormulationStep from "./onboarding/formulation-step"
 import Image from "next/image"
 
-export default function OnboardingModal() {
+interface OnboardingModalProps {
+  onComplete?: () => void
+}
+
+export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    // Check if onboarding was already completed
+    const onboardingCompleted = localStorage.getItem('formial-onboarding-completed')
+    if (!onboardingCompleted) {
+      setIsOpen(true)
+    }
+  }, [])
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
   const [userName] = useState("User")
 
@@ -36,7 +48,12 @@ export default function OnboardingModal() {
   }
 
   const handleComplete = () => {
+    localStorage.setItem('formial-onboarding-completed', 'true')
     setIsOpen(false)
+    // Notify parent component to show dashboard
+    if (onComplete) {
+      onComplete()
+    }
   }
 
   if (!isOpen) return null
