@@ -132,7 +132,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
               onClick={onNext}
               className="w-fit mx-auto md:w-full flex items-center justify-center gap-3 px-32 md:px-8 md:py-4 py-3 bg-[#1E3F2B] text-white rounded-full font-semibold text-lg lg:text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
             >
-              I Agree
+             Get Started
               <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
@@ -152,7 +152,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       </div>
 
       {/* Right Column - Testimonials Carousel */}
-      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-10% md:mask-r-from-100% md:mask-b-from-50% mt-8">
+      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-10% md:mask-r-from-100% md:mask-b-from-50% mt-8 md:mt-0">
         {/* Desktop Vertical Carousel */}
         <div className="hidden md:block w-full max-h-screen max-w-xl mx-auto relative overflow-hidden">
           {/* Gradient Overlays */}

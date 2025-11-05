@@ -20,19 +20,19 @@ interface UploadStepProps {
 const UPLOADS = [
   {
     label: "Upload Front View",
-    refImg: "/FormialFront.png",
+    refImg: "/centerAI2.png",
     refAlt: "Front Reference",
     uploadAlt: "User uploaded front view",
   },
   {
     label: "Upload Left View",
-    refImg: "/FormialLeft.png",
+    refImg: "/leftAI3.png",
     refAlt: "Left Reference",
     uploadAlt: "User uploaded left view",
   },
   {
     label: "Upload Right View",
-    refImg: "/Formialright.png",
+    refImg: "/rightAI3.png",
     refAlt: "Right Reference",
     uploadAlt: "User uploaded right view",
   },
@@ -249,18 +249,18 @@ export default function UploadStep({
                   </div>
                   <div className="flex flex-row items-center justify-center w-full gap-7">
                     {/* Reference image (left) */}
-                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-sm bg-white/70">
+                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-sm bg-[#F4EBDF]">
                       <Image
                         src={UPLOADS[step].refImg}
                         alt={UPLOADS[step].refAlt}
-                        height={160}
-                        width={160}
-                        className="opacity-50"
+                        height={200}
+                        width={200}
+                        className=" object-contain w-50 h-50"
                         priority
                       />
                     </div>
                     {/* Uploaded image (right) */}
-                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-white/50">
+                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-[#F4EBDF]">
                       {uploadedPhotos[step] ? (
                         <>
                           <Image
