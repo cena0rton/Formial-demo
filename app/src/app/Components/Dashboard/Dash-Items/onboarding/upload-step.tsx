@@ -26,7 +26,7 @@ const UPLOADS = [
   },
   {
     label: "Upload Left View",
-    refImg: "/Formialleft.png",
+    refImg: "/FormialLeft.png",
     refAlt: "Left Reference",
     uploadAlt: "User uploaded left view",
   },
