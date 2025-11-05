@@ -17,9 +17,9 @@ const stepIcons = [
 export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
   const text = "We will guide you through the simple steps below to unlock your best skin!"
   const steps = [
-    { id: 1, label: "Upload Photos" },
-    { id: 2, label: "Consultation" },
-    { id: 3, label: "Formulation" },
+    { id: 1, label: "1. Upload Photos" },
+    { id: 2, label: "2. Consultation" },
+    { id: 3, label: "3. Formulation" },
   ]
 
   const detailSteps = [
@@ -40,7 +40,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
-        className="space-y-6"
+        className="flex flex-col items-center justify-center my-auto h-100%"
       >
         <h2 className="md:text-3xl text-2xl font-medium tracking-tight text-[#1E3F2B] mb-12 text-center pt-10">
           {text.split("").map((char, idx) => (
@@ -62,15 +62,18 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
           className="flex flex-col items-start gap-6 mb-6"
         >
           {/* Stepper Progress */}
-          <div className="flex items-center justify-center w-full gap-5 mb-8">
+          <div className="flex items-center justify-center w-full gap-6 mb-8">
             {steps.map((step, idx) => (
               <React.Fragment key={step.id}>
                 <div className="flex flex-col items-center relative">
-                  <div
-                    className="rounded-full flex items-center justify-center mb-2 border-4 border-[#1E3F2B] bg-transparent w-14 h-14 shadow-lg"
+                  <motion.div
+                  initial={{ border: "0px" }}
+                  animate={{ border: "2px solid #1E3F2B" }}
+                  transition={{ delay: 0.2, duration: 0.4 }}
+                    className="rounded-full flex items-center justify-center mb-2 border-[#1E3F2B] bg-transparent w-14 h-14 shadow-lg"
                   >
                     {stepIcons[idx]}
-                  </div>
+                  </motion.div>
                   <span className="text-xs md:text-sm font-medium text-[#1E3F2B]">
                     {step.label}
                   </span>
@@ -82,7 +85,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
             ))}
           </div>
 
-          <div className="flex flex-col w-full gap-8 border border-[#1E3F2B]/5">
+          <div className="hidden md:flex flex-col w-full gap-8 border border-[#1E3F2B]/5">
             {detailSteps.map((step) => (
               <motion.div
                 key={step.id}
@@ -91,7 +94,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
                 transition={{ delay: 1.35 + step.id * 0.13, duration: 0.5, type: "spring", stiffness: 120 }}
                 className="flex flex-row items-center gap-5 rounded-xl px-6 py-4 w-full shadow bg-transparent hover:bg-[#1E3F2B]/5 transition-all"
               >
-                <span className="flex items-center justify-center w-fit h-fit px-3 py-1 text-sm font-medium rounded-full border bg-[#1E3F2B]/90 text-[#F2F0E0] border-[#1E3F2B] shadow-inner shadow-white mr-3">
+                <span className="flex items-center justify-center w-fit h-fit px-2 py-0 text-sm font-medium rounded-full border bg-[#1E3F2B]/90 text-[#F2F0E0] border-[#1E3F2B] mr-3">
                   {step.id}
                 </span>
                 <span className="text-sm font-medium text-[#1E3F2B]">{step.description}</span>
@@ -105,11 +108,11 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.1, duration: 0.4 }}
-        className="flex justify-center mt-16 pb-12"
+        className="flex justify-center mt-0 md:mt-8 pb-12"
       >
         <button
           onClick={onNext}
-          className="px-12 py-4 rounded-full font-medium text-white transition-all duration-200 bg-[#1E3F2B] hover:bg-[#163021] shadow-md hover:shadow-lg text-lg tracking-tight cursor-pointer"
+          className="px-12 py-4 w-full md:w-fit rounded-full font-medium text-white transition-all duration-200 bg-[#1E3F2B] hover:bg-[#163021] shadow-md hover:shadow-lg text-lg tracking-tight cursor-pointer"
         >
           Continue
         </button>

@@ -191,10 +191,10 @@ export default function UploadStep({
                   }}
                   className="list-disc list-inside text-[#1E3F2B] space-y-2 text-xs font-medium tracking-tight"
                 >
-                  <li>Don’t use filters.</li>
-                  <li>Good, natural light.</li>
-                  <li>Face should be clear.</li>
-                  <li>No glasses or hair on face.</li>
+                <li>No filters</li>
+                <li>Use natural light</li>
+                <li>Face fully visible</li>
+                <li>Avoid glasses or hair obstruction</li>
                 </motion.ul>
               )}
             </AnimatePresence>
@@ -260,7 +260,7 @@ export default function UploadStep({
                       />
                     </div>
                     {/* Uploaded image (right) */}
-                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-white">
+                    <div className="w-40 h-40 relative rounded-lg overflow-hidden border-1 border-gray-300 flex items-center justify-center shadow-[0_4px_24px_0_rgba(7,16,11,0.12)] bg-white/50">
                       {uploadedPhotos[step] ? (
                         <>
                           <Image
@@ -283,7 +283,7 @@ export default function UploadStep({
                           </button>
                         </>
                       ) : (
-                        <div className="w-full h-full rounded-lg flex items-center justify-center text-xs text-gray-500">
+                        <div className="w-full h-full rounded-lg bg-transparent flex items-center justify-center text-xs text-gray-500 border-1 border-dashed border-[#1E3F2B]/30">
                           Click on upload photo
                         </div>
                       )}
