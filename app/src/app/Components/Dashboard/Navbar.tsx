@@ -14,7 +14,7 @@ const Navbar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiv
       <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#E0E0E0] px-6 md:px-10 py-3 bg-[#1E3F2B] backdrop-blur-sm sticky top-0 z-10">
         {/* Logo */}
         <div className="flex items-center gap-4 text-[#3C403D]">
-          <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial" width={120} height={40} className="h-8 w-auto" />
+          <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial" width={120} height={40} className="md:h-8 w-auto h-6" />
         </div>
 
         {/* Desktop Navigation */}
@@ -46,9 +46,9 @@ const Navbar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActiv
         {/* Mobile Menu Button */}
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden flex items-center justify-center rounded-full size-10 bg-[#EAE0D5]/50 text-[#3C403D]"
+          className="md:hidden flex items-center justify-center rounded-full size-6 bg-[#EAE0D5]/50 text-[#3C403D]"
         >
-          {!isOpen ? <IconMenu2 className="h-6 w-6" /> : <IconX className="h-6 w-6" />}
+          {!isOpen ? <IconMenu2 className="h-4 w-4" /> : <IconX className="h-4 w-4" />}
         </button>
       </header>
 

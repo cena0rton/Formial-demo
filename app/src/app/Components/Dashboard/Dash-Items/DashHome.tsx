@@ -47,12 +47,12 @@ const DashHome = () => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-0 border border-[#E0E0E0]">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-0 border border-[#E0E0E0] rounded-xl">
         {/* Left Column */}
         <div className="lg:col-span-3 flex flex-col gap-2 ">
           {/* Current Prescription Section */}
           <section>
-            <h2 className="text-[#3C403D] text-[22px] font-medium leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
+            <h2 className="text-[#3C403D] text-lg lg:text-2xl font-medium leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
               Your Current Prescription
             </h2>
             
@@ -67,7 +67,7 @@ const DashHome = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div>
                   <p className="text-xs font-medium text-[#585C5B] mb-1">Next shipment</p>
                   <p className="font-medium text-[#3C403D] text-xs">Nov 29, 2025</p>
@@ -94,10 +94,10 @@ const DashHome = () => {
                       {item.icon}
                     </div>
                     <div className="flex flex-col justify-center">
-                      <p className="text-[#3C403D] text-base font-medium leading-normal line-clamp-1">
+                      <p className="text-[#3C403D] text-sm lg:text-base font-medium leading-normal line-clamp-1">
                         {item.title}
                       </p>
-                      <p className="text-[#585C5B] text-sm font-normal leading-normal line-clamp-2">
+                      <p className="text-[#585C5B] text-xs lg:text-sm font-normal leading-normal line-clamp-2">
                         {item.description}
                       </p>
                     </div>
@@ -117,10 +117,10 @@ const DashHome = () => {
 
           {/* Upload Photos Section */}
           <section>
-            <h2 className="text-[#3C403D] text-[22px] font-medium leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
+            <h2 className="text-[#3C403D] text-lg lg:text-2xl] font-medium leading-tight tracking-[-0.015em] px-4 pt-4 ">
               Track Your Progress
             </h2>
-            <div className="flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-[#E0E0E0] bg-[#EAE0D5]/30 p-8 text-center">
+            <div className="flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-[#E0E0E0] bg-[#EAE0D5]/30 p-8 m-8 text-center">
               <div className="flex items-center justify-center size-14 rounded-full bg-[#A3B18A]/20 text-[#A3B18A]">
                 <IconPlus className="text-3xl" />
               </div>
