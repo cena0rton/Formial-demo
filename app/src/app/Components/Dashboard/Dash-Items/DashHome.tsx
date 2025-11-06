@@ -1,10 +1,10 @@
 'use client'
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   IconInfoCircle,
   IconCamera,
-
   IconTruck,
   IconBell,
   IconUser,
@@ -12,15 +12,16 @@ import {
   IconSend,
   IconPlus,
   IconCheck,
-
+  IconX,
 } from '@tabler/icons-react'
-import { IconHome, IconProgress , IconMessage } from '@tabler/icons-react'
+import { IconHome } from '@tabler/icons-react'
 
 
 
 const DashHome = () => {
   
   const [showNotification, setShowNotification] = useState<number | null>(null)
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
 
 
@@ -71,7 +72,7 @@ const DashHome = () => {
               <IconUser className="h-6 w-6 text-gray-600" />
             </div>
             <h1 className="md:text-3xl text-xl font-bold text-[#1E3F2B] tracking-tight">
-              Welcome, Jeet!
+              Welcome, User!
             </h1>
           </div>
           <div className="md:flex hidden items-center justify-end space-x-4">
@@ -106,279 +107,271 @@ const DashHome = () => {
           </div>
         </div>
 
-        {/* Top Row */}
-<div className="flex items-start justify-start max-w-[1440px] mx-auto gap-0 rounded-xl overflow-y-auto">
+        {/* Main Grid */}
+        <div className="max-w-screen-xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 tracking-tight">
+          {/* Left Column: Prescription and Photos */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Your Current Prescription Card */}
+            <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-6 md:p-8">
+              <div className="flex items-center space-x-3 mb-6">
+                <IconHome className="text-[#1E3F2B] h-6 w-6" />
+                <h2 className="md:text-xl text-lg font-semibold text-[#343434]">Your Current Prescription</h2>
+              </div>
+              
+              {/* Prescription Details Box */}
+              <div className="bg-[#F8F7F4] rounded-xl p-6 mb-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                  <div>
+                    <h3 className="md:text-xl text-lg font-medium text-gray-800 mb-1">0.025% tretinoin cream</h3>
+                    <p className="text-sm text-gray-500">Prescription</p>
+                  </div>
+                  <span className="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800 border border-green-200">
+                    <span className="w-2 h-2 mr-2 bg-green-500 rounded-full"></span>
+                    Active
+                  </span>
+                </div>
+                
+                {/* Date Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Next shipment</p>
+                    <p className="font-medium text-gray-800">Nov 29, 2025</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Request changes by</p>
+                    <p className="font-medium text-gray-800">Nov 26, 2025</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Expires on</p>
+                    <p className="font-medium text-gray-800">Nov 12, 2025</p>
+                  </div>
+                </div>
+              </div>
 
-        <div className=" mr-auto flex-1 max-w-5xl">
-        {/* Top Row */}
-        <div className="grid grid-cols-1 gap-0 mb-6 ">
-
-          {/* Home Section */}
-          <div className="bg-[#f8f6ee] rounded-tl-xl shadow-lg border border-b-0 border-gray-300">
-            {/* Header */}
-            <div className="flex items-center h-20 justify-start space-x-2 tracking-tight border-b border-gray-300  bg-[#F2EEE0] rounded-tl-xl px-6">
-              <IconHome className="text-gray-800 h-5 w-5" />
-              <h2 className="text-xl font-semibold text-gray-800">Your Current Prescription</h2>
+              {/* Daily Routine Section */}
+              <div>
+                <p className="text-base font-medium text-gray-700 mb-3">Daily routine:</p>
+                <div className="flex flex-wrap gap-3">
+                  {['Cleanser', 'Treatment', 'Moisturizer'].map((item, index) => (
+                    <span
+                      key={index}
+                      className="flex items-center px-4 py-2 text-sm font-medium rounded-full bg-[#F2F8F5] text-[#1E4D31]"
+                    >
+                      <IconCheck className="h-4 w-4 mr-1.5" />
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="p-6">
+            {/* Upload Your Photos Card */}
+            <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-6 md:p-8">
+              <div className="flex items-center space-x-3 mb-6">
+                <IconCamera className="text-[#1E3F2B] h-6 w-6" />
+                <h2 className="md:text-xl text-lg font-semibold text-[#343434]">Upload Your Photos Here</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Upload Area */}
+                <div className="md:col-span-1 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer min-h-[200px]">
+                  <IconPlus className="h-12 w-12 text-gray-400 mb-2" />
+                  <p className="font-semibold text-gray-800 mb-1">Upload Photos</p>
+                  <p className="text-sm text-gray-500">Track your progress</p>
+                </div>
+                
+                {/* Progress Photos Grid */}
+                <div className="md:col-span-2 grid grid-cols-3 gap-4">
+                  {[
+                    { week: 'Week 0', src: '/leftMain.png' },
+                    { week: 'Week 4', src: '/centerAI.png' },
+                    { week: 'Week 8', src: '/rightMain.png' }
+                  ].map((photo, index) => (
+                    <div key={index} className="relative group aspect-square">
+                      <div className="w-full h-full bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden relative">
+                        {photo.src ? (
+                          <Image
+                            alt={`Skincare progress ${photo.week}`}
+                            className="object-cover rounded-xl"
+                            src={photo.src}
+                            fill
+                          />
+                        ) : (
+                          <span className="text-xs text-gray-500">{photo.week}</span>
+                        )}
+                      </div>
+                      <div className="absolute inset-0 bg-black/10 rounded-xl flex items-end p-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <p className="text-white text-xs font-semibold">{photo.week}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
 
-              {/* Active Prescription Details */}
-              <div className="mb-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <p className="text-sm text-[#1E3F2B]/80 mb-1">Prescription:</p>
-                    <p className="font-bold text-[#1E3F2B] flex items-center space-x-2">
-                      0.025% tretinoin cream 
-                      <span className="text-sm text-green-500 px-2 py-0.5 bg-green-500/10 rounded-full flex items-center gap-2 ml-2 border border-green-300">
-                        <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
-                        active
-                      </span>
+          {/* Right Column: Chat Section - Desktop Only */}
+          <div className="hidden lg:block lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-col h-[calc(100vh-4rem)] max-h-[850px]">
+              {/* Chat Header */}
+              <div className="p-6 border-b border-gray-100 mt-2">
+                <h2 className="text-xl font-semibold text-left text-[#343434]">Formial Consultant</h2>
+              </div>
+
+              {/* Chat Messages Area */}
+              <div className="flex-grow p-6 overflow-y-auto space-y-6">
+                {/* User Message */}
+                <div className="flex justify-end">
+                  <div className="bg-green-100 text-gray-800 p-3 rounded-lg rounded-br-none max-w-xs shadow-sm">
+                    <p className="text-sm">How is my skin progress looking?</p>
+                  </div>
+                </div>
+
+                {/* AI Response */}
+                <div className="flex justify-start">
+                  <div className="bg-white border border-gray-200 p-3 rounded-lg rounded-bl-none max-w-xs shadow-sm">
+                    <p className="text-sm text-gray-700">
+                      Your skin is showing great improvement! Based on your latest photos, I can see a 67% improvement in texture and clarity. Keep up with your current routine!
                     </p>
                   </div>
-                  <div className="mt-4 md:mt-0 flex flex-col md:items-end">
-                    <p className="text-xs text-gray-500 font-medium">Expires on</p>
-                    <span className="font-medium border border-yellow-300 text-sm text-yellow-600 bg-yellow-100 px-2 py-0.5 rounded-full mt-1">
-                      12 Nov 2025
-                    </span>
+                </div>
+
+                {/* Quick Replies */}
+                <div className="pt-4">
+                  <p className="text-center text-xs text-gray-400 mb-3">Quick Replies</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                      Need refill
+                    </button>
+                    <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                      Skin Analysis
+                    </button>
+                    <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                      My skin feels dry
+                    </button>
+                    <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                      Get Help
+                    </button>
                   </div>
                 </div>
               </div>
 
-              {/* Ship/Next Pump Information */}
-              <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                <div>
-                  <p className="text-sm text-[#1E3F2B]/90 mb-1 flex items-center gap-1">
-                    <IconTruck className="inline-block text-[#1E3F2B] h-4 w-4 mr-1" />
-                    Next pump ships:
-                  </p>
-                  <span className="font-medium border border-blue-300 text-sm text-blue-500 bg-blue-100 px-2 py-1 rounded-full">
-                    29 Nov 2025
-                  </span>
+              {/* Chat Input Area */}
+              <div className="p-4 border-t border-gray-200 mt-auto">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Type your message..."
+                    className="w-full bg-gray-100 border-gray-200 rounded-full py-3 pl-5 pr-12 text-sm focus:ring-2 focus:ring-[#1E3F2B] focus:border-[#1E3F2B] placeholder-gray-500"
+                  />
+                  <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#1E3F2B] text-white rounded-full flex items-center justify-center hover:bg-[#1a3528] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E3F2B]">
+                    <IconSend className="h-4 w-4" />
+                  </button>
                 </div>
-                <div className="flex flex-col items-end">
-                  <p className="text-xs text-gray-500 mb-1">Request changes by:</p>
-                  <span className="font-medium border border-green-300 text-sm text-green-500 bg-green-100 px-2 py-0.5 rounded-full">
-                    26 Nov 2025
-                  </span>
-                </div>
-              </div>
-
-              {/* Daily routine */}
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 mb-3">Daily routine:</p>
-                <div className="space-y-2">
-                  {['Cleanser', 'Treatment', 'Moisturizer'].map(
-                    (item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center space-x-2"
-                      >
-                        <IconCheck className="text-[#1E3F2B] h-5 w-5" />
-                        <span className="text-sm">{item}</span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* Side effect info */}
-              <div className="bg-[#1E3F2B]/80 text-white border border-white border-dashed rounded-lg px-3 py-2 flex justify-start w-fit items-center space-x-2 mt-8">
-                <IconInfoCircle className="text-white h-5 w-5 " />
-                <p className="text-sm text-white">
-                  Facing issues with dryness and peeling?
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Skin Progress Section */}
-            <div className="bg-[#f8f6ee] rounded-bl-xl shadow-lg border border-gray-300">
-
-             <div className="flex items-center justify-start space-x-2 mb-4 tracking-tight border-b border-gray-300 px-6 h-20 bg-[#F2EEE0]">
-          <IconProgress className="text-gray-800 h-5 w-5" />
-            <h2 className="text-xl font-semibold text-gray-800 ">Upload Your Photos Here</h2>
-            </div>
-<div className="p-6">
-            <div className="text-center mb-4">
-              <div className="bg-[#1E3F2B]/20 rounded-full w-16 h-16 mx-auto flex items-center justify-center mb-2">
-                <IconCamera className="text-gray-600 h-8 w-8" />
-              </div>
-              <p className="text-sm text-gray-600">Upload photos</p>
-            </div>
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="text-center">
-                <div className="bg-gray-200 rounded-lg h-20 mb-1 flex items-center justify-center">
-                  <span className="text-xs text-gray-500">Week 0</span>
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="bg-gray-200 rounded-lg h-20 mb-1 flex items-center justify-center">
-                  <span className="text-xs text-gray-500">Week 4</span>
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="bg-gray-200 rounded-lg h-20 mb-1 flex items-center justify-center">
-                  <span className="text-xs text-gray-500">Week 8</span>
-                </div>
-              </div>
-            </div>
-            <button className="w-full bg-[#1E3F2B] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#1E3F2B]/80 transition-colors">
-              Add a journal entry
-            </button>
-          </div>
-        
-        </div>
-  </div>
-            </div>
-
-        
-{/* Chat Section */}
-
-         <div className="h-191 w-full bg-[#f8f6ee] rounded-tr-xl rounded-br-xl shadow-lg border border-l-0 border-gray-300 max-w-xl mx-auto flex flex-col tracking-tight scroll-none">
-           {/* Chat Header */}
-           <div className="flex h-20 items-center justify-between p-6 border-b border-gray-300 bg-[#F2EEE0] rounded-tr-xl">
-             <div className="flex items-center space-x-3">
-               <div className="w-10 h-10  rounded-xl flex items-center justify-center">
-                 <IconMessage className="h-6 w-6 text-gray-800" />
-              </div>
-               <div>
-                 <h3 className="text-lg font-semibold text-gray-800">Formial Consultant</h3>
-                 <p className="text-sm text-gray-500">Your skincare companion</p>
-              </div>
-            </div>
-             <div className="flex items-center space-x-2">
-               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-               <span className="text-xs text-green-500">Online</span>
-            </div>
-          </div>
-
-           {/* Chat Messages Area */}
-           <div className="flex-1 p-6 overflow-y-auto h-full">
-             <div className="space-y-6">
-               {/* Welcome Message */}
-               <div className="text-center py-8">
-                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to Formial Chat</h2>
-                 <p className="text-gray-600 mb-8">Get started by asking about your skincare routine, treatment progress, or any questions you have. Not sure where to start?</p>
-               
-                 {/* Quick Action Cards */}
-                 <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                   <motion.button
-                     whileHover={{ scale: 1.02 }}
-                     whileTap={{ scale: 0.98 }}
-                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
-                   >
-                     <div className="flex items-center justify-between">
-                       <div className="flex items-center space-x-3">
-                        
-                         <span className="text-sm font-medium text-gray-900">Need refill</span>
-                       </div>
-                       <IconPlus className="h-4 w-4 text-gray-400" />
-                     </div>
-                   </motion.button>
-
-                   <motion.button
-                     whileHover={{ scale: 1.02 }}
-                     whileTap={{ scale: 0.98 }}
-                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
-                   >
-                     <div className="flex items-center justify-between">
-                       <div className="flex items-center space-x-3">
-                        
-                         <span className="text-sm font-medium text-gray-900">Skin Analysis</span>
-                       </div>
-                       <IconPlus className="h-4 w-4 text-gray-400" />
-                     </div>
-                   </motion.button>
-
-                   <motion.button
-                     whileHover={{ scale: 1.02 }}
-                     whileTap={{ scale: 0.98 }}
-                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
-                   >
-                     <div className="flex items-center justify-between">
-                       <div className="flex items-center space-x-3">
-                        
-                         <span className="text-sm font-medium text-gray-900">My skin feels dry today</span>
-                       </div>
-                       <IconPlus className="h-4 w-4 text-gray-400" />
-                     </div>
-                   </motion.button>
-
-                   <motion.button
-                     whileHover={{ scale: 1.02 }}
-                     whileTap={{ scale: 0.98 }}
-                     className="bg-[#1E3F2B]/10 hover:bg-[#1E3F2B]/20 rounded-xl p-4 text-left transition-colors border border-gray-200"
-                   >
-                     <div className="flex items-center justify-between">
-                       <div className="flex items-center space-x-3">
-                       
-                         <span className="text-sm font-medium text-gray-900">Get Help</span>
-                       </div>
-                       <IconPlus className="h-4 w-4 text-gray-400" />
-            </div>
-                   </motion.button>
-                </div>
-              </div>
-
-               {/* Sample Messages */}
-               <div className="space-y-4">
-                 <div className="flex justify-end">
-                   <div className="bg-[#abe4e6] text-gray-800 rounded-2xl rounded-br-md px-4 py-3 max-w-xs">
-                     <p className="text-sm">How is my skin progress looking?</p>
-                     <p className="text-xs opacity-75 mt-1">2:30 PM</p>
-                </div>
-              </div>
-
-                 <div className="flex justify-start">
-                   <div className="bg-[#b5d3d4] text-gray-800 rounded-2xl rounded-bl-md px-4 py-3 max-w-xs">
-                     <p className="text-sm">Your skin is showing great improvement! Based on your latest photos, I can see a 67% improvement in texture and clarity. Keep up with your current routine!</p>
-                     <p className="text-xs text-gray-500 mt-1">2:31 PM</p>
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-
-           {/* Chat Input Area */}
-           <div className="p-6 border-t border-gray-100">
-             <div className="relative">
-               <input
-                 type="text"
-                 placeholder="Ask about your skincare routine, treatment progress, or any questions..."
-                 className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E3F2B]/20 focus:border-[#1E3F2B] transition-colors"
-               />
-               <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#1E3F2B] text-white p-2 rounded-xl hover:bg-[#1E3F2B]/90 transition-colors">
-                 <IconSend className="h-4 w-4" />
-               </button>
-              </div>
-             
-             {/* Additional Options */}
-             <div className="flex items-center justify-between mt-4">
-               <div className="flex items-center space-x-4">
-                 <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors">
-                   <IconCamera className="h-4 w-4" />
-                   <span className="text-xs">Attach Photo</span>
-                 </button>
-                 <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors">
-                   <IconBell className="h-4 w-4" />
-                   <span className="text-xs">Voice Message</span>
-                 </button>
-                 <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors">
-                   <IconInfoCircle className="h-4 w-4" />
-                   <span className="text-xs">Browse Prompts</span>
-                 </button>
-              </div>
-               <div className="text-xs text-gray-400">
-                 AI Assistant
               </div>
             </div>
           </div>
         </div>
 
+        {/* Mobile Chat Icon Button */}
+        {!isChatOpen && (
+          <button
+            onClick={() => setIsChatOpen(true)}
+            className="lg:hidden fixed bottom-4 right-4 z-40 w-fit h-fit bg-[#1E3F2B] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#1a3528] transition-colors px-4 py-2"
+            aria-label="Open chat"
+          >
+           <div className='flex items-center justify-center gap-2'><span className='text-xs'>Formial Consultant</span><IconMessageCircle className="h-6 w-6" /></div> 
+          </button>
+        )}
 
-  </div>
+        {/* Mobile Chat Modal */}
+        <AnimatePresence>
+          {isChatOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsChatOpen(false)}
+                className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              />
+              
+              {/* Chat Modal */}
+              <motion.div
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 100 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl flex flex-col max-h-[100vh]"
+              >
+                {/* Chat Header with Close Button */}
+                <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-[#343434]">Formial Consultant</h2>
+                  <button
+                    onClick={() => setIsChatOpen(false)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    aria-label="Close chat"
+                  >
+                    <IconX className="h-5 w-5 text-gray-600" />
+                  </button>
+                </div>
 
+                {/* Chat Messages Area */}
+                <div className="flex-grow p-4 overflow-y-auto space-y-4">
+                  {/* User Message */}
+                  <div className="flex justify-end">
+                    <div className="bg-green-100 text-gray-800 p-3 rounded-lg rounded-br-none max-w-[80%] shadow-sm">
+                      <p className="text-sm">How is my skin progress looking?</p>
+                    </div>
+                  </div>
+
+                  {/* AI Response */}
+                  <div className="flex justify-start">
+                    <div className="bg-white border border-gray-200 p-3 rounded-lg rounded-bl-none max-w-[80%] shadow-sm">
+                      <p className="text-sm text-gray-700">
+                        Your skin is showing great improvement! Based on your latest photos, I can see a 67% improvement in texture and clarity. Keep up with your current routine!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Quick Replies */}
+                  <div className="pt-4">
+                    <p className="text-center text-xs text-gray-400 mb-3">Quick Replies</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        Need refill
+                      </button>
+                      <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        Skin Analysis
+                      </button>
+                      <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        My skin feels dry
+                      </button>
+                      <button className="text-sm text-center p-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+                        Get Help
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Chat Input Area */}
+                <div className="p-4 border-t border-gray-200">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Type your message..."
+                      className="w-full bg-gray-100 border-gray-200 rounded-full py-3 pl-5 pr-12 text-sm focus:ring-2 focus:ring-[#1E3F2B] focus:border-[#1E3F2B] placeholder-gray-500"
+                    />
+                    <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-[#1E3F2B] text-white rounded-full flex items-center justify-center hover:bg-[#1a3528] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E3F2B]">
+                      <IconSend className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
