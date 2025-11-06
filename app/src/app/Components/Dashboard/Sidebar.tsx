@@ -21,7 +21,7 @@ const Sidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActi
 
   return (
     <div>
-        <div className='bg-[#1E3F2B]/40  py-4 px-2 w-74 fixed left-0  top-2 h-screen border-[#1E3F2B] hidden md:block'>
+        <div className='  py-4 px-2 w-74 fixed left-0 text-[#1E3F2B] top-2 h-screen border-[#1E3F2B] hidden md:block'>
             <div className='flex justify-start items-center px-2 mb-8'>
                 <h1 className='text-xl font-medium'>
                     <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial Logo" height={150} width={150}/>
@@ -29,7 +29,7 @@ const Sidebar = ({activeItem, setActiveItem, ref}: {activeItem?: number, setActi
                 </h1>
             </div>
             
-            <nav className='space-y-2 px-2 text-white'>
+            <nav className='space-y-2 px-2 text-[#1E3F2B]'>
               {menuItems.map((item, index) => (
                 <button 
                   onClick={() => handleClick(index)}

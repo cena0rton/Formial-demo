@@ -174,10 +174,10 @@ const DashHome = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Upload Area */}
-                <div className="md:col-span-1 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer min-h-[200px]">
-                  <IconPlus className="h-12 w-12 text-gray-400 mb-2" />
-                  <p className="font-semibold text-gray-800 mb-1">Upload Photos</p>
-                  <p className="text-sm text-gray-500">Track your progress</p>
+                <div className="md:col-span-1 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer">
+                  <IconPlus className="h-8 w-8 text-gray-400 mb-2" />
+                  <p className="font-medium text-gray-800 mb-1">Upload Photos</p>
+                  <p className="text-xs text-gray-500">Track your progress</p>
                 </div>
                 
                 {/* Progress Photos Grid */}
@@ -212,7 +212,7 @@ const DashHome = () => {
 
           {/* Right Column: Chat Section - Desktop Only */}
           <div className="hidden lg:block lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-col h-[calc(100vh-4rem)] max-h-[850px]">
+            <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex flex-col h-full ">
               {/* Chat Header */}
               <div className="p-6 border-b border-gray-100 mt-2">
                 <h2 className="text-xl font-semibold text-left text-[#343434]">Formial Consultant</h2>
