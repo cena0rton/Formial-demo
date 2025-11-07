@@ -120,22 +120,24 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         </div>
 
         {/* Footer with Progress */}
-        <div className="flex items-center justify-center gap-3 py-4">
-          {[0, 1, 2].map((step) => {
-            // Map step indices to progress dots (0,1 are welcome, 2-4 are main steps)
-            const stepProgress = currentStep - 2
-            return (
-              <motion.div
-                key={step}
-                className="h-2 rounded-full transition-all"
-                animate={{
-                  width: stepProgress >= step ? 32 : 8,
-                  backgroundColor: stepProgress >= step ? "#1E3F2B" : "#D1D5DB",
-                }}
-              />
-            )
-          })}
-        </div>
+        {currentStep > 0 && (
+          <div className="flex items-center justify-center gap-3 py-4">
+            {[0, 1, 2].map((step) => {
+              // Map step indices to progress dots (0,1 are welcome, 2-4 are main steps)
+              const stepProgress = currentStep - 2
+              return (
+                <motion.div
+                  key={step}
+                  className="h-2 rounded-full transition-all"
+                  animate={{
+                    width: stepProgress >= step ? 32 : 8,
+                    backgroundColor: stepProgress >= step ? "#1E3F2B" : "#D1D5DB",
+                  }}
+                />
+              )
+            })}
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   )

@@ -80,36 +80,40 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
     "acne scars": "bg-indigo-200 text-indigo-900 border-indigo-300",
   }
 
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className=" md:flex block md:max-w-5xl w-full  overflow-x-hidden overflow-hidden "
+      className=" md:flex md:flex-row flex-col md:max-w-5xl w-full justify-between h-screen items-end md:justify-center md:items-center  overflow-x-hidden overflow-y-auto "
     >
       {/* Left Column - Content */}
       <div className="flex-1 flex items-start md:items-center justify-center -ml-2 md:ml-0 md:px-16 mx-auto mt-16 lg:-mt-16 h-90% md:h-auto">
         <div className=" w-full md:space-y-6 space-y-6 overflow-hidden">
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{  delay: 0.2, duration: 0.5, type:"spring", stiffness: 100, damping: 10, ease: "easeInOut" }}
             className="text-3xl md:text-4xl font-medium tracking-tight text-center md:text-left"
             style={{ color: '#1E3F2B' }}
           >
-           <span>Hi</span>  <span className="font-instrument-serif">Pawan!</span>
-            <br/>
-           {"Welcome to Formial".split("").map((word, idx) => (
+            
+           <span className="font-instrument-serif tracking-wide">Hi {"Pawan!".split("").map((word, idx) => (
             <motion.span
               key={idx}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: idx * 0.05, duration: 0.5 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{  delay: idx * 0.2, duration: 0.5, type:"spring", stiffness: 500, damping: 5,mass: 10, ease: "easeInOut" }}
             >
               {word}
            </motion.span>
-           ))}
+            ))}
+           </span>
+            <br/>
+           Welcome to Formial
+       
           </motion.h1>
 
           {/* Description */}
@@ -152,7 +156,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       </div>
 
       {/* Right Column - Testimonials Carousel */}
-      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-10% md:mask-r-from-100% md:mask-b-from-50% mt-8 md:mt-0">
+      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-90% md:mask-r-from-100% md:mask-b-from-50%  mt-16 md:mt-0">
         {/* Desktop Vertical Carousel */}
         <div className="hidden md:block w-full max-h-screen max-w-xl mx-auto relative overflow-hidden">
           {/* Gradient Overlays */}

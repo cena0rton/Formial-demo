@@ -20,19 +20,19 @@ interface UploadStepProps {
 const UPLOADS = [
   {
     label: "Upload Front View",
-    refImg: "/frontMain.png",
+    refImg: "/FormialFront1.png",
     refAlt: "Front Reference",
     uploadAlt: "User uploaded front view",
   },
   {
     label: "Upload Left View",
-    refImg: "/leftMain.png",
+    refImg: "/FormialLeft1.png",
     refAlt: "Left Reference",
     uploadAlt: "User uploaded left view",
   },
   {
     label: "Upload Right View",
-    refImg: "/rightMain.png",
+    refImg: "/FormialRight1.png",
     refAlt: "Right Reference",
     uploadAlt: "User uploaded right view",
   },
@@ -191,7 +191,7 @@ export default function UploadStep({
                   }}
                   className="list-disc list-inside text-[#1E3F2B] space-y-2 text-xs font-medium tracking-tight"
                 >
-                <li>No filters</li>
+                <li>No filters. No Makeup.</li>
                 <li>Use natural light</li>
                 <li>Face fully visible</li>
                 <li>Avoid glasses or hair obstruction</li>
@@ -255,7 +255,7 @@ export default function UploadStep({
                         alt={UPLOADS[step].refAlt}
                         height={200}
                         width={200}
-                        className="object-cover opacity-50"
+                        className="object-fit opacity-50 aspect-square"
                         priority
                       />
                     </div>

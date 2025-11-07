@@ -128,7 +128,7 @@ const DashHome = () => {
               <p className="text-[#585C5B] text-sm max-w-xs">
                 Drag & drop your files here or click the button below to select them from your device.
               </p>
-              <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 mt-2 bg-[#A3B18A] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+              <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 mt-2 bg-[#1E3F2B] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
                 <span className="truncate">Upload Photos</span>
               </button>
             </div>
