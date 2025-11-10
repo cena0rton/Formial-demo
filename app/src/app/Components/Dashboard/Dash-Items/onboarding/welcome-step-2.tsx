@@ -2,7 +2,7 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { IconCheck, IconRefresh, IconShieldLock, IconUser, IconPhone, IconMail } from "@tabler/icons-react"
+import { IconCheck, IconRefresh, IconShieldLock, IconUser, IconPhone, IconMail, IconEdit } from "@tabler/icons-react"
 
 interface WelcomeStep2Props {
   userDetails: {
@@ -22,7 +22,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col md:flex-col tracking-tight md:items-center md:justify-between gap-10 px-6 md:px-16 py-12 w-full max-w-6xl mx-auto"
+      className="flex flex-col md:flex-col tracking-tight md:items-center md:justify-between gap-10 px-6 md:px-16 py-6 w-full max-w-6xl mx-auto"
     >
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -35,7 +35,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.4 }}
-          className="text-2xl md:text-3xl font-medium text-[#1E3F2B] leading-tight"
+          className="md:text-2xl text-xl  font-medium text-[#1E3F2B] leading-tight"
         >
           Let’s make sure we’ve got
           <br />
@@ -49,7 +49,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
 
         <div className="flex items-center w-fit rounded-xl gap-3 text-sm text-gray-500 border-1 border-neutral-300 px-2 py-1 ">
           <IconShieldLock size={18} className="text-[#1E3F2B]" />
-          <span>We encrypt your details and never share them without your permission.</span>
+          <span className="text-xs md:text-sm">We encrypt your details and never share them without your permission.</span>
         </div>
       </motion.div>
 
@@ -59,15 +59,15 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
         transition={{ delay: 0.25, duration: 0.45, type: "spring", stiffness: 120 }}
         className="flex-1 w-full"
       >
-        <div className="bg-[#f2f0e0] relative rounded-[20px] border border-[#1E3F2B]/20 px-6 md:px-10 py-8 space-y-8 ">
+        <div className="bg-[#f2f0e0] relative rounded-[20px] border border-[#1E3F2B]/20 px-4 md:px-4 py-4 space-y-4 ">
           
           <div className="flex relative z-10 items-start justify-between gap-4">
             <div>
-              <h3 className="text-xl font-medium text-[1E3F2B] mt-1">Confirm your Details</h3>
+              <h3 className="text-lg font-medium text-[1E3F2B] ">Confirm your Details</h3>
             </div>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-4">
             <DetailRow icon={<IconUser size={20} />} label="Full name" value={userDetails.name} />
             <DetailRow icon={<IconPhone size={20} />} label="Mobile number" value={userDetails.phone} />
             <DetailRow icon={<IconMail size={20} />} label="Email address" value={userDetails.email} />
@@ -119,15 +119,21 @@ function DetailRow({ icon, label, value }: DetailRowProps) {
       transition={{ duration: 0.3 }}
       className="flex items-center gap-4 rounded-xl border border-[#1E3F2B]/10 bg-[#f6f4e5] px-4 py-4"
     >
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F8F7EF] text-[#1E3F2B] shadow-inner border-1 border-[#dad9d6]">
+      <div className="flex aspect-square w-8 items-center p-1 justify-center rounded-2xl bg-[#1E3F2B]/80 text-[#f6f4e5] shadow-inner border-1 border-[#dad9d6]">
         {icon}
       </div>
       <div className="w-full">
         <p className="text-xs uppercase tracking-tight text-[#1E3F2B]/60 px-2 font-semibold">{label}</p>
+        <div className="flex items-center gap-2">
         <input
         value={value}
         
         className="text-base md:text-lg w-full font-medium text-[#1E3F2B] mt-1 px-2 outline-none focus:ring-1 focus:ring-[#1E3F2B]/30 rounded-xl"></input>
+
+<button>  
+                    <IconEdit size={16} className="text-[#1E3F2B]" />
+                  </button>
+                  </div>
       </div>
     </motion.div>
   )

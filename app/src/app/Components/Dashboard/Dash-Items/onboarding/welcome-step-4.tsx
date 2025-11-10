@@ -38,7 +38,7 @@ export default function WelcomeStep4({ onNext, onBack }: WelcomeStep4Props) {
         transition={{ delay: 0.2, duration: 0.4 }}
         className="flex flex-col items-center justify-center my-auto h-full"
       >
-        <h2 className="md:text-3xl text-left text-2xl font-medium tracking-tight md:w-xl w-full text-[#1E3F2B] mb-8 md:mb-8 pt-6 md:pt-10">
+        <h2 className="md:text-2xl text-xl text-left font-medium tracking-tight md:w-xl w-full text-[#1E3F2B] mb-8 md:mb-8 pt-6 md:pt-10">
           {text.split("").map((char, idx) => (
             <motion.span
               key={idx}
@@ -188,7 +188,7 @@ export default function WelcomeStep4({ onNext, onBack }: WelcomeStep4Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 0.4 }}
-        className="flex justify-between mt-4 md:mt-4 pb-8 md:pb-12"
+        className="flex justify-between md:mt-4 pb-8 md:pb-12"
       >
         <button
           type="button"

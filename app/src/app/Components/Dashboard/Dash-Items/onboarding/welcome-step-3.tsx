@@ -61,7 +61,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col tracking-tight items-center justify-center gap-6 px-6 md:px-16 py-12 w-full max-w-6xl mx-auto"
+      className="flex flex-col tracking-tight items-center justify-center gap-6 px-6 md:px-16 py-6 w-full max-w-6xl mx-auto"
     >
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -70,7 +70,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
         className="text-center space-y-4"
       >
       
-        <h2 className="text-2xl md:text-3xl font-medium text-[#1E3F2B] leading-tight text-left">
+        <h2 className="md:text-2xl text-xl  font-medium text-[#1E3F2B] leading-tight text-left">
           Verify it’s really you
         </h2>
         <p className="text-sm md:text-lg text-gray-600 max-w-2xl mx-auto text-left">
@@ -108,7 +108,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
                     value={digit}
                     onChange={(event) => handleChange(index, event.target.value)}
                     onKeyDown={(event) => handleKeyDown(index, event)}
-                    className="md:w-16 w-12 aspect-square rounded-lg border border-[#1E3F2B]/20 bg-[#F8F7EF] text-xl md:text-2xl font-medium text-[#1E3F2B] text-center outline-none focus:border-[#1E3F2B] focus:ring-1 focus:ring-[#1E3F2B]/10 transition-all placeholder:text-gray-300"
+                    className="md:w-12 w-10 aspect-square rounded-lg border border-[#1E3F2B]/20 bg-[#F6F4E5] text-xl md:text-2xl font-medium text-[#1E3F2B] text-center outline-none focus:border-[#1E3F2B] focus:ring-1 focus:ring-[#1E3F2B]/10 transition-all placeholder:text-gray-300"
                     aria-label={`OTP digit ${index + 1}`}
                     autoComplete="one-time-code"
                   />
