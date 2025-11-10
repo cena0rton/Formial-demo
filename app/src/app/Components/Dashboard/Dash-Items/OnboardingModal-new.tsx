@@ -1,10 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
 import WelcomeStep1 from "./onboarding/welcome-step-1"
 import WelcomeStep2 from "./onboarding/welcome-step-2"
+import WelcomeStep3 from "./onboarding/welcome-step-3"
+import WelcomeStep4 from "./onboarding/welcome-step-4"
 import UploadStep from "./onboarding/upload-step"
 import DoctorReviewStep from "./onboarding/doctor-review-step"
 import FormulationStep from "./onboarding/formulation-step"
@@ -26,11 +28,23 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }
   }, [])
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
-  const [userName] = useState("User")
+  const [userDetails] = useState({
+    name: "Pawan Mishra",
+    phone: "+91 98765 43210",
+    email: "pawan.mishra@example.com",
+  })
+  const userFirstName = userDetails.name.split(" ")[0] || userDetails.name
 
+  const handleRefreshDetails = useCallback(() => {
+    console.info("Refresh user details requested")
+  }, [])
+
+  const handleResendOtp = useCallback(() => {
+    console.info("Resend OTP requested")
+  }, [])
 
   const handleNext = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -42,7 +56,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }
 
   const handleSkip = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -105,12 +119,30 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           <div className="px-0 items-center justify-center">
             <AnimatePresence mode="wait">
               {currentStep === 0 && (
-                <WelcomeStep1 key="welcome1" userName={userName} onNext={handleNext} />
+                <WelcomeStep1 key="welcome1" userName={userFirstName} onNext={handleNext} />
               )}
               {currentStep === 1 && (
-                <WelcomeStep2 key="welcome2" onNext={handleNext} />
+                <WelcomeStep2
+                  key="welcome2"
+                  userDetails={userDetails}
+                  onNext={handleNext}
+                  onBack={handleBack}
+                  onRefresh={handleRefreshDetails}
+                />
               )}
               {currentStep === 2 && (
+                <WelcomeStep3
+                  key="welcome3"
+                  phoneNumber={userDetails.phone}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                  onResend={handleResendOtp}
+                />
+              )}
+              {currentStep === 3 && (
+                <WelcomeStep4 key="welcome4" onNext={handleNext} />
+              )}
+              {currentStep === 4 && (
                 <div className="px-8 mt-20">
                   <div className="w-full max-w-4xl mx-auto">
                     <UploadStep
@@ -124,14 +156,14 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   </div>
                 </div>
               )}
-              {currentStep === 3 && (
+              {currentStep === 5 && (
                 <div className="px-8 mt-20">
                   <div className="w-full max-w-4xl mx-auto">
                     <DoctorReviewStep key="doctor" onNext={handleNext} onBack={handleBack} onSkip={handleSkip} />
                   </div>
                 </div>
               )}
-              {currentStep === 4 && (
+              {currentStep === 6 && (
                 <div className="px-8 mt-20">
                   <div className="w-full max-w-4xl mx-auto">
                     <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
@@ -143,11 +175,11 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         </div>
 
         {/* Footer with Progress */}
-        {currentStep > 0 && (
+        {currentStep >= 4 && (
           <div className="flex items-center justify-center gap-3 py-4">
             {[0, 1, 2].map((step) => {
-              // Map step indices to progress dots (0,1 are welcome, 2-4 are main steps)
-              const stepProgress = currentStep - 2
+              // Map main step indices (upload, doctor review, formulation) to progress dots
+              const stepProgress = currentStep - 4
               return (
                 <motion.div
                   key={step}
