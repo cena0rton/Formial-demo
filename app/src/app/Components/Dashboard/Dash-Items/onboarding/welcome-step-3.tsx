@@ -70,7 +70,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
         className="text-center space-y-4"
       >
       
-        <h2 className="text-3xl md:text-4xl font-medium text-[#1E3F2B] leading-tight">
+        <h2 className="text-2xl md:text-3xl font-medium text-[#1E3F2B] leading-tight">
           Verify it’s really you
         </h2>
         <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">

@@ -57,6 +57,7 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
           transition={{ delay: 1.0, duration: 0.4 }}
           className="relative w-full max-w-3xl mb-8 md:mb-12"
         >
+            <div className="w-md md:w-xl mx-auto">
           {/* Step 1 - Top Left */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -176,6 +177,7 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
             </div>
           </motion.div>
 
+          </div>
           {/* Mobile arrows - simplified vertical flow */}
          
         </motion.div>
@@ -185,7 +187,7 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 0.4 }}
-        className="flex justify-center mt-4 md:mt-8 pb-8 md:pb-12"
+        className="flex justify-end mt-4 md:mt-8 pb-8 md:pb-12"
       >
         <button
           onClick={onNext}
