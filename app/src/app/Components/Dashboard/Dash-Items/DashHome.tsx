@@ -57,8 +57,8 @@ const DashHome = () => {
 
   const treatmentTags = [
     { label: "pimples", color: "bg-red-200 text-red-900 border-red-300" },
-    { label: "dullness", color: "bg-green-200 text-green-900 border-green-300" },
-    { label: "fine lines", color: "bg-green-200 text-green-900 border-green-300" },
+    { label: "dullness", color: "bg-yellow-200 text-yellow-900 border-yellow-300" },
+    { label: "fine lines", color: "bg-orange-200 text-orange-900 border-orange-300" },
   ]
 
   return (
@@ -109,8 +109,8 @@ const DashHome = () => {
           >
             {/* Skin/Treatment Card */}
             <div className="bg-white rounded-xl shadow-sm border border-[#E0E0E0] p-6 relative overflow-hidden">
-              <div className="flex items-center gap-3 mb-4 border-b border-[#E0E0E0] pb-4">
-                <div className="p-2 rounded-lg bg-[#EAE0D5]/60">
+              <div className="flex items-center gap-1 mb-4 border-b border-[#E0E0E0] pb-4">
+                <div className="p-2 rounded-lg bg-[#EAE0D5]/0">
                   <IconDroplet className="h-6 w-6 text-[#1E3F2B]" />
                 </div>
                 <h2 className="text-xl font-semibold tracking-tight text-[#1E3F2B]">Skin</h2>
@@ -167,34 +167,35 @@ const DashHome = () => {
             </div>
 
             {/* Formial 101 Card */}
-            <div className="bg-[#EAE0D5]/40 rounded-xl shadow-sm border border-[#E0E0E0] p-6">
+            <div className="bg-[#EAE0D5]/40 rounded-xl shadow-sm border border-[#E0E0E0] px-6 py-3">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-[#A3B18A]/20">
+                  <div className="p-2 rounded-lg bg-[#A3B18A]/0">
                     <IconBook className="h-5 w-5 text-[#1E3F2B]" />
                   </div>
-                  <h3 className="text-lg font-semibold text-[#1E3F2B]">FORMIAL 101</h3>
+                  <h3 className="text-lg font-medium text-[#1E3F2B] tracking-tight">Formial Guide</h3>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-[#585C5B]">
                   <IconClock className="h-4 w-4" />
                   <span>2 MIN</span>
                 </div>
               </div>
-              <p className="text-sm text-[#585C5B] mb-4">
+              <p className="text-sm text-[#585C5B] flex items-center justify-between gap-2">
                 Improve your skin journey with our guide to getting started.
-              </p>
-              <button className="ml-auto block px-6 py-2 rounded-lg bg-[#1E3F2B] text-white text-sm font-medium hover:bg-[#1a3528] transition-colors">
+                <button className="ml-auto block px-6 py-2 rounded-lg bg-[#1E3F2B] text-white text-sm font-medium hover:bg-[#1a3528] transition-colors">
                 Read
               </button>
+              </p>
+            
             </div>
 
             {/* Skin Progress Card */}
             <div className="bg-white rounded-xl shadow-sm border border-[#E0E0E0] p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-[#EAE0D5]/60">
+              <div className="flex items-center gap-3 mb-4 border-b border-[#E0E0E0] pb-4">
+                <div className="p-2 rounded-lg bg-[#EAE0D5]/0">
                   <IconCamera className="h-6 w-6 text-[#1E3F2B]" />
                 </div>
-                <h3 className="text-lg font-semibold text-[#1E3F2B]">Your skin progress</h3>
+                <h3 className="text-lg font-semibold text-[#1E3F2B] tracking-tight">Your Skin Progress</h3>
               </div>
               <p className="text-sm text-[#585C5B] mb-4">
                 Hi {userName}, how is your skin going today?

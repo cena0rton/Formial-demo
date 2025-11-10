@@ -11,7 +11,7 @@ const Page = () => {
   const ref = useRef<number>(0);
   
   return (
-    <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-[#f5f2ed]">
+    <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-[#F8F7F3]">
       <div className="layout-container flex h-full grow flex-col">
         <Navbar activeItem={activeItem} setActiveItem={setActiveItem} ref={ref} />
         <Dash>
