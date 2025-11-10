@@ -6,6 +6,7 @@ import { IconCamera, IconUserCheck, IconFlask } from "@tabler/icons-react"
 
 interface WelcomeStep4Props {
   onNext: () => void
+  onBack: () => void
 }
 
 const stepIcons = [
@@ -20,7 +21,7 @@ const steps = [
   { id: 3, label: "Formulation", description: "Get your personalized skincare plan" },
 ]
 
-export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
+export default function WelcomeStep4({ onNext, onBack }: WelcomeStep4Props) {
   const text = "We will guide you through the simple steps below to unlock your best skin!"
 
   return (
@@ -29,7 +30,7 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="md:mt-0 mt-0 px-4 md:px-8 m-auto max-w-4xl bg-transparent"
+      className="md:mt-0 mt-0 px-4 md:px-8 m-auto max-w-6xl bg-transparent"
     >
       <motion.div
         initial={{ opacity: 0 }}
@@ -37,7 +38,7 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
         transition={{ delay: 0.2, duration: 0.4 }}
         className="flex flex-col items-center justify-center my-auto h-full"
       >
-        <h2 className="md:text-3xl text-2xl font-medium tracking-tight text-[#1E3F2B] mb-8 md:mb-12 text-center pt-6 md:pt-10">
+        <h2 className="md:text-3xl text-left text-2xl font-medium tracking-tight w-xl text-[#1E3F2B] mb-8 md:mb-8 text-center pt-6 md:pt-10">
           {text.split("").map((char, idx) => (
             <motion.span
               key={idx}
@@ -55,9 +56,9 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.0, duration: 0.4 }}
-          className="relative w-full max-w-3xl mb-8 md:mb-12"
+          className="relative w-full max-w-3xl mb-8 md:mb-6 md:border rounded-xl border-[#1E3F2B]/10"
         >
-            <div className="w-md md:w-xl mx-auto">
+            <div className="w-full md:w-xl mx-auto">
           {/* Step 1 - Top Left */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -187,11 +188,18 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2, duration: 0.4 }}
-        className="flex justify-end mt-4 md:mt-8 pb-8 md:pb-12"
+        className="flex justify-between mt-4 md:mt-4 pb-8 md:pb-12"
       >
         <button
+          type="button"
+          onClick={onBack}
+          className="w-fit md:w-auto rounded-full border border-[#1E3F2B]/30 text-[#1E3F2B] px-6 py-3 font-medium hover:bg-[#1E3F2B]/10 transition-all mr-4"
+        >
+          Go back
+        </button>
+        <button
           onClick={onNext}
-          className="px-12 py-4 w-full md:w-fit rounded-full font-medium text-white transition-all duration-200 bg-[#1E3F2B] hover:bg-[#163021] shadow-md hover:shadow-lg text-lg tracking-tight cursor-pointer"
+          className="w-fit md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1E3F2B] px-9 py-3 font-semibold text-white cursor-pointer hover:bg-[#163021] transition-all disabled:bg-[#1E3F2B]/30 disabled:shadow-none disabled:cursor-not-allowed"
         >
           Continue
         </button>
@@ -199,5 +207,4 @@ export default function WelcomeStep4({ onNext }: WelcomeStep4Props) {
     </motion.div>
   )
 }
-
 

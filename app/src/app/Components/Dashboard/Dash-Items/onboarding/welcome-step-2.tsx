@@ -47,7 +47,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
           Please confirm everything looks perfect before we proceed.
         </p>
 
-        <div className="flex items-center w-fit rounded-xl gap-3 text-sm text-gray-500 border-1 border-neutral-300 px-2 py-1">
+        <div className="flex items-center w-fit rounded-xl gap-3 text-sm text-gray-500 border-1 border-neutral-300 px-2 py-1 ">
           <IconShieldLock size={18} className="text-[#1E3F2B]" />
           <span>We encrypt your details and never share them without your permission.</span>
         </div>

@@ -61,7 +61,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col tracking-tight items-center justify-center gap-10 px-6 md:px-16 py-12 w-full max-w-5xl mx-auto"
+      className="flex flex-col tracking-tight items-center justify-center gap-6 px-6 md:px-16 py-12 w-full max-w-6xl mx-auto"
     >
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -70,10 +70,10 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
         className="text-center space-y-4"
       >
       
-        <h2 className="text-2xl md:text-3xl font-medium text-[#1E3F2B] leading-tight">
+        <h2 className="text-2xl md:text-3xl font-medium text-[#1E3F2B] leading-tight text-left">
           Verify it’s really you
         </h2>
-        <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto text-left">
           We’ve sent a 4-digit verification code to{" "}{formattedPhone}.<br/>
           Enter the code to continue with your
           personalised onboarding journey.
@@ -136,7 +136,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
         
         </div>
 
-        <div className="flex flex-row items-center justify-between gap-4 mt-12">
+        <div className="flex flex-row items-center justify-between gap-4 mt-6">
             <button
               type="button"
               onClick={onBack}

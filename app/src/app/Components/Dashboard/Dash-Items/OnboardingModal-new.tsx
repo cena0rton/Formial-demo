@@ -140,7 +140,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 />
               )}
               {currentStep === 3 && (
-                <WelcomeStep4 key="welcome4" onNext={handleNext} />
+                <WelcomeStep4 key="welcome4" onNext={handleNext} onBack={handleBack} />
               )}
               {currentStep === 4 && (
                 <div className="px-8 mt-20">

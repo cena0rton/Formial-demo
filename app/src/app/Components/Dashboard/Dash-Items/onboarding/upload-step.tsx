@@ -131,7 +131,7 @@ export default function UploadStep({
         className="text-left w-full max-w-7xl"
       >
         {/* Title */}
-        <h2 className="md:text-4xl text-2xl font-medium tracking-tight text-[#1E3F2B] mb-4">
+        <h2 className="md:text-3xl text-2xl font-medium tracking-tight text-[#1E3F2B] mb-4">
           {"Upload Your Photos".split("").map((char, idx) => (
             <motion.span
               key={idx}
