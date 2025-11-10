@@ -59,13 +59,10 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
         transition={{ delay: 0.25, duration: 0.45, type: "spring", stiffness: 120 }}
         className="flex-1 w-full"
       >
-        <div className="bg-[#f2f0e0] relative rounded-[20px] border border-[#1E3F2B] px-6 md:px-10 py-8 space-y-8 ">
+        <div className="bg-[#f2f0e0] relative rounded-[20px] border border-[#1E3F2B]/20 px-6 md:px-10 py-8 space-y-8 ">
           
           <div className="flex relative z-10 items-start justify-between gap-4">
             <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-[#1E3F2B]/60 font-semibold">
-                profile snapshot
-              </p>
               <h3 className="text-xl font-medium text-[1E3F2B] mt-1">Confirm your Details</h3>
             </div>
           </div>
@@ -100,8 +97,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
               onClick={onNext}
               className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1E3F2B] px-8 py-3 font-semibold text-white hover:bg-[#163021] transition-all"
             >
-              <IconCheck size={18} />
-              Looks good, continue
+              Continue
             </button>
           </div>
       </motion.div>
