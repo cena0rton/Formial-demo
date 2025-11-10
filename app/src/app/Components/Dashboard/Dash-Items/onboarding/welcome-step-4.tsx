@@ -38,7 +38,7 @@ export default function WelcomeStep4({ onNext, onBack }: WelcomeStep4Props) {
         transition={{ delay: 0.2, duration: 0.4 }}
         className="flex flex-col items-center justify-center my-auto h-full"
       >
-        <h2 className="md:text-3xl text-left text-2xl font-medium tracking-tight w-xl text-[#1E3F2B] mb-8 md:mb-8 pt-6 md:pt-10">
+        <h2 className="md:text-3xl text-left text-2xl font-medium tracking-tight md:w-xl w-full text-[#1E3F2B] mb-8 md:mb-8 pt-6 md:pt-10">
           {text.split("").map((char, idx) => (
             <motion.span
               key={idx}
@@ -56,7 +56,7 @@ export default function WelcomeStep4({ onNext, onBack }: WelcomeStep4Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.0, duration: 0.4 }}
-          className="relative w-full max-w-3xl mb-8 md:mb-6 md:border rounded-xl border-[#1E3F2B]/10"
+          className="relative w-full max-w-3xl mb-8 md:mb-6 border rounded-xl border-[#1E3F2B]/10"
         >
             <div className="w-full md:w-xl mx-auto">
           {/* Step 1 - Top Left */}
