@@ -3,10 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import {
-  IconMessageCircle,
   IconSend,
   IconPlus,
-  IconX,
   IconDroplet,
   IconBook,
   IconClock,
@@ -108,8 +106,8 @@ const DashHome = () => {
             className="space-y-6"
           >
             {/* Skin/Treatment Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-[#E0E0E0] p-6 relative overflow-hidden">
-              <div className="flex items-center gap-1 mb-4 border-b border-[#E0E0E0] pb-4">
+            <div className="bg-white rounded-xl shadow-sm border border-[#E0E0E0] px-6 pb-4 pt-3 relative overflow-hidden">
+              <div className="flex items-center gap-1 mb-4 border-b border-[#E0E0E0] pb-1">
                 <div className="p-2 rounded-lg bg-[#EAE0D5]/0">
                   <IconDroplet className="h-6 w-6 text-[#1E3F2B]" />
                 </div>
@@ -190,8 +188,8 @@ const DashHome = () => {
             </div>
 
             {/* Skin Progress Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-[#E0E0E0] p-6">
-              <div className="flex items-center gap-3 mb-4 border-b border-[#E0E0E0] pb-4">
+            <div className="bg-white rounded-xl shadow-sm border border-[#E0E0E0]  px-6 pb-4 pt-3">
+              <div className="flex items-center gap-3 mb-4 border-b border-[#E0E0E0] pb-1">
                 <div className="p-2 rounded-lg bg-[#EAE0D5]/0">
                   <IconCamera className="h-6 w-6 text-[#1E3F2B]" />
                 </div>
@@ -313,89 +311,7 @@ const DashHome = () => {
       </AnimatePresence>
 
       {/* Mobile Chat Icon Button */}
-      {!isChatOpen && (
-        <button
-          onClick={() => setIsChatOpen(true)}
-          className="lg:hidden fixed bottom-4 right-4 z-40 w-fit h-fit bg-[#A3B18A] text-white rounded-full shadow-lg flex items-center justify-center hover:opacity-90 transition-opacity px-4 py-2"
-          aria-label="Open chat"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-xs">Formial Consultant</span>
-            <IconMessageCircle className="h-6 w-6" />
-          </div>
-        </button>
-      )}
-
-      {/* Mobile Chat Modal */}
-      <AnimatePresence>
-        {isChatOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsChatOpen(false)}
-              className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-            />
-
-            {/* Chat Modal */}
-            <motion.div
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl flex flex-col max-h-[100vh]"
-            >
-              {/* Chat Header with Close Button */}
-              <div className="p-4 border-b border-[#E0E0E0] flex items-center justify-between">
-                <h2 className="text-lg font-bold text-[#3C403D]">Chat with Your Consultant</h2>
-                <button
-                  onClick={() => setIsChatOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  aria-label="Close chat"
-                >
-                  <IconX className="h-5 w-5 text-[#585C5B]" />
-                </button>
-              </div>
-
-              {/* Chat Messages Area */}
-              <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4">
-                {showWelcomeMessage && (
-                  <div className="flex gap-3">
-                    <div className="size-8 rounded-full bg-center bg-cover shrink-0 bg-gray-300"></div>
-                    <div className="flex flex-col gap-1">
-                      <div className="bg-white p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                        <p className="text-[#585C5B] text-sm whitespace-pre-line">
-                          Thank you, {userName}. Your photos are with our dermatology team now.{'\n\n'}
-                          They&apos;ll review your skin carefully and discuss your tailored treatment plan within the next 8–12 hours (or sooner).{'\n\n'}
-                          We&apos;ll message you on your verified WhatsApp number, and your consultation will appear in your Consultation tab.{'\n\n'}
-                          This dashboard is your skin&apos;s personal space :)
-                        </p>
-                      </div>
-                      <span className="text-xs text-[#585C5B]/60 px-1">Formial Consultant - Just now</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Chat Input Area */}
-              <div className="p-4 border-t border-[#E0E0E0]">
-                <div className="flex items-center gap-2">
-                  <input
-                    className="w-full h-10 px-4 bg-white rounded-full border border-[#E0E0E0] focus:ring-2 focus:ring-[#A3B18A]/50 focus:border-[#A3B18A] transition-shadow text-[#585C5B] text-sm"
-                    placeholder="Type your message..."
-                    type="text"
-                  />
-                  <button className="flex items-center justify-center shrink-0 size-10 rounded-full bg-[#A3B18A] text-white hover:opacity-90 transition-opacity">
-                    <IconSend className="text-xl" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+   
     </div>
   )
 }
