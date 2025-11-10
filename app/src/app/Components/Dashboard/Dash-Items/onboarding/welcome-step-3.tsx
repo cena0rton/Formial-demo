@@ -73,7 +73,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
         <h2 className="text-2xl md:text-3xl font-medium text-[#1E3F2B] leading-tight text-left">
           Verify it’s really you
         </h2>
-        <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto text-left">
+        <p className="text-sm md:text-lg text-gray-600 max-w-2xl mx-auto text-left">
           We’ve sent a 4-digit verification code to{" "}{formattedPhone}.<br/>
           Enter the code to continue with your
           personalised onboarding journey.

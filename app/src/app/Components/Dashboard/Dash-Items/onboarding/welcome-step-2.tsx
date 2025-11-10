@@ -117,13 +117,13 @@ function DetailRow({ icon, label, value }: DetailRowProps) {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex items-center gap-4 rounded-xl border border-[#1E3F2B]/10 bg-[#F8F7EF] px-4 py-4"
+      className="flex items-center gap-4 rounded-xl border border-[#1E3F2B]/10 bg-[#f6f4e5] px-4 py-4"
     >
       <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F8F7EF] text-[#1E3F2B] shadow-inner border-1 border-[#dad9d6]">
         {icon}
       </div>
       <div className="w-full">
-        <p className="text-xs uppercase tracking-[0.2em] text-[#1E3F2B]/60 px-2 font-semibold">{label}</p>
+        <p className="text-xs uppercase tracking-tight text-[#1E3F2B]/60 px-2 font-semibold">{label}</p>
         <input
         value={value}
         

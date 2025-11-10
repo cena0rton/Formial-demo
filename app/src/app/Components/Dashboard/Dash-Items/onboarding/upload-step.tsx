@@ -149,7 +149,7 @@ export default function UploadStep({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.18, duration: 0.43 }}
-          className="text-lg text-gray-600 font-normal max-w-2xl mb-4 tracking-tight"
+          className="md:text-lg text-sm text-gray-600 font-normal max-w-2xl mb-4 tracking-tight"
         >
           You are few steps away from getting your personalized skincare plan!
         </motion.p>
