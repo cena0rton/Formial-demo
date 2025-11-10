@@ -79,7 +79,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
                initial={{ opacity: 0, scale: 0.8, rotateY: 180 }}
                animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               transition={{ delay: 1.6, duration: 0.8, ease: "easeOut" }}
-              className="absolute right-[20%] translate-x-1/2 md:top-[100%] mt-2 w-[15%] md:w-[15%] h-auto z-10 stroke-1 "
+              className="absolute right-[50%] translate-x-1/2 md:top-[100%] mt-2 w-[15%] md:w-[15%] h-auto z-10 stroke-1 "
               viewBox="0 0 47 45"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -127,11 +127,11 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1, rotateY: 180 }}
               transition={{ delay: 1.8, duration: 0.8, ease: "easeOut" }}
-              className="absolute right-[85%] mt-2 -translate-x-1/2 md:right-[20%] md:top-[100%] w-[18%] md:w-[16%] h-auto z-10"
+              className="absolute right-[100%] mt-2 translate-x-1/2 md:right-[80%] md:top-[100%] w-[18%] md:w-[16%] h-auto z-10"
               viewBox="0 0 47 45"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              style={{ transform: 'rotate(-45deg) scaleY(-1) scale(1.3)' }}
+              
             >
               <motion.path
               initial={{pathLength: 0}}
