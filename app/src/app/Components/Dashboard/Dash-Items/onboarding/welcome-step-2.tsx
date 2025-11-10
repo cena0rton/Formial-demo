@@ -84,18 +84,18 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
 
         
         </div>
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-2 mt-6">
+        <div className="flex flex-row md:flex-row items-center justify-between gap-4 pt-2 mt-6">
             <button
               type="button"
               onClick={onBack}
-              className="w-full bg-[#F2F0E0] md:w-auto rounded-full border border-[#1E3F2B]/30 text-[#1E3F2B] px-6 py-3 font-medium hover:bg-[#1E3F2B]/10 transition-all"
+              className="w-fit bg-[#F2F0E0] md:w-auto rounded-full border border-[#1E3F2B]/30 text-[#1E3F2B] px-6 py-3 font-medium hover:bg-[#1E3F2B]/10 transition-all"
             >
               Go back
             </button>
             <button
               type="button"
               onClick={onNext}
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1E3F2B] px-8 py-3 font-semibold text-white hover:bg-[#163021] transition-all"
+              className="w-fit md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1E3F2B] px-8 py-3 font-semibold text-white hover:bg-[#163021] transition-all"
             >
               Continue
             </button>

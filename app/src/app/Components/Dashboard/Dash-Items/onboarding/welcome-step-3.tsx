@@ -12,7 +12,7 @@ interface WelcomeStep3Props {
 }
 
 export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: WelcomeStep3Props) {
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(""))
+  const [otp, setOtp] = useState<string[]>(Array(4).fill(""))
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   const formattedPhone = useMemo(() => {
@@ -30,7 +30,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
     nextOtp[index] = value
     setOtp(nextOtp)
 
-    if (value && index < 5) {
+    if (value && index < 3) {
       inputRefs.current[index + 1]?.focus()
     }
   }
@@ -74,7 +74,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
           Verify it’s really you
         </h2>
         <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-          We’ve sent a 6-digit verification code to{" "}{formattedPhone}.<br/>
+          We’ve sent a 4-digit verification code to{" "}{formattedPhone}.<br/>
           Enter the code to continue with your
           personalised onboarding journey.
         </p>
@@ -87,8 +87,8 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
         className="w-full"
       >
         <div className=" rounded-[24px] border border-[#1E3F2B]/10  px-6 md:px-12 py-10 md:py-12 space-y-10">
-          <div className="flex flex-col items-center gap-6">
-            <div className="grid grid-cols-6 gap-3 md:gap-4 w-full max-w-3xl">
+          <div className="flex flex-col items-center justify-center gap-6 mx-auto">
+            <div className="grid grid-cols-4 gap-4 md:gap-4 mx-auto">
               {otp.map((digit, index) => (
                 <motion.div
                   key={index}
@@ -108,7 +108,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
                     value={digit}
                     onChange={(event) => handleChange(index, event.target.value)}
                     onKeyDown={(event) => handleKeyDown(index, event)}
-                    className="w-16 aspect-square rounded-2xl border border-[#1E3F2B]/20 bg-[#F8F7EF] text-xl md:text-2xl font-medium text-[#1E3F2B] text-center outline-none focus:border-[#1E3F2B] focus:ring-1 focus:ring-[#1E3F2B]/10 transition-all placeholder:text-gray-300"
+                    className="md:w-16 w-12 aspect-square rounded-lg border border-[#1E3F2B]/20 bg-[#F8F7EF] text-xl md:text-2xl font-medium text-[#1E3F2B] text-center outline-none focus:border-[#1E3F2B] focus:ring-1 focus:ring-[#1E3F2B]/10 transition-all placeholder:text-gray-300"
                     aria-label={`OTP digit ${index + 1}`}
                     autoComplete="one-time-code"
                   />
@@ -136,11 +136,11 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
         
         </div>
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-12">
+        <div className="flex flex-row items-center justify-between gap-4 mt-12">
             <button
               type="button"
               onClick={onBack}
-              className="w-full md:w-auto rounded-full border border-[#1E3F2B]/30 text-[#1E3F2B] px-6 py-3 font-medium hover:bg-[#1E3F2B]/10 transition-all"
+              className="w-fit md:w-auto rounded-full border border-[#1E3F2B]/30 text-[#1E3F2B] px-6 py-3 font-medium hover:bg-[#1E3F2B]/10 transition-all"
             >
               Go back
             </button>
@@ -148,7 +148,7 @@ export default function WelcomeStep3({ phoneNumber, onBack, onNext, onResend }: 
               type="button"
               onClick={onNext}
               disabled={!isOtpComplete}
-              className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1E3F2B] px-9 py-3 font-semibold text-white cursor-pointer hover:bg-[#163021] transition-all disabled:bg-[#1E3F2B]/30 disabled:shadow-none disabled:cursor-not-allowed"
+              className="w-fit md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1E3F2B] px-9 py-3 font-semibold text-white cursor-pointer hover:bg-[#163021] transition-all disabled:bg-[#1E3F2B]/30 disabled:shadow-none disabled:cursor-not-allowed"
             >
              
               Verify & continue
