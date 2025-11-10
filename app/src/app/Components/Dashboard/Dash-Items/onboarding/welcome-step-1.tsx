@@ -100,7 +100,8 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
             style={{ color: '#1E3F2B' }}
           >
             
-           <span className="font-instrument-serif tracking-wide">Hi {"Pawan!".split("").map((word, idx) => (
+           <p
+           className="font-instrument-serif tracking-wide -mb-4">Hi {"Pawan!".split("").map((word, idx) => (
             <motion.span
               key={idx}
               initial={{ opacity: 0, y: 20 }}
@@ -110,9 +111,9 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
               {word}
            </motion.span>
             ))}
-           </span>
+           </p>
             <br/>
-           Welcome to Formial
+           <p>Welcome to Formial</p>
        
           </motion.h1>
 

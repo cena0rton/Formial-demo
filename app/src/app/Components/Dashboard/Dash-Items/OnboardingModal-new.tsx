@@ -47,7 +47,30 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     }
   }
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    // Save uploaded photos to localStorage as data URLs
+    if (uploadedPhotos.length > 0) {
+      const photoDataUrls: string[] = []
+      for (const photo of uploadedPhotos) {
+        if (photo) {
+          try {
+            const dataUrl = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader()
+              reader.onload = () => resolve(reader.result as string)
+              reader.onerror = reject
+              reader.readAsDataURL(photo)
+            })
+            photoDataUrls.push(dataUrl)
+          } catch (error) {
+            console.error('Error converting photo to data URL:', error)
+          }
+        }
+      }
+      if (photoDataUrls.length > 0) {
+        localStorage.setItem('formial-uploaded-photos', JSON.stringify(photoDataUrls))
+      }
+    }
+    
     localStorage.setItem('formial-onboarding-completed', 'true')
     setIsOpen(false)
     // Notify parent component to show dashboard

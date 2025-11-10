@@ -64,7 +64,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
             transition={{ delay: 1.2, duration: 0.5, type: "spring", stiffness: 120 }}
             className="relative md:w-[45%] w-fit mb-16 md:mb-16"
           >
-            <div className="bg-[#F2F0E0] border-1 border-[#1E3F2B]/20 rounded-[13px] p-6 flex flex-col items-start gap-4 shadow-lg">
+            <div className="bg-[#F2F0E0] rounded-[13px] p-6 flex flex-col items-start gap-4 ">
               <div className="flex items-center gap-3">
                 <div className="rounded-full border-2 border-[#1E3F2B] bg-transparent p-3 flex items-center justify-center w-12 h-12">
                   {stepIcons[0]}
@@ -79,7 +79,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
                initial={{ opacity: 0, scale: 0.8, rotateY: 180 }}
                animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               transition={{ delay: 1.6, duration: 0.8, ease: "easeOut" }}
-              className="absolute right-[85%] translate-x-1/2 md:top-[100%] mt-2 w-[15%] md:w-[15%] h-auto z-10 stroke-1"
+              className="absolute right-[20%] translate-x-1/2 md:top-[100%] mt-2 w-[15%] md:w-[15%] h-auto z-10 stroke-1 "
               viewBox="0 0 47 45"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +113,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
             transition={{ delay: 1.4, duration: 0.5, type: "spring", stiffness: 120 }}
             className="relative w-fit md:w-[45%] ml-auto mb-16 md:mb-16"
           >
-            <div className="bg-[#F2F0E0] border-1 border-[#1E3F2B]/20 rounded-[13px] p-6 flex flex-col items-start gap-4 shadow-lg">
+            <div className="bg-[#F2F0E0]  rounded-[13px] p-6 flex flex-col items-start gap-4 ">
               <div className="flex items-center gap-3">
                 <div className="rounded-full border-2 border-[#1E3F2B] bg-transparent p-3 flex items-center justify-center w-12 h-12">
                   {stepIcons[1]}
@@ -127,7 +127,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1, rotateY: 180 }}
               transition={{ delay: 1.8, duration: 0.8, ease: "easeOut" }}
-              className="absolute right-[15%] mt-2 translate-x-1/2 md:right-[20%] md:top-[100%] w-[18%] md:w-[16%] h-auto z-10"
+              className="absolute right-[85%] mt-2 -translate-x-1/2 md:right-[20%] md:top-[100%] w-[18%] md:w-[16%] h-auto z-10"
               viewBox="0 0 47 45"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +161,7 @@ export default function WelcomeStep2({ onNext }: WelcomeStep2Props) {
             transition={{ delay: 1.6, duration: 0.5, type: "spring", stiffness: 120 }}
             className="relative w-fit md:w-[45%]"
           >
-            <div className="bg-[#F2F0E0]  border-1 border-[#1E3F2B]/20 rounded-[13px] p-6 flex flex-col items-start gap-4 shadow-lg">
+            <div className="bg-[#F2F0E0] rounded-[13px] p-6 flex flex-col items-start gap-4">
               <div className="flex items-center gap-3">
                 <div className="rounded-full border-2 border-[#1E3F2B] bg-transparent p-3 flex items-center justify-center w-12 h-12">
                   {stepIcons[2]}
