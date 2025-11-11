@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { IconUser, IconArrowLeft } from "@tabler/icons-react"
+import {  IconArrowLeft } from "@tabler/icons-react"
 
 interface DoctorReviewStepProps {
   onNext: () => void
@@ -13,7 +13,7 @@ interface DoctorReviewStepProps {
 export default function DoctorReviewStep({ onNext, onBack, }: DoctorReviewStepProps) {
   const [displayedText, setDisplayedText] = useState("")
   const [isTypingComplete, setIsTypingComplete] = useState(false)
-  const fullText = "Doctor Review"
+  const fullText = "Doctor Review";
 
   useEffect(() => {
     if (displayedText.length < fullText.length) {
@@ -32,21 +32,11 @@ export default function DoctorReviewStep({ onNext, onBack, }: DoctorReviewStepPr
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="text-left md:mt-50 mt-30"
+      className="text-left mt-0"
     >
-      {/* Icon */}
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.2, duration: 0.3 }}
-        className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-        style={{ backgroundColor: "#1E3F2B" }}
-      >
-        <IconUser size={32} className="text-white" />
-      </motion.div>
 
       {/* Heading */}
-      <h2 className="text-2xl md:text-4xl font-medium tracking-tight mb-6" style={{ color: "#1E3F2B" }}>
+      <h2 className="text-xl md:text-2xl font-medium tracking-tight mb-6" style={{ color: "#1E3F2B" }}>
         {displayedText}
         {!isTypingComplete && (
           <motion.span
@@ -60,8 +50,8 @@ export default function DoctorReviewStep({ onNext, onBack, }: DoctorReviewStepPr
       </h2>
 
       {/* Description */}
-      <p className="text-base text-gray-600 font-normal max-w-lg mb-8">
-        {"Our expert dermatologists will review your photos and create a personalized skincare plan tailored just for you. You're one step closer!".split("").map((char, idx) => (
+      <p className="text-md  text-gray-600 font-normal max-w-lg mb-8">
+        {/* {text.split("").map((char, idx) => (
           <motion.span
             key={idx}
             initial={{ opacity: 0 }}
@@ -70,7 +60,8 @@ export default function DoctorReviewStep({ onNext, onBack, }: DoctorReviewStepPr
           >
             {char}
           </motion.span>
-        ))}
+        ))} */}
+        Thank you, Pawan. Your photos are with our dermatology team now.<br/><br/>They&apos;ll review your skin carefully and discuss your tailored treatment plan within the next 8–12 hours (or sooner).<br/><br/>We&apos;ll message you on your verified WhatsApp number, and your consultation will appear in your Consultation tab.<br/><br/>This dashboard is your skin&apos;s personal space :)
       </p>
 
       {/* Buttons */}

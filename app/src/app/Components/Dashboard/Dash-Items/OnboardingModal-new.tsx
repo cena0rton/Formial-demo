@@ -31,7 +31,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const [userDetails] = useState({
     name: "Pawan Mishra",
     phone: "+91 98765 43210",
-    email: "pawan.mishra@example.com",
+    address: "123, Main Street, blr, INDIA",
   })
   const userFirstName = userDetails.name.split(" ")[0] || userDetails.name
 
@@ -164,7 +164,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 </div>
               )}
               {currentStep === 6 && (
-                <div className="px-8 mt-20">
+                <div className="px-8 mt-2 0">
                   <div className="w-full max-w-4xl mx-auto">
                     <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
                   </div>

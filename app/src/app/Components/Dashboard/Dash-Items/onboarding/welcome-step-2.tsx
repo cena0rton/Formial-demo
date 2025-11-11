@@ -2,13 +2,13 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { IconCheck, IconRefresh, IconShieldLock, IconUser, IconPhone, IconMail, IconEdit } from "@tabler/icons-react"
+import { IconShieldLock, IconUser, IconPhone, IconMail, IconEdit } from "@tabler/icons-react"
 
 interface WelcomeStep2Props {
   userDetails: {
     name: string
     phone: string
-    email: string
+    address: string
   }
   onNext: () => void
   onBack: () => void
@@ -38,13 +38,11 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
           className="md:text-2xl text-xl  font-medium text-[#1E3F2B] leading-tight"
         >
           Let’s make sure we’ve got
-          <br />
           your details correct.
         </motion.h2>
 
         <p className="text-sm md:text-lg text-gray-600 leading-relaxed max-w-xl">
-          These details help&apos;s us personalise your treatment plan and keep you updated at every step.
-          Please confirm everything looks perfect before we proceed.
+          We&apos;ll use this number to send Important communication to your WhatsApp number and important updates about your treatment.
         </p>
 
         <div className="flex items-center w-fit rounded-xl gap-3 text-sm text-gray-500 border-1 border-neutral-300 px-2 py-1 ">
@@ -70,7 +68,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }:
           <div className="space-y-4">
             <DetailRow icon={<IconUser size={20} />} label="Full name" value={userDetails.name} />
             <DetailRow icon={<IconPhone size={20} />} label="Mobile number" value={userDetails.phone} />
-            <DetailRow icon={<IconMail size={20} />} label="Email address" value={userDetails.email} />
+            <DetailRow icon={<IconMail size={20} />} label="Address" value={userDetails.address} />
           </div>
 
           {/* <div className="rounded-2xl border border-dashed border-[#1E3F2B]/20 bg-[#F2F0E0]/60 px-5 py-4 text-sm text-gray-600 leading-relaxed">
