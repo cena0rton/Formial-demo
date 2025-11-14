@@ -105,9 +105,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         style={{ backgroundColor: "#F2F0E0" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-8 md:py-6 py-6 border-b border-gray-200">
+        <div className="flex items-center justify-between px-8 md:py-6 py-6 border-b border-gray-200 bg-[#1E3F2B]">
           <div className="flex items-center gap-3">
-           <Image src="/Formial.webp" alt="Formial" width={120} height={40} className="md:h-8 h-6 w-auto " />
+           <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial" width={120} height={40} className="md:h-8 h-6 w-auto " />
           </div>
           {/* <button onClick={handleClose} className="p-2 hover:bg-white/50 rounded-lg transition-colors">
             <IconX className="h-5 w-5 text-[#1E3F2B]" />

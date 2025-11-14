@@ -1,8 +1,8 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { IconShieldLock, IconUser, IconPhone, IconMail, IconEdit } from "@tabler/icons-react"
+import { IconShieldLock, IconUser, IconCamera, IconRocket } from "@tabler/icons-react"
 
 interface WelcomeStep2Props {
   userDetails: {
@@ -15,126 +15,156 @@ interface WelcomeStep2Props {
   onRefresh?: () => void
 }
 
-export default function WelcomeStep2({ userDetails, onNext, onBack, onRefresh }: WelcomeStep2Props) {
+const timeline = [
+  {
+    title: "Verify your details",
+    subtitle: "Verify your WhatsApp number",
+    icon: <IconUser size={20} stroke={1.8} />,
+  },
+  {
+    title: "Upload your pictures",
+    subtitle: "Ensure quality for higher accuracy",
+    icon: <IconCamera size={20} stroke={1.8} />,
+  },
+  {
+    title: "Welcome to Formial",
+    subtitle: "Here's your personalised dashboard",
+    icon: <IconRocket size={20} stroke={1.8} />,
+  },
+]
+
+export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeStep2Props) {
+  const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
+
+  const handleDigitChange = (index: number, value: string) => {
+    if (!/^[0-9]?$/.test(value)) return
+    const updated = [...otpDigits]
+    updated[index] = value
+    setOtpDigits(updated)
+  }
+
+  const allDigitsFilled = otpDigits.every((digit) => digit.length === 1)
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
+      exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col md:flex-col tracking-tight md:items-center md:justify-between gap-10 px-6 md:px-16 py-6 w-full max-w-6xl mx-auto"
+      className="flex flex-col lg:flex-row gap-10 items-center justify-center w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-10 text-[#3D2D1F]"
+      style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-        className="flex-1 space-y-6"
+        initial={{ opacity: 0, x: -15 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.15, duration: 0.45 }}
+        className="w-full lg:max-w-sm h-full"
       >
-        
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
-          className="md:text-2xl text-xl  font-medium text-[#1E3F2B] leading-tight"
-        >
-          Let’s make sure we’ve got
-          your details correct.
-        </motion.h2>
-
-        <p className="text-sm md:text-lg text-gray-600 leading-relaxed max-w-xl">
-          We&apos;ll use this number to send Important communication to your WhatsApp number and important updates about your treatment.
-        </p>
-
-        <div className="flex items-center w-fit rounded-xl gap-3 text-sm text-gray-500 border-1 border-neutral-300 px-2 py-1 ">
-          <IconShieldLock size={18} className="text-[#1E3F2B]" />
-          <span className="text-xs md:text-sm">We encrypt your details and never share them without your permission.</span>
+        <div className="relative lg:bg-[#7CB58D] bg-transparent text-[#1E3F2B] rounded-[32px] px-6 py-2 lg:px-8 lg:py-10 lg:border border-[#325A3C] lg:shadow-[0_10px_30px_rgba(50,90,60,0.25)]">
+          <div className="absolute left-12 top-16 bottom-16 w-[2px] bg-[#1E3F2B]/50 hidden md:block" />
+          <div className="flex lg:flex-col flex-row lg:gap-8 gap-2 justify-center items-center lg:justify-start lg:items-start">
+            {timeline.map((step) => (
+              <div key={step.title} className="relative flex lgitems-start gap-4">
+                <div className="relative z-10 mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-[#1E3F2B] shadow-md">
+                  {step.icon}
+                </div>
+                <div>
+                  <p className="hidden lg:block font-medium text-lg tracking-tight">
+                    {step.title}
+                  </p>
+                  <p className="hidden lg:block text-sm text-[#1E3F2B]/80">{step.subtitle}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.25, duration: 0.45, type: "spring", stiffness: 120 }}
-        className="flex-1 w-full"
+        initial={{ opacity: 0, x: 15 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2, duration: 0.45 }}
+        className="relative flex-1 rounded-[32px] px-8 md:px-12 "
       >
-        <div className="bg-[#f2f0e0] relative rounded-[20px] border border-[#1E3F2B]/20 px-4 md:px-4 py-4 space-y-4 ">
-          
-          <div className="flex relative z-10 items-start justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-medium text-[1E3F2B] ">Confirm your Details</h3>
-            </div>
-          </div>
+        <div className="space-y-4">
+         
+          <h2
+            className="text-2xl md:text-xl text-[#5B4331] tracking-tight font-medium leading-tight"
+            style={{ fontFamily: "var(--font-inter), sans-serif" }}
+          >
+            Please review your details before proceeding.
+          </h2>
+          <p className="text-sm md:text-base text-[#6F5B4C] max-w-xl">
+            Accurate information helps us reach you directly and provide a personalised experience.
+          </p>
+          <div className="w-full h-px bg-[#5B4331]/30 mt-4" />
+        </div>
 
+        <div className="mt-6 space-y-6">
           <div className="space-y-4">
-            <DetailRow icon={<IconUser size={20} />} label="Full name" value={userDetails.name} />
-            <DetailRow icon={<IconPhone size={20} />} label="Mobile number" value={userDetails.phone} />
-            <DetailRow icon={<IconMail size={20} />} label="Address" value={userDetails.address} />
+            <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Name</span>
+            <input
+              value={userDetails.name}
+              readOnly
+              className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white/60 px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
+            />
           </div>
 
-          {/* <div className="rounded-2xl border border-dashed border-[#1E3F2B]/20 bg-[#F2F0E0]/60 px-5 py-4 text-sm text-gray-600 leading-relaxed">
-            <strong className="text-[#1E3F2B]">Need a change?</strong> Let our care team know during your doctor
-            consultation or reach us at{" "}
-            <a href="mailto:care@formial.in" className="underline hover:text-[#1E3F2B] font-medium">
-              care@formial.in
-            </a>
-            . We’ll update it instantly.
-          </div> */}
-
-        
+          <div className="space-y-2">
+            <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">WhatsApp Number</span>
+            
+              <div className="flex flex-wrap items-center justify-start gap-4 mt-2 w-full">
+                <div className="w-full sm:w-auto">
+                <input
+                  value={userDetails.phone}
+                  readOnly
+                  className="w-full rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white/60 px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
+                />
+                </div>
+                <div className="flex items-start justify-start gap-3 relative flex-wrap sm:flex-nowrap">
+                  {otpDigits.map((digit, index) => (
+                    <input
+                      key={index}
+                      value={digit}
+                      onChange={(event) => handleDigitChange(index, event.target.value)}
+                      className="h-12 w-12 rounded-full border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white text-center text-lg font-semibold text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
+                      maxLength={1}
+                    />
+                  ))}
+                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 sm:absolute sm:right-0 sm:top-14">Verify OTP</div>
+                </div>
+           
+            </div>
+            
+          </div>
         </div>
-        <div className="flex flex-row md:flex-row items-center justify-between gap-4 pt-2 mt-6">
-            <button
-              type="button"
-              onClick={onBack}
-              className="w-fit bg-[#F2F0E0] md:w-auto rounded-full border border-[#1E3F2B]/30 text-[#1E3F2B] px-6 py-3 font-medium hover:bg-[#1E3F2B]/10 transition-all"
-            >
-              Go back
-            </button>
-            <button
-              type="button"
-              onClick={onNext}
-              className="w-fit md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1E3F2B] px-8 py-3 font-semibold text-white hover:bg-[#163021] transition-all"
-            >
-              Continue
-            </button>
-          </div>
+
+        <div className="mt-8 flex items-center gap-4">
+          <button
+            type="button"
+            onClick={onBack}
+            className="rounded-full border border-[#5B4331]/30 px-6 py-3 text-sm font-semibold text-[#5B4331] hover:bg-[#5B4331]/5 transition-colors"
+          >
+            Go back
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            disabled={!allDigitsFilled}
+            className="box-border px-6 py-3 bg-[#90C494] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-[#1F3F2A] flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+          >
+            Continue
+          </button>
+        </div>
+
+        <div className="mt-6 flex items-center gap-2 text-xs text-[#6F5B4C]">
+          <IconShieldLock size={16} className="text-[#5B4331]" />
+          <span>We encrypt your details and never share them without your permission.</span>
+        </div>
       </motion.div>
     </motion.div>
   )
 }
 
-interface DetailRowProps {
-  icon: React.ReactNode
-  label: string
-  value: string
-}
-
-function DetailRow({ icon, label, value }: DetailRowProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3 }}
-      className="flex items-center gap-4 rounded-xl border border-[#1E3F2B]/10 bg-[#f6f4e5] px-4 py-4"
-    >
-      <div className="flex aspect-square w-8 items-center p-1 justify-center rounded-2xl bg-[#1E3F2B]/80 text-[#f6f4e5] shadow-inner border-1 border-[#dad9d6]">
-        {icon}
-      </div>
-      <div className="w-full">
-        <p className="text-xs uppercase tracking-tight text-[#1E3F2B]/60 px-2 font-semibold">{label}</p>
-        <div className="flex items-center gap-2">
-        <input
-        value={value}
-        
-        className="text-base md:text-lg w-full font-medium text-[#1E3F2B] mt-1 px-2 outline-none focus:ring-1 focus:ring-[#1E3F2B]/30 rounded-xl"></input>
-
-<button>  
-                    <IconEdit size={16} className="text-[#1E3F2B]" />
-                  </button>
-                  </div>
-      </div>
-    </motion.div>
-  )
-}
-
+/* Rounded rectangle */
 

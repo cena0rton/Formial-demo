@@ -2,7 +2,6 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { IconUserCheck, IconFlask } from "@tabler/icons-react"
 
 interface WelcomeStep4Props {
   onNext: () => void
