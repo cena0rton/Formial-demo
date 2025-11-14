@@ -29,7 +29,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }, [])
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
   const [userDetails] = useState({
-    name: "Pawan Mishra",
+    name: "Pawan",
     phone: "+91 98765 43210",
     address: "123, Main Street, blr, INDIA",
   })

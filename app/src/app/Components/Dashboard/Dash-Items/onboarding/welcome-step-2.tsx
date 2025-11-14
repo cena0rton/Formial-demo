@@ -24,12 +24,12 @@ const timeline = [
   {
     title: "Upload your pictures",
     subtitle: "Ensure quality for higher accuracy",
-    icon: <IconCamera size={20} stroke={1.8} />,
+    icon: <IconCamera size={20} stroke={1.8} className="text-[#937272]" />,
   },
   {
     title: "Welcome to Formial",
     subtitle: "Here's your personalised dashboard",
-    icon: <IconRocket size={20} stroke={1.8} />,
+    icon: <IconRocket size={20} stroke={1.8} className="text-[#937272]" />,
   },
 ]
 
@@ -63,9 +63,14 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
         <div className="relative lg:bg-[#7CB58D] bg-transparent text-[#1E3F2B] rounded-[32px] px-6 py-2 lg:px-8 lg:py-10 lg:border border-[#325A3C] lg:shadow-[0_10px_30px_rgba(50,90,60,0.25)]">
           <div className="absolute left-12 top-16 bottom-16 w-[2px] bg-[#1E3F2B]/50 hidden md:block" />
           <div className="flex lg:flex-col flex-row lg:gap-8 gap-2 justify-center items-center lg:justify-start lg:items-start">
-            {timeline.map((step) => (
+            {timeline.map((step, idx) => (
               <div key={step.title} className="relative flex lgitems-start gap-4">
-                <div className="relative z-10 mt-1 flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-[#1E3F2B] shadow-md">
+                <div
+                  className={`
+                    relative z-10 mt-1 flex h-10 w-10 items-center justify-center rounded-2xl text-[#1E3F2B] shadow-md border border-black/60
+                    ${idx === 0 ? "bg-white" : "bg-gray-300"}
+                  `}
+                >
                   {step.icon}
                 </div>
                 <div>
@@ -131,7 +136,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
                       maxLength={1}
                     />
                   ))}
-                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 sm:absolute sm:right-0 sm:top-14">Verify OTP</div>
+                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 sm:absolute sm:right-0 sm:top-10">Verify OTP</div>
                 </div>
            
             </div>
