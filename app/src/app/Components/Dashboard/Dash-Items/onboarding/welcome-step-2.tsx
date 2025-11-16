@@ -51,7 +51,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col lg:flex-row gap-10 items-center justify-center w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-10 text-[#3D2D1F]"
+      className="flex flex-col lg:flex-row gap-10 items-center justify-center w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-30 text-[#3D2D1F]"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
       <motion.div
@@ -170,6 +170,4 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
     </motion.div>
   )
 }
-
-/* Rounded rectangle */
 

@@ -39,10 +39,6 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
     console.info("Refresh user details requested")
   }, [])
 
-  const handleResendOtp = useCallback(() => {
-    console.info("Resend OTP requested")
-  }, [])
-
   const handleNext = () => {
     if (currentStep < 6) {
       setCurrentStep(currentStep + 1)
@@ -101,7 +97,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex flex-col"
+        className="fixed inset-0 z-50 flex flex-col overflow-x-hidden"
         style={{ backgroundColor: "#F2F0E0" }}
       >
         {/* Header */}
@@ -115,7 +111,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-w-7xl mx-auto">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-w-7xl mx-auto w-full">
           <div className="px-0 items-center justify-center">
             <AnimatePresence mode="wait">
               {currentStep === 0 && (
@@ -133,10 +129,9 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
               {currentStep === 2 && (
                 <WelcomeStep3
                   key="welcome3"
-                  phoneNumber={userDetails.phone}
+                  userDetails={userDetails}
                   onBack={handleBack}
                   onNext={handleNext}
-                  onResend={handleResendOtp}
                 />
               )}
               {currentStep === 3 && (

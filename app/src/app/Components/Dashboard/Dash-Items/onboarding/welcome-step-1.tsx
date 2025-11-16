@@ -3,7 +3,7 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { IconArrowRight } from "@tabler/icons-react"
+// import { IconArrowRight } from "@tabler/icons-react"
 
 interface WelcomeStep1Props {
   userName: string
@@ -68,7 +68,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       beforeImage: "https://formial.in/cdn/shop/files/0f9c4b1732486cb4d030166e57e10aa61a1963e3.jpg?v=1760441871&width=300",
       afterImage: "https://formial.in/cdn/shop/files/06d6109bf1e44c41dd7360e39d4ed29eb0d9707b.jpg?v=1760441899&width=300",
     },
-  ]
+  ];
 
   const tagColors: { [key: string]: string } = {
     pigmentation: "bg-yellow-200 text-yellow-900 border-yellow-300",
@@ -78,124 +78,119 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
     acne: "bg-red-200 text-red-900 border-red-300",
     texture: "bg-yellow-200 text-yellow-900 border-yellow-300",
     "acne scars": "bg-indigo-200 text-indigo-900 border-indigo-300",
-  }
+  };
 
-  
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className=" md:flex md:flex-row flex-col md:max-w-5xl w-full justify-between h-screen items-end md:justify-center md:items-center  overflow-x-hidden overflow-y-auto "
+      className="w-full flex flex-col min-h-screen justify-start items-center pt-12 pb-10 mx-auto overflow-x-hidden"
     >
-      {/* Left Column - Content */}
-      <div className="flex-1 flex items-start md:items-center justify-center -ml-2 md:ml-0 md:px-16 mx-auto mt-16 lg:-mt-16 h-90% md:h-auto">
-        <div className=" w-full md:space-y-6 space-y-6 overflow-hidden">
-          <motion.h1
+      {/* Content (Top) */}
+      <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 max-w-2xl">
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{  delay: 0.2, duration: 0.5, type:"spring", stiffness: 100, damping: 10, ease: "easeInOut" }}
-            className="text-3xl md:text-4xl font-medium tracking-tight text-center md:text-left"
-            style={{ color: '#1E3F2B' }}
-          >
-            
-           <p
-           className="font-instrument-serif tracking-wide -mb-4">Hi {"Pawan!".split("").map((word, idx) => (
-            <motion.span
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{  delay: idx * 0.2, duration: 0.5, type:"spring", stiffness: 500, damping: 5,mass: 10, ease: "easeInOut" }}
-            >
-              {word}
-           </motion.span>
+          transition={{ delay: 0.2, duration: 0.5, type: "spring", stiffness: 100, damping: 10, ease: "easeInOut" }}
+          className="text-3xl md:text-4xl font-medium tracking-tight text-center"
+          style={{ color: '#1E3F2B' }}
+        >
+        
+          <p className=" tracking-tight md:text-5xl text-4xl  -mb-4">
+            Hello {"Pawan!".split("").map((word, idx) => (
+              <motion.span
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.2, duration: 0.5, type: "spring", stiffness: 500, damping: 5, mass: 10, ease: "easeInOut" }}
+                className="font-instrument-serif italic"
+              >
+                {word}
+              </motion.span>
             ))}
-           </p>
-            <br/>
-           <p>Welcome to Formial</p>
-       
-          </motion.h1>
+          </p>
+          <br />
+          <p>Welcome to Formial Labs</p>
+        
+        </motion.h1>
 
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="md:text-lg text-md text-gray-600 mb-8 text-center mx-auto md:text-left tracking-tight w-full md:w-full"
-          >
-            Get ready for visible results. You're in expert hands
-          </motion.p>
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="md:text-lg text-md text-gray-600 mb-8 text-center mx-auto tracking-tight w-full mt-6"
+        >
+         Get ready to see real results.
+        </motion.p>
 
-          {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          <button
+            onClick={onNext}
+            className="w-fit mx-auto flex items-center justify-center gap-3 px-3 py-3 md:py-1 bg-[#1E3F2B] text-white rounded-full font-semibold text-base md:text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
           >
-            <button
-              onClick={onNext}
-              className="w-fit mx-auto md:w-full flex items-center justify-center gap-3 px-32 md:px-8 md:py-4 py-3 bg-[#1E3F2B] text-white rounded-full font-semibold text-lg lg:text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
-            >
-             Get Started
-              <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </motion.div>
+            GET STARTED
+            {/* <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /> */}
+          </button>
+        </motion.div>
 
-          {/* Legal Disclaimer */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-            className="text-gray-500 w-70 text-center mx-auto text-xs md:text-left md:w-full md:-mt-2"
-          >
-            By clicking above you agree to our{" "}
-            <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Terms & Conditions</a> and{" "}
-            <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Privacy Policy</a>.
-          </motion.p>
-        </div>
+        {/* Legal Disclaimer */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.5 }}
+          className="text-gray-500 w-70 text-center mx-auto text-xs mt-8"
+        >
+          By clicking above you agree to our{" "}
+          <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Terms & Conditions</a> and{" "}
+          <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Privacy Policy</a>.
+        </motion.p>
       </div>
 
-      {/* Right Column - Testimonials Carousel */}
-      <div className="md:flex md:flex-1 px-8 h-fit w-100 md:w-full mask-l-from-90% mask-r-from-90% md:mask-r-from-100% md:mask-b-from-50%  mt-16 md:mt-0">
-        {/* Desktop Vertical Carousel */}
-        <div className="hidden md:block w-full max-h-screen max-w-xl mx-auto relative overflow-hidden">
-          {/* Gradient Overlays */}
-          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#F2F0E0] to-transparent z-10 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#F2F0E0] to-transparent z-10 pointer-events-none" />
-          
-          {/* Scrolling Container */}
+      {/* Carousel (below content) */}
+      <div className="w-full flex flex-col items-center justify-center md:mt-24 mt-12 relative overflow-hidden">
+        {/* Horizontally scrolling carousel */}
+        <div className="w-full overflow-hidden py-2">
           <motion.div
+            className="flex gap-2 sm:gap-3 md:gap-4 lg:gap-5 items-center"
+            style={{
+              willChange: "transform",
+            }}
             animate={{
-              y: [0, -1450],
+              x: [0, "-50%"],
             }}
             transition={{
-              duration: 30,
+              duration: testimonials.length * 2,
               repeat: Infinity,
               ease: "linear",
             }}
-            className="space-y-6"
           >
-            {/* Render testimonials twice for seamless loop */}
             {[...testimonials, ...testimonials].map((testimonial, idx) => (
               <div
-                key={`${idx}-${testimonial.name}`}
-                className="border-1 border-[#1] rounded-xl p-4 shadow-md bg-white/40"
+                key={`carousel-horizontal-${idx}-${testimonial.name}`}
+                className="w-[180px] sm:w-[180px] md:w-[200px] lg:w-[240px] flex-shrink-0 min-h-fit border rounded-xl p-2 sm:p-3 md:p-4 shadow-md bg-white/40 flex flex-col items-center justify-center"
               >
                 {/* Name and Duration */}
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xl font-medium text-black">{testimonial.name}</span>
-                  <span className="text-xs font-semibold bg-[#1E3F2B] text-white px-3 py-1 rounded-full">
+                <div className="flex items-center justify-between mb-1.5 sm:mb-2 w-full gap-1">
+                  <span className="text-sm sm:text-base md:text-lg font-medium text-black truncate flex-1">{testimonial.name}</span>
+                  <span className="text-[9px] sm:text-[10px] md:text-xs font-semibold bg-[#1E3F2B] text-white px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full whitespace-nowrap">
                     {testimonial.duration}
                   </span>
                 </div>
 
                 {/* Tags */}
-                <div className="flex flex-wrap gap-1 mb-3">
+                <div className="flex flex-wrap gap-1 mb-2 sm:mb-3 w-full">
                   {testimonial.tags.map((tag, tagIdx) => (
                     <span
                       key={tagIdx}
-                      className={`px-2 py-1 rounded-full text-xs font-semibold border ${
+                      className={`px-1 sm:px-1.5 md:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] md:text-xs font-semibold border ${
                         tagColors[tag] || "bg-gray-200 text-gray-900 border-gray-300"
                       }`}
                     >
@@ -205,8 +200,8 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
                 </div>
 
                 {/* Before and After Images */}
-                <div className="flex gap-2">
-                  <div className="flex-1 relative h-32 rounded-lg overflow-hidden border border-gray-200">
+                <div className="flex gap-1.5 sm:gap-2 w-full">
+                  <div className="flex-1 relative h-16 sm:h-20 md:h-24 rounded-lg overflow-hidden border border-gray-200">
                     <Image
                       src={testimonial.beforeImage}
                       alt={`${testimonial.name} before`}
@@ -214,76 +209,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
                       className="object-cover"
                     />
                   </div>
-                  <div className="flex-1 relative h-32 rounded-lg overflow-hidden border border-gray-200">
-                    <Image
-                      src={testimonial.afterImage}
-                      alt={`${testimonial.name} after`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Mobile Horizontal Carousel */}
-        <div className="flex lg:hidden mx-auto relative py-6">
-       
-         
-          
-          {/* Scrolling Container */}
-          <motion.div
-            animate={{
-              x: [0, -2400],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="flex gap-4"
-          >
-            {/* Render testimonials twice for seamless loop */}
-            {[...testimonials, ...testimonials].map((testimonial, idx) => (
-              <div
-                key={`mobile-${idx}-${testimonial.name}`}
-                className="min-w-[220px] min-h-fit border-1 border-[#1] rounded-xl p-4 shadow-md bg-white/40"
-              >
-                {/* Name and Duration */}
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-lg font-medium text-black">{testimonial.name}</span>
-                  <span className="text-xs font-semibold bg-[#1E3F2B] text-white px-2.5 py-0.5 rounded-full">
-                    {testimonial.duration}
-                  </span>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {testimonial.tags.map((tag, tagIdx) => (
-                    <span
-                      key={tagIdx}
-                      className={`px-1.5 py-0.5 rounded-full text-xs font-semibold border ${
-                        tagColors[tag] || "bg-gray-200 text-gray-900 border-gray-300"
-                      }`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Before and After Images */}
-                <div className="flex gap-2">
-                  <div className="flex-1 relative h-24 rounded-lg overflow-hidden border border-gray-200">
-                    <Image
-                      src={testimonial.beforeImage}
-                      alt={`${testimonial.name} before`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 relative h-24 rounded-lg overflow-hidden border border-gray-200">
+                  <div className="flex-1 relative h-16 sm:h-20 md:h-24 rounded-lg overflow-hidden border border-gray-200">
                     <Image
                       src={testimonial.afterImage}
                       alt={`${testimonial.name} after`}
@@ -298,5 +224,5 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
