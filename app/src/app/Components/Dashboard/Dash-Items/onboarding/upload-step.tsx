@@ -142,7 +142,7 @@ export default function UploadStep({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col lg:flex-row gap-10 items-center justify-center w-full max-w-6xl mx-auto px-0 py-8 md:py-10 text-[#3D2D1F]"
+      className="flex flex-col lg:flex-row gap-10 items-center justify-center w-full max-w-6xl mx-auto px-0 py-8 md:py-30 text-[#3D2D1F]"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
       {/* Left Panel - Timeline */}
@@ -184,7 +184,7 @@ export default function UploadStep({
         transition={{ delay: 0.2, duration: 0.45 }}
         className="relative flex-1 rounded-[32px] md:px-12"
       >
-        <div className="rounded-xl border border-black overflow-hidden bg-white px-6 md:px-12 py-10 md:py-12 z-20">
+        <div className="rounded-xl border border-black overflow-hidden bg-white/70 px-6 md:px-12 py-10 md:py-12 z-20">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
               key={step}
@@ -279,7 +279,7 @@ export default function UploadStep({
                 <button
                   onClick={handleNextLocal}
                   disabled={!uploadedPhotos[step]}
-                  className="box-border px-6 py-3 bg-[#90C494] border-[0.767442px] border-[#1F3F2A]  rounded-full font-medium text-[#1F3F2A] flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+                  className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A]  rounded-full font-medium text-white flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                   type="button"
                   aria-label={
                     step < UPLOADS.length - 1

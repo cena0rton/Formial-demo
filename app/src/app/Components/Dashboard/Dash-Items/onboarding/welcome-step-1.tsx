@@ -86,7 +86,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="w-full flex flex-col min-h-screen justify-start items-center pt-12 pb-10 mx-auto overflow-x-hidden"
+      className="w-full flex flex-col md:min-h-screen min-h-fit justify-start items-center md:pt-30 pt-16 pb-10 mx-auto overflow-x-hidden"
     >
       {/* Content (Top) */}
       <div className="flex flex-col items-center justify-start w-full px-4 sm:px-6 max-w-2xl">
@@ -134,7 +134,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
         >
           <button
             onClick={onNext}
-            className="w-fit mx-auto flex items-center justify-center gap-3 px-3 py-3 md:py-1 bg-[#1E3F2B] text-white rounded-full font-semibold text-base md:text-lg hover:bg-[#1a3528] transition-all duration-200 shadow-lg hover:shadow-xl group"
+            className="w-fit mx-auto flex items-center justify-center gap-3 px-4 py-3 md:py-2 bg-[#1E3F2B] text-white rounded-full font-semibold text-base md:text-lg cursor-pointer hover:bg-[#1a3528] transition-all duration-200 hover:shadow-xl group shadow-inner shadow-white/70"
           >
             GET STARTED
             {/* <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /> */}
@@ -146,7 +146,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="text-gray-500 w-100 text-center mx-auto text-xs mt-8"
+          className="text-gray-500 text-wrap text-center mx-auto text-xs mt-8"
         >
           By clicking above you agree to our{" "}
           <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Terms & Conditions</a> and{" "}
@@ -155,7 +155,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
       </div>
 
       {/* Carousel (below content) */}
-      <div className="w-full flex flex-col items-center justify-center md:mt-24 mt-12 relative overflow-hidden">
+      <div className="w-full flex max-w-5xl mx-auto flex-col items-center justify-center md:mt-24 mt-12 relative overflow-hidden mask-x-from-95%">
         {/* Horizontally scrolling carousel */}
         <div className="w-full overflow-hidden py-2">
           <motion.div

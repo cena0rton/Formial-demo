@@ -108,7 +108,7 @@ export default function WelcomeStep3({ userDetails, onNext }: WelcomeStep3Props)
           <button
             type="button"
             onClick={onNext}
-            className="box-border px-6 py-3 bg-[#90C494] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity hover:opacity-90 text-sm uppercase"
+            className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity hover:opacity-90 text-sm uppercase"
           >
             Next
           </button>

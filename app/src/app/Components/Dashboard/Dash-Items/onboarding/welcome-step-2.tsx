@@ -144,7 +144,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
           </div>
         </div>
 
-        <div className="mt-8 flex items-center gap-4">
+        <div className="mt-8 flex items-center gap-8">
           <button
             type="button"
             onClick={onBack}
@@ -156,7 +156,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
             type="button"
             onClick={onNext}
             disabled={!allDigitsFilled}
-            className="box-border px-6 py-3 bg-[#90C494] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-[#1F3F2A] flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
+            className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
           >
             Continue
           </button>
