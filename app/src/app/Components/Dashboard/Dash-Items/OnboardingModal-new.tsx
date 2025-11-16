@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import WelcomeStep1 from "./onboarding/welcome-step-1"
 import WelcomeStep2 from "./onboarding/welcome-step-2"
 import WelcomeStep3 from "./onboarding/welcome-step-3"
-import WelcomeStep4 from "./onboarding/welcome-step-4"
 import UploadStep from "./onboarding/upload-step"
 import DoctorReviewStep from "./onboarding/doctor-review-step"
 import FormulationStep from "./onboarding/formulation-step"
@@ -40,7 +39,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }, [])
 
   const handleNext = () => {
-    if (currentStep < 6) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -52,7 +51,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }
 
   const handleSkip = () => {
-    if (currentStep < 6) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -135,30 +134,25 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 />
               )}
               {currentStep === 3 && (
-                <WelcomeStep4 key="welcome4" onNext={handleNext} onBack={handleBack} />
-              )}
-              {currentStep === 4 && (
-                <div className="px-8 mt-20">
-                  <div className="w-full max-w-4xl mx-auto">
-                    <UploadStep
-                      key="upload"
-                      uploadedPhotos={uploadedPhotos}
-                      setUploadedPhotos={setUploadedPhotos}
-                      onNext={handleNext}
-                      onBack={handleBack}
-                      onSkip={handleSkip}
-                    />
-                  </div>
+                <div className="px-4 sm:px-6 md:px-10">
+                  <UploadStep
+                    key="upload"
+                    uploadedPhotos={uploadedPhotos}
+                    setUploadedPhotos={setUploadedPhotos}
+                    onNext={handleNext}
+                    onBack={handleBack}
+                    onSkip={handleSkip}
+                  />
                 </div>
               )}
-              {currentStep === 5 && (
+              {currentStep === 4 && (
                 <div className="px-8 mt-20">
                   <div className="w-full max-w-4xl mx-auto">
                     <DoctorReviewStep key="doctor" onNext={handleNext} onBack={handleBack} onSkip={handleSkip} />
                   </div>
                 </div>
               )}
-              {currentStep === 6 && (
+              {currentStep === 5 && (
                 <div className="px-8 mt-2 0">
                   <div className="w-full max-w-4xl mx-auto">
                     <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
@@ -170,11 +164,11 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         </div>
 
         {/* Footer with Progress */}
-        {currentStep >= 4 && (
+        {currentStep >= 3 && (
           <div className="flex items-center justify-center gap-3 py-4">
             {[0, 1, 2].map((step) => {
               // Map main step indices (upload, doctor review, formulation) to progress dots
-              const stepProgress = currentStep - 4
+              const stepProgress = currentStep - 3
               return (
                 <motion.div
                   key={step}

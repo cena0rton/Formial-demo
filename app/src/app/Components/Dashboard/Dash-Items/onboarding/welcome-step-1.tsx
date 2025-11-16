@@ -146,7 +146,7 @@ export default function WelcomeStep1({ onNext }: WelcomeStep1Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="text-gray-500 w-70 text-center mx-auto text-xs mt-8"
+          className="text-gray-500 w-100 text-center mx-auto text-xs mt-8"
         >
           By clicking above you agree to our{" "}
           <a href="#" className="underline hover:text-[#1E3F2B] text-xs">Terms & Conditions</a> and{" "}
