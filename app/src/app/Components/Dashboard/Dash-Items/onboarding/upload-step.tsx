@@ -108,14 +108,6 @@ export default function UploadStep({
     const newPhotos = [...uploadedPhotos];
     newPhotos[idx] = file;
     setUploadedPhotos(newPhotos);
-    
-    // Auto-advance to next step after upload
-    if (idx < UPLOADS.length - 1) {
-      setTimeout(() => {
-        setDirection(1);
-        setStep(idx + 1);
-      }, 300);
-    }
   };
 
   const handleNextLocal = () => {

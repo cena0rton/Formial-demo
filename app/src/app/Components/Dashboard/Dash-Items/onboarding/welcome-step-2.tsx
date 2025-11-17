@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { IconShieldLock, IconUser, IconCamera, IconRocket } from "@tabler/icons-react"
 
@@ -35,12 +35,72 @@ const timeline = [
 
 export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeStep2Props) {
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+
+  useEffect(() => {
+    // Auto-focus first input on mount
+    inputRefs.current[0]?.focus()
+  }, [])
 
   const handleDigitChange = (index: number, value: string) => {
+    // Only allow single digit
     if (!/^[0-9]?$/.test(value)) return
+    
     const updated = [...otpDigits]
-    updated[index] = value
+    updated[index] = value.slice(-1) // Take only the last character if multiple are pasted
     setOtpDigits(updated)
+
+    // Auto-focus next input if a digit was entered
+    if (value && index < 3) {
+      inputRefs.current[index + 1]?.focus()
+    }
+  }
+
+  const handleKeyDown = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
+    // Handle backspace
+    if (event.key === "Backspace") {
+      if (otpDigits[index]) {
+        // If current input has value, clear it
+        const updated = [...otpDigits]
+        updated[index] = ""
+        setOtpDigits(updated)
+      } else if (index > 0) {
+        // If current input is empty, move to previous and clear it
+        inputRefs.current[index - 1]?.focus()
+        const updated = [...otpDigits]
+        updated[index - 1] = ""
+        setOtpDigits(updated)
+      }
+    }
+    // Handle arrow keys
+    if (event.key === "ArrowLeft" && index > 0) {
+      inputRefs.current[index - 1]?.focus()
+    }
+    if (event.key === "ArrowRight" && index < 3) {
+      inputRefs.current[index + 1]?.focus()
+    }
+  }
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, startIndex: number) => {
+    e.preventDefault()
+    const pastedData = e.clipboardData.getData("text").trim()
+    const digits = pastedData.replace(/\D/g, "").slice(0, 4 - startIndex).split("")
+    
+    if (digits.length > 0) {
+      const updated = [...otpDigits]
+      digits.forEach((digit, idx) => {
+        const targetIndex = startIndex + idx
+        if (targetIndex < 4) {
+          updated[targetIndex] = digit
+        }
+      })
+      setOtpDigits(updated)
+      
+      // Focus the next empty input or the last input
+      const nextEmptyIndex = updated.findIndex((d, idx) => idx >= startIndex && !d)
+      const focusIndex = nextEmptyIndex === -1 ? Math.min(startIndex + digits.length - 1, 3) : nextEmptyIndex
+      inputRefs.current[focusIndex]?.focus()
+    }
   }
 
   const allDigitsFilled = otpDigits.every((digit) => digit.length === 1)
@@ -118,25 +178,36 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
           <div className="space-y-2">
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">WhatsApp Number</span>
             
-              <div className="flex flex-wrap items-center justify-start gap-4 mt-2 w-full">
-                <div className="w-full sm:w-auto">
+              <div className="flex flex-wrap items-center justify-start gap-6 mt-2 w-full">
+                <div className="w-fit sm:w-auto flex items-center justify-between gap-4">
                 <input
                   value={userDetails.phone}
                   readOnly
                   className="w-full rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white/60 px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
                 />
+                <span className="text-xs text-[#6F5B4C]">Please ensure this is your personal WhatsApp number</span>
                 </div>
-                <div className="flex items-start justify-start gap-3 relative flex-wrap sm:flex-nowrap">
+                <div className="flex items-start justify-center gap-4 relative flex-wrap sm:flex-nowrap">
                   {otpDigits.map((digit, index) => (
                     <input
                       key={index}
+                      ref={(el) => {
+                        inputRefs.current[index] = el
+                      }}
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       value={digit}
                       onChange={(event) => handleDigitChange(index, event.target.value)}
-                      className="h-12 w-12 rounded-full border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white text-center text-lg font-semibold text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
+                      onKeyDown={(event) => handleKeyDown(index, event)}
+                      onPaste={(e) => handlePaste(e, index)}
+                      className="h-12 w-12 rounded-full border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white text-center text-lg font-semibold text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
                       maxLength={1}
+                      autoComplete="one-time-code"
+                      aria-label={`OTP digit ${index + 1}`}
                     />
                   ))}
-                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 sm:absolute sm:right-0 sm:top-10">Verify OTP</div>
+                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 text-center">Verify OTP</div>
                 </div>
            
             </div>
