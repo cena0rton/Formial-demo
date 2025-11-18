@@ -35,6 +35,8 @@ const timeline = [
 
 export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeStep2Props) {
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
+  const [name, setName] = useState(userDetails.name)
+  const [phone, setPhone] = useState(userDetails.phone)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
@@ -104,6 +106,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
   }
 
   const allDigitsFilled = otpDigits.every((digit) => digit.length === 1)
+  const isFormValid = name.trim().length > 0 && phone.trim().length > 0 && allDigitsFilled
 
   return (
     <motion.div
@@ -142,12 +145,12 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
               </div>
             ))}
           </div>
-        </div>
-      </motion.div>
+            </div>
+          </motion.div>
 
-      <motion.div
+          <motion.div
         initial={{ opacity: 0, x: 15 }}
-        animate={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2, duration: 0.45 }}
         className="relative flex-1 rounded-[32px] px-8 md:px-12 "
       >
@@ -169,9 +172,11 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
           <div className="space-y-4">
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Name</span>
             <input
-              value={userDetails.name}
-              readOnly
-              className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white/60 px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+              placeholder="Enter your name"
             />
           </div>
 
@@ -179,15 +184,17 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">WhatsApp Number</span>
             
               <div className="flex flex-wrap items-center justify-start gap-6 mt-2 w-full">
-                <div className="w-fit sm:w-auto flex items-center justify-between gap-4">
+                <div className="w-fit sm:w-auto flex flex-col items-start justify-between gap-4">
                 <input
-                  value={userDetails.phone}
-                  readOnly
-                  className="w-full rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white/60 px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-fit rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                  placeholder="Enter WhatsApp number"
                 />
                 <span className="text-xs text-[#6F5B4C]">Please ensure this is your personal WhatsApp number</span>
                 </div>
-                <div className="flex items-start justify-center gap-4 relative flex-wrap sm:flex-nowrap">
+                <div className="flex items-start justify-start gap-4 relative flex-wrap sm:flex-nowrap">
                   {otpDigits.map((digit, index) => (
                     <input
                       key={index}
@@ -207,7 +214,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
                       aria-label={`OTP digit ${index + 1}`}
                     />
                   ))}
-                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 text-center">Verify OTP</div>
+                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 text-center">Send OTP</div>
                 </div>
            
             </div>
@@ -215,7 +222,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
           </div>
         </div>
 
-        <div className="mt-8 flex items-center gap-8">
+        <div className="mt-8 flex items-center justify-between gap-4">
           <button
             type="button"
             onClick={onBack}
@@ -223,14 +230,14 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
           >
             Go back
           </button>
-          <button
+        <button
             type="button"
-            onClick={onNext}
-            disabled={!allDigitsFilled}
+          onClick={onNext}
+            disabled={!isFormValid}
             className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
-          >
-            Continue
-          </button>
+        >
+         Verify & Continue
+        </button>
         </div>
 
         <div className="mt-6 flex items-center gap-2 text-xs text-[#6F5B4C]">

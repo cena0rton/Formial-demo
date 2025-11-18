@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { IconUser, IconCamera, IconRocket } from "@tabler/icons-react"
 
@@ -32,7 +32,8 @@ const timeline = [
   },
 ]
 
-export default function WelcomeStep3({ userDetails, onNext }: WelcomeStep3Props) {
+export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeStep3Props) {
+  const [address, setAddress] = useState(userDetails.address)
 
   return (
     <motion.div
@@ -97,18 +98,30 @@ export default function WelcomeStep3({ userDetails, onNext }: WelcomeStep3Props)
           <div className="space-y-4">
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Address</span>
             <input
-              value={userDetails.address}
-              readOnly
-              className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white/60 px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]"
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+              placeholder="Enter your address"
             />
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-end">
+        <div className="mt-8 flex items-center gap-4">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="rounded-full border border-[#5B4331]/30 px-6 py-3 text-sm font-semibold text-[#5B4331] hover:bg-[#5B4331]/5 transition-colors"
+            >
+              Go back
+            </button>
+          )}
           <button
             type="button"
             onClick={onNext}
-            className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity hover:opacity-90 text-sm uppercase"
+            disabled={!address.trim()}
+            className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed text-sm uppercase ml-auto"
           >
             Next
           </button>
