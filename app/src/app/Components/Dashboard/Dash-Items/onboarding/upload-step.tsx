@@ -128,8 +128,6 @@ export default function UploadStep({
     }
   };
 
-  const currentStepIndex: number = 1 // Photo Upload step
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -139,21 +137,6 @@ export default function UploadStep({
       className="flex flex-col w-full max-w-6xl mx-auto text-[#3D2D1F]"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
-      {/* Mobile Progress Bar */}
-      <div className="lg:hidden w-full px-8 pt-12">
-        <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2">
-          <span className={`text-sm font-medium ${currentStepIndex === 0 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Verification
-          </span>
-          <span className={`text-sm font-medium ${currentStepIndex === 1 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Photo Upload
-          </span>
-          <span className={`text-sm font-medium ${currentStepIndex === 2 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Welcome
-          </span>
-        </div>
-      </div>
-
       <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-0 py-0 md:py-30">
       {/* Left Panel - Timeline */}
       <motion.div

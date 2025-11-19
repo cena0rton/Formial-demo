@@ -34,7 +34,6 @@ const timeline = [
 
 export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeStep3Props) {
   const [address, setAddress] = useState(userDetails.address)
-  const currentStepIndex: number = 0 // Verification step (address is part of verification)
 
   return (
     <motion.div
@@ -45,21 +44,6 @@ export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeSte
       className="flex flex-col w-full max-w-6xl mx-auto text-[#3D2D1F]"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
-      {/* Mobile Progress Bar */}
-      <div className="lg:hidden w-full px-8 pt-12">
-        <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2">
-          <span className={`text-sm font-medium ${currentStepIndex === 0 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Verification
-          </span>
-          <span className={`text-sm font-medium ${currentStepIndex === 1 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Photo Upload
-          </span>
-          <span className={`text-sm font-medium ${currentStepIndex === 2 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Welcome
-          </span>
-        </div>
-      </div>
-
       <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-4 sm:px-6 md:px-10 py-0 md:py-30">
       <motion.div
         initial={{ opacity: 0, x: -15 }}

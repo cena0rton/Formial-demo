@@ -111,7 +111,23 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
 
         {/* Main Content */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-w-7xl mx-auto w-full">
-          <div className="px-0 items-center justify-center">
+          {/* Mobile Progress Bar */}
+          {currentStep > 0 && (
+            <div className="lg:hidden w-full px-8 pt-12  md:-pb-0 flex items-center justify-center">
+              <div className="w-fit bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between gap-6 border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2">
+                <span className={`text-sm font-medium ${currentStep >= 1 ? 'text-neutral-200 font-bold' : 'text-[#1E3F2B]'}`}>
+                  Verification
+                </span>
+                <span className={`text-sm font-medium ${currentStep === 3 ? 'text-neutral-200 font-bold' : 'text-[#1E3F2B]'}`}>
+                  Photo Upload
+                </span>
+                <span className={`text-sm font-medium ${currentStep >= 4 ? 'text-neutral-200 font-bold' : 'text-[#1E3F2B]'}`}>
+                  Welcome
+                </span>
+              </div>
+            </div>
+          )}
+          <div className="px-0 items-center justify-center -mt-2 md:-mt-0">
             <AnimatePresence mode="wait">
               {currentStep === 0 && (
                 <WelcomeStep1 key="welcome1" userName={userFirstName} onNext={handleNext} />

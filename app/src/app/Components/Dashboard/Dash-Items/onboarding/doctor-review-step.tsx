@@ -44,8 +44,6 @@ export default function DoctorReviewStep({ onNext, onBack }: DoctorReviewStepPro
     }
   }, [displayedText, fullText])
 
-  const currentStepIndex: number = 2 // Welcome step
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -55,21 +53,6 @@ export default function DoctorReviewStep({ onNext, onBack }: DoctorReviewStepPro
       className="flex flex-col w-full max-w-6xl mx-auto text-[#3D2D1F] -mt-16 md:-mt-0"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
-      {/* Mobile Progress Bar */}
-      <div className="lg:hidden w-full px-8 pt-12">
-        <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2">
-          <span className={`text-sm font-medium ${currentStepIndex === 0 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Verification
-          </span> 
-          <span className={`text-sm font-medium ${currentStepIndex === 1 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Photo Upload
-          </span>
-          <span className={`text-sm font-medium ${currentStepIndex === 2 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
-            Welcome
-          </span>
-        </div>
-      </div>
-
       <div className="flex flex-col lg:flex-row gap-10 items-center justify-start px-4 sm:px-6 md:px-10 py-0 md:py-10">
       {/* Left Panel - Timeline */}
       <motion.div
