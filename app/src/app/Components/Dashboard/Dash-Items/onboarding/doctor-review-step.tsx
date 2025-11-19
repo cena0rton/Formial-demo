@@ -44,15 +44,33 @@ export default function DoctorReviewStep({ onNext, onBack }: DoctorReviewStepPro
     }
   }, [displayedText, fullText])
 
+  const currentStepIndex: number = 2 // Welcome step
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col lg:flex-row gap-10 items-center justify-start w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-8 md:py-10 text-[#3D2D1F] -mt-16 md:-mt-0"
+      className="flex flex-col w-full max-w-6xl mx-auto text-[#3D2D1F] -mt-16 md:-mt-0"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
+      {/* Mobile Progress Bar */}
+      <div className="lg:hidden w-full px-8 pt-12">
+        <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between">
+          <span className={`text-sm font-medium ${currentStepIndex === 0 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
+            Verification
+          </span>
+          <span className={`text-sm font-medium ${currentStepIndex === 1 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
+            Photo Upload
+          </span>
+          <span className={`text-sm font-medium ${currentStepIndex === 2 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
+            Welcome
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-10 items-center justify-start px-4 sm:px-6 md:px-10 py-0 md:py-10">
       {/* Left Panel - Timeline */}
       <motion.div
         initial={{ opacity: 0, x: -15 }}
@@ -67,7 +85,7 @@ export default function DoctorReviewStep({ onNext, onBack }: DoctorReviewStepPro
               <div key={step.title} className="relative flex lg:items-start gap-4">
                 <div
                   className={`
-                    relative z-10 mt-1 flex h-10 w-10 items-center justify-center rounded-2xl text-[#1E3F2B] shadow-md border border-black/60
+                    hidden lg:flex relative z-10 mt-1 h-10 w-10 items-center justify-center rounded-2xl text-[#1E3F2B] shadow-md border border-black/60
                     ${idx <= 1 ? "bg-white" : "bg-gray-300"}
                   `}
                 >
@@ -134,6 +152,7 @@ export default function DoctorReviewStep({ onNext, onBack }: DoctorReviewStepPro
           </button>
         </div>
       </motion.div>
+      </div>
     </motion.div>
   )
 }

@@ -128,15 +128,33 @@ export default function UploadStep({
     }
   };
 
+  const currentStepIndex: number = 1 // Photo Upload step
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col lg:flex-row gap-10 items-center justify-center w-full max-w-6xl mx-auto px-0 py-8 md:py-30 text-[#3D2D1F]"
+      className="flex flex-col w-full max-w-6xl mx-auto text-[#3D2D1F]"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
+      {/* Mobile Progress Bar */}
+      <div className="lg:hidden w-full px-8 pt-12">
+        <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between">
+          <span className={`text-sm font-medium ${currentStepIndex === 0 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
+            Verification
+          </span>
+          <span className={`text-sm font-medium ${currentStepIndex === 1 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
+            Photo Upload
+          </span>
+          <span className={`text-sm font-medium ${currentStepIndex === 2 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
+            Welcome
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-0 py-0 md:py-30">
       {/* Left Panel - Timeline */}
       <motion.div
         initial={{ opacity: 0, x: -15 }}
@@ -151,7 +169,7 @@ export default function UploadStep({
               <div key={stepItem.title} className="relative flex lg:items-start gap-4">
                 <div
                   className={`
-                    relative z-10 mt-1 flex h-10 w-10 items-center justify-center rounded-2xl text-[#1E3F2B] shadow-md border border-black/60
+                    hidden lg:flex relative z-10 mt-1 h-10 w-10 items-center justify-center rounded-2xl text-[#1E3F2B] shadow-md border border-black/60
                     ${idx === 1 ? "bg-white" : idx < 1 ? "bg-white" : "bg-gray-300"}
                   `}
                 >
@@ -177,16 +195,16 @@ export default function UploadStep({
         className="relative flex-1 rounded-[32px] md:px-12"
       >
         <div className="rounded-xl border border-black overflow-hidden bg-white/70 px-6 md:px-12 py-10 md:py-12 z-20">
-          <AnimatePresence initial={false} custom={direction} mode="wait">
-            <motion.div
-              key={step}
-              variants={uploadStepVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              custom={direction}
+            <AnimatePresence initial={false} custom={direction} mode="wait">
+              <motion.div
+                key={step}
+                variants={uploadStepVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                custom={direction}
               className="w-full overflow-hidden relative z-10"
-              style={{ willChange: "transform,opacity" }}
+                style={{ willChange: "transform,opacity" }}
             >
               {/* Title */}
               <h2
@@ -205,87 +223,88 @@ export default function UploadStep({
               <div className="flex flex-row items-center justify-center gap-4 mb-6">
                 {/* Left Frame - Reference Image */}
                 <div className="w-full sm:w-[200px] h-[200px] relative rounded-xl overflow-hidden border border-black flex items-center justify-center bg-white">
-                  <Image
-                    src={UPLOADS[step].refImg}
-                    alt={UPLOADS[step].refAlt}
+                      <Image
+                        src={UPLOADS[step].refImg}
+                        alt={UPLOADS[step].refAlt}
                     fill
                     className="object-cover"
-                    priority
-                  />
-                </div>
+                        priority
+                      />
+                    </div>
 
                 {/* Right Frame - Upload Area */}
                 <div className="w-full sm:w-[200px] h-[200px] relative rounded-xl overflow-hidden border border-dashed border-black flex items-center justify-between bg-white">
-                  {uploadedPhotos[step] ? (
-                    <>
-                      <Image
-                        src={URL.createObjectURL(uploadedPhotos[step])}
-                        alt={UPLOADS[step].uploadAlt}
-                        fill
-                        className="object-cover"
-                      />
-                      <button
+                      {uploadedPhotos[step] ? (
+                        <>
+                          <Image
+                            src={URL.createObjectURL(uploadedPhotos[step])}
+                            alt={UPLOADS[step].uploadAlt}
+                            fill
+                            className="object-cover"
+                          />
+                          <button
                         className="absolute top-2 right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition z-10"
-                        onClick={() => handleDeletePhoto(step)}
-                        type="button"
-                        aria-label="Remove uploaded photo"
-                      >
-                        <IconX
-                          size={16}
-                          className="text-white"
-                          strokeWidth={3}
-                        />
-                      </button>
-                    </>
-                  ) : (
+                            onClick={() => handleDeletePhoto(step)}
+                            type="button"
+                            aria-label="Remove uploaded photo"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-white"
+                              strokeWidth={3}
+                            />
+                          </button>
+                        </>
+                      ) : (
                     <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
                       <div className="w-16 h-16 mb-3 flex items-center justify-center">
                         <IconUpload size={32} className="text-gray-600" />
-                      </div>
+                        </div>
                       <span className="text-sm text-black font-medium text-center">Click to upload</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            handlePhotoChange(step, e.target.files[0]);
-                          }
-                        }}
-                      />
-                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          handlePhotoChange(step, e.target.files[0]);
+                        }
+                      }}
+                    />
+                  </label>
                   )}
-                </div>
-              </div>
+          </div>
+        </div>
 
-              {/* Navigation Buttons */}
+        {/* Navigation Buttons */}
               <div className="flex items-center justify-between gap-4 mt-8">
-                <button
-                  onClick={handleBackLocal}
+          <button
+            onClick={handleBackLocal}
                   className="rounded-full border border-[#5B4331]/30 px-6 py-3 text-sm font-semibold text-[#5B4331] hover:bg-[#5B4331]/5 transition-colors"
                   type="button"
-                  aria-label={step === 0 ? "Back" : "Previous Photo"}
-                >
+            aria-label={step === 0 ? "Back" : "Previous Photo"}
+          >
                   Go back
-                </button>
-                <button
-                  onClick={handleNextLocal}
-                  disabled={!uploadedPhotos[step]}
+          </button>
+          <button
+            onClick={handleNextLocal}
+            disabled={!uploadedPhotos[step]}
                   className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A]  rounded-full font-medium text-white flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                   type="button"
-                  aria-label={
-                    step < UPLOADS.length - 1
-                      ? "Next Photo"
-                      : "Done and continue"
-                  }
-                >
-                  {step < UPLOADS.length - 1 ? "Next" : "Continue"}
-                </button>
+            aria-label={
+              step < UPLOADS.length - 1
+                ? "Next Photo"
+                : "Done and continue"
+            }
+          >
+            {step < UPLOADS.length - 1 ? "Next" : "Continue"}
+          </button>
               </div>
-            </motion.div>
+        </motion.div>
           </AnimatePresence>
         </div>
       </motion.div>
+    </div>
     </motion.div>
   );
 }
