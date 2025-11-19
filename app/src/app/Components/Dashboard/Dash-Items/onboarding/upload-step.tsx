@@ -141,7 +141,7 @@ export default function UploadStep({
     >
       {/* Mobile Progress Bar */}
       <div className="lg:hidden w-full px-8 pt-12">
-        <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between">
+        <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2">
           <span className={`text-sm font-medium ${currentStepIndex === 0 ? 'text-black font-bold' : 'text-[#1E3F2B]'}`}>
             Verification
           </span>
