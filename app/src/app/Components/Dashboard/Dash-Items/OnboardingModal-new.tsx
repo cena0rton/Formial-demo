@@ -7,7 +7,6 @@ import WelcomeStep1 from "./onboarding/welcome-step-1"
 import WelcomeStep2 from "./onboarding/welcome-step-2"
 import WelcomeStep3 from "./onboarding/welcome-step-3"
 import UploadStep from "./onboarding/upload-step"
-import DoctorReviewStep from "./onboarding/doctor-review-step"
 import FormulationStep from "./onboarding/formulation-step"
 import Image from "next/image"
 
@@ -39,7 +38,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }, [])
 
   const handleNext = () => {
-    if (currentStep < 5) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -51,7 +50,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }
 
   const handleSkip = () => {
-    if (currentStep < 5) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -110,18 +109,20 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-w-7xl mx-auto w-full">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-w-7xl mx-auto w-full pb-12">
           {/* Mobile Progress Bar */}
           {currentStep > 0 && (
-            <div className="lg:hidden w-full px-8 pt-12  md:-pb-0 flex items-center justify-center">
-              <div className="w-fit bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between gap-6 border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2">
-                <span className={`text-sm font-medium ${currentStep >= 1 ? 'text-neutral-200 font-bold' : 'text-[#1E3F2B]'}`}>
+            <div className="lg:hidden w-full px-6 pt-12  md:-pb-0 flex items-center justify-center">
+              <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between gap-6 border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2 tracking-tight"
+              
+              >
+                <span className={`text-sm font-medium ${currentStep >= 1 && currentStep <= 2 ? 'text-[#1E3F2B] font-semibold' : 'text-[#5B4331]'}`}>
                   Verification
                 </span>
-                <span className={`text-sm font-medium ${currentStep === 3 ? 'text-neutral-200 font-bold' : 'text-[#1E3F2B]'}`}>
-                  Photo Upload
+                <span className={`text-sm font-medium ${currentStep === 3 ? 'text-[#1E3F2B] font-semibold' : 'text-[#5B4331]'}`}>
+                 Upload Photos
                 </span>
-                <span className={`text-sm font-medium ${currentStep >= 4 ? 'text-neutral-200 font-bold' : 'text-[#1E3F2B]'}`}>
+                <span className={`text-sm font-medium ${currentStep === 4 ? 'text-[#1E3F2B] font-semibold' : 'text-[#5B4331]'}`}>
                   Welcome
                 </span>
               </div>
@@ -162,17 +163,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                 </div>
               )}
               {currentStep === 4 && (
-                <div className="px-8 mt-20">
-                  <div className="w-full max-w-4xl mx-auto">
-                    <DoctorReviewStep key="doctor" onNext={handleNext} onBack={handleBack} onSkip={handleSkip} />
-                  </div>
-                </div>
-              )}
-              {currentStep === 5 && (
-                <div className="px-8 mt-2 0">
-                  <div className="w-full max-w-4xl mx-auto">
-                    <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
-                  </div>
+                <div className="px-4 sm:px-6 md:px-10">
+                  <FormulationStep key="formulation" onBack={handleBack} onComplete={handleComplete} />
                 </div>
               )}
             </AnimatePresence>
@@ -182,8 +174,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         {/* Footer with Progress */}
         {currentStep >= 3 && (
           <div className="flex items-center justify-center gap-3 py-4">
-            {[0, 1, 2].map((step) => {
-              // Map main step indices (upload, doctor review, formulation) to progress dots
+            {[0, 1].map((step) => {
+              // Map main step indices (upload, formulation) to progress dots
               const stepProgress = currentStep - 3
               return (
                 <motion.div

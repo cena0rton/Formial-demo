@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Zilla_Slab_Highlight, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono, Zilla_Slab_Highlight, Instrument_Serif, Lexend_Exa } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,6 +29,12 @@ const instrumentSerif = Instrument_Serif({
   weight: "400",
 });
 
+const lexendExa = Lexend_Exa({
+  variable: "--font-lexend-exa",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${zillaSlabHighlight.variable} ${instrumentSerif.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${zillaSlabHighlight.variable} ${instrumentSerif.variable} ${lexendExa.variable} antialiased`}
       >
         {children}
       </body>

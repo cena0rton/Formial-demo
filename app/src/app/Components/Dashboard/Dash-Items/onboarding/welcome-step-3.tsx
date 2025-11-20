@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { motion } from "framer-motion"
-import { IconUser, IconCamera, IconRocket } from "@tabler/icons-react"
+import { IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
 
 interface WelcomeStep3Props {
   userDetails: {
@@ -34,6 +34,7 @@ const timeline = [
 
 export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeStep3Props) {
   const [address, setAddress] = useState(userDetails.address)
+  const addressInputRef = useRef<HTMLInputElement | null>(null)
 
   return (
     <motion.div
@@ -84,7 +85,7 @@ export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeSte
       >
         <div className="space-y-4">
           <h2
-            className="text-2xl md:text-xl text-[#5B4331] tracking-tight font-medium leading-tight"
+            className="text-xl md:text-2xl text-[#5B4331] tracking-tight font-medium leading-tight"
             style={{ fontFamily: "var(--font-inter), sans-serif" }}
           >
             Please review your details before proceeding.
@@ -98,13 +99,24 @@ export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeSte
         <div className="mt-6 space-y-6">
           <div className="space-y-4">
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Address</span>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
-              placeholder="Enter your address"
-            />
+            <div className="relative">
+              <input
+                ref={addressInputRef}
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                placeholder="Enter your address"
+              />
+              <button
+                type="button"
+                onClick={() => addressInputRef.current?.focus()}
+                className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                aria-label="Edit address"
+              >
+                <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+              </button>
+            </div>
           </div>
         </div>
 

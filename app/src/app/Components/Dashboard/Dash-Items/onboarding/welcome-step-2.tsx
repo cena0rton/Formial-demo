@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
-import { IconShieldLock, IconUser, IconCamera, IconRocket } from "@tabler/icons-react"
+import { IconShieldLock, IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
 
 interface WelcomeStep2Props {
   userDetails: {
@@ -38,6 +38,8 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
   const [name, setName] = useState(userDetails.name)
   const [phone, setPhone] = useState(userDetails.phone)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const nameInputRef = useRef<HTMLInputElement | null>(null)
+  const phoneInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     // Auto-focus first input on mount
@@ -158,7 +160,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
         <div className="space-y-4">
          
           <h2
-            className="text-2xl md:text-xl text-[#5B4331] tracking-tight font-medium leading-tight"
+            className="text-xl md:text-2xl text-[#5B4331] tracking-tight font-medium leading-tight"
             style={{ fontFamily: "var(--font-inter), sans-serif" }}
           >
             Please review your details before proceeding.
@@ -172,13 +174,24 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
         <div className="mt-6 space-y-6">
           <div className="space-y-4">
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Name</span>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
-              placeholder="Enter your name"
-            />
+            <div className="relative">
+              <input
+                ref={nameInputRef}
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                placeholder="Enter your name"
+              />
+              <button
+                type="button"
+                onClick={() => nameInputRef.current?.focus()}
+                className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                aria-label="Edit name"
+              >
+                <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+              </button>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -186,13 +199,24 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
             
               <div className="flex flex-wrap items-center justify-start gap-6 mt-2 w-full">
                 <div className="w-fit sm:w-auto flex flex-col items-start justify-between gap-4">
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-fit rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
-                  placeholder="Enter WhatsApp number"
-                />
+                <div className="relative">
+                  <input
+                    ref={phoneInputRef}
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-fit rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                    placeholder="Enter WhatsApp number"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => phoneInputRef.current?.focus()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2  p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                    aria-label="Edit phone number"
+                  >
+                    <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+                  </button>
+                </div>
                 <span className="text-xs text-[#6F5B4C]">Please ensure this is your personal WhatsApp number</span>
                 </div>
                 <div className="flex items-start justify-start gap-4 relative flex-wrap sm:flex-nowrap">
