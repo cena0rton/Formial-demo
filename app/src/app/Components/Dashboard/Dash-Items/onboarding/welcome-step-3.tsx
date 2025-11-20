@@ -45,7 +45,7 @@ export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeSte
       className="flex flex-col w-full max-w-6xl mx-auto text-[#3D2D1F]"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
-      <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-4 sm:px-6 md:px-10 py-0 md:py-30">
+      <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-0 sm:px-6 md:px-10 py-0 md:py-30">
       <motion.div
         initial={{ opacity: 0, x: -15 }}
         animate={{ opacity: 1, x: 0 }}

@@ -119,7 +119,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
       className="flex flex-col w-full max-w-6xl mx-auto text-[#3D2D1F]"
       style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
     >
-      <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-4 sm:px-6 md:px-10 py-0 md:py-30">
+      <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-0 sm:px-6 md:px-10 py-0 md:py-30">
       <motion.div
         initial={{ opacity: 0, x: -15 }}
         animate={{ opacity: 1, x: 0 }}
@@ -263,11 +263,6 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
         >
          Verify & Continue
         </button>
-        </div>
-
-        <div className="mt-6 flex items-center gap-2 text-xs text-[#6F5B4C]">
-          <IconShieldLock size={16} className="text-[#5B4331]" />
-          <span>We encrypt your details and never share them without your permission.</span>
         </div>
       </motion.div>
       </div>

@@ -135,8 +135,8 @@ export default function WelcomeStep1({ userName, onNext }: WelcomeStep1Props) {
             className="text-3xl md:text-4xl font-medium tracking-tight text-center"
             style={{ color: '#1E3F2B' }}
           >
-            <p className="tracking-tight text-center text-4xl mb-4">
-              Hello{" "}
+            <p className=" text-center text-4xl mb-6">
+              <span className="">Hello{" "}</span>
               {((userName ?? "Pawan") + "!").split("").map((char, idx) => (
                 <motion.span
                   key={idx}
@@ -161,7 +161,7 @@ export default function WelcomeStep1({ userName, onNext }: WelcomeStep1Props) {
                 </motion.span>
               ))}
             </p>
-            <p className="text-center mt-0">Welcome to Formial</p>
+            <p className="text-center mt-0 mb-2">Welcome to Formial</p>
           </motion.h1>
 
           {/* Description */}
@@ -172,7 +172,7 @@ export default function WelcomeStep1({ userName, onNext }: WelcomeStep1Props) {
             className="md:text-lg text-md text-gray-600 text-center mx-auto w-full max-w-xs md:max-w-full tracking-tight"
             style={{ margin: "0.3rem 0" }}
           >
-            Get ready for visible results. You're in expert hands
+            Get ready to see real results.
           </motion.p>
 
           {/* CTA Button */}
