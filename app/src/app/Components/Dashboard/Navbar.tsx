@@ -17,21 +17,48 @@ interface NavbarProps {
 
 const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection}: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [hoveredSection, setHoveredSection] = useState<SectionType | null>(null)
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
-  const sections: { id: SectionType; label: string }[] = [
-    { id: 'treatment', label: 'Treatment Plan' },
-    { id: 'progress', label: 'Progress Timeline' },
-    { id: 'refer', label: 'Refer and Earn' },
+  // Unified navigation items - all links in one array
+  const navItems: { 
+    id: string; 
+    label: string; 
+    type: 'section' | 'page'; 
+    sectionId?: SectionType; 
+    itemIndex?: number 
+  }[] = [
+    { id: 'treatment', label: 'Treatment Plan', type: 'section', sectionId: 'treatment' },
+    { id: 'progress', label: 'Progress Timeline', type: 'section', sectionId: 'progress' },
+    { id: 'refer', label: 'Refer and Earn', type: 'section', sectionId: 'refer' },
+    { id: 'support', label: 'Support', type: 'page', itemIndex: 4 },
+    { id: 'details', label: 'Details', type: 'page', itemIndex: 6 },
   ]
 
-  const handleSectionClick = (sectionId: SectionType) => {
-    if (setActiveSection) {
-      setActiveSection(sectionId)
+  const handleNavClick = (item: typeof navItems[0]) => {
+    if (item.type === 'section' && item.sectionId) {
+      // Handle section navigation
+      if (setActiveSection) {
+        setActiveSection(item.sectionId)
+      }
+      setActiveItem(0)
+      ref.current = 0
+    } else if (item.type === 'page' && item.itemIndex !== undefined) {
+      // Handle direct page navigation
+      setActiveItem(item.itemIndex)
+      ref.current = item.itemIndex
+      if (setActiveSection) {
+        setActiveSection('treatment')
+      }
     }
-    // Set activeItem to 0 (Home) when clicking sections
-    setActiveItem(0)
-    ref.current = 0
+  }
+
+  const isItemActive = (item: typeof navItems[0]) => {
+    if (item.type === 'section' && item.sectionId) {
+      return activeSection === item.sectionId && activeItem === 0
+    } else if (item.type === 'page' && item.itemIndex !== undefined) {
+      return activeItem === item.itemIndex
+    }
+    return false
   }
 
   return (
@@ -45,52 +72,58 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex flex-1 justify-end items-center gap-4">
-          {/* Section Tabs */}
+          {/* Unified Navigation Tabs */}
           <div className="relative flex rounded-full bg-[#1E3F2B] border border-[#1E3F2B] overflow-hidden">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => handleSectionClick(section.id)}
-                onMouseEnter={() => setHoveredSection(section.id)}
-                onMouseLeave={() => setHoveredSection(null)}
-                className={`relative px-6 py-2 rounded-full text-sm font-medium transition-all focus:outline-none z-10 ${
-                  hoveredSection === section.id && activeSection !== section.id
-                    ? 'opacity-80'
-                    : ''
-                }`}
-                style={{
-                  color: activeSection === section.id ? 'white' : 'white',
-                }}
-              >
-                {section.label}
-              </button>
-            ))}
-            {/* Animated Background */}
-            {activeSection && (
-              <motion.div
-                layoutId="activeSection"
-                className="absolute inset-y-0 bg-[#7CB58D] rounded-full z-0"
-                initial={false}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 30,
-                }}
-                style={{
-                  width: `${100 / sections.length}%`,
-                  left: `${(sections.findIndex(s => s.id === activeSection)) * (100 / sections.length)}%`,
-                }}
-              />
-            )}
+            {navItems.map((item) => {
+              const isActive = isItemActive(item)
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item)}
+                  onMouseEnter={() => setHoveredItem(item.id)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  className={`relative px-3 py-2 rounded-full text-sm font-medium transition-all focus:outline-none z-10 ${
+                    hoveredItem === item.id && !isActive
+                      ? 'opacity-80'
+                      : ''
+                  }`}
+                  style={{
+                    color: isActive ? '#1E3F2B' : 'white',
+                  }}
+                >
+                  {item.label}
+                </button>
+              )
+            })}
+            {/* Animated Background - Single element for smooth animation */}
+            {(() => {
+              const activeIndex = navItems.findIndex(item => isItemActive(item))
+              if (activeIndex === -1) return null
+              
+              return (
+                <motion.div
+                  layoutId="activeNavItem"
+                  className="absolute inset-y-0 bg-[#7CB58D] rounded-full z-0 w-fit"
+                  initial={false}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 30,
+                  }}
+                  style={{
+                    width: `${100 / navItems.length}%`,
+                    left: `${activeIndex * (100 / navItems.length)}%`,
+                  }}
+                />
+              )
+            })()}
           </div>
-
-          <div className="flex items-center gap-4">
-            <button className="flex items-center justify-center overflow-hidden rounded-full size-10 bg-[#EAE0D5]/50 hover:bg-[#EAE0D5] text-[#3C403D] transition-colors">
-              <IconBell className="text-xl" />
-            </button>
-            <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 text-[#3C403D] bg-[#EAE0D5]/50 hover:bg-[#EAE0D5] flex items-center justify-center">
-              <IconUser className="text-xl" />
-            </div>
+          
+          <button className="flex items-center justify-center overflow-hidden rounded-full size-10 bg-[#EAE0D5]/50 hover:bg-[#EAE0D5] text-[#3C403D] transition-colors">
+            <IconBell className="text-xl" />
+          </button>
+          <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 text-[#3C403D] bg-[#EAE0D5]/50 hover:bg-[#EAE0D5] flex items-center justify-center">
+            <IconUser className="text-xl" />
           </div>
         </div>
 

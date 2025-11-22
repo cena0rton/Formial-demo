@@ -4,6 +4,7 @@ import Dash from './Dash'
 import DashHome from './Dash-Items/DashHome'
 import SkinProgress from './Dash-Items/SkinProgress'
 import PersonalDetails from './Dash-Items/PersonalDetails'
+import Support from './Dash-Items/Support'
 import Navbar from './Navbar'
 
 type SectionType = 'treatment' | 'progress' | 'refer'
@@ -26,6 +27,7 @@ const Page = () => {
         <Dash>
           {ref.current === 0 && <DashHome activeSection={activeSection} />}
           {ref.current === 1 && <SkinProgress />}
+          {ref.current === 4 && <Support />}
           {ref.current === 6 && <PersonalDetails />}
         </Dash>
       </div>
