@@ -231,7 +231,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
          
           <h2
             className="text-xl md:text-2xl text-[#5B4331] tracking-tight font-medium leading-tight"
-            style={{ fontFamily: "var(--font-inter), sans-serif" }}
+            style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
           >
             Please review your details before proceeding.
           </h2>

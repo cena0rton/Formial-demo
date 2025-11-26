@@ -36,7 +36,7 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
       transition={{ duration: 0.3 }}
     >
       {/* Header Button */}
-      <div className="flex items-center justify-center mb-6">
+      <div className="flex items-center justify-center mb-6 tracking-tight">
         <div className="px-6 py-3 rounded-full bg-[#7CB58D] border border-[#1E3F2B] text-[#1E3F2B] text-sm tracking-tighter font-bold"
           style={{ fontFamily: "var(--font-lexend-exa), sans-serif" }}
         >
@@ -45,12 +45,12 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
       </div>
 
       {/* Headline */}
-      <h2 className="text-2xl md:text-3xl font-medium text-[#3D2D1F] mb-4">
+      <h2 className="text-xl md:text-2xl text-center font-medium text-[#3D2D1F] mb-4">
         Share the joy of great skin.
       </h2>
 
       {/* Description */}
-      <p className="text-sm text-[#3D2D1F] mb-8 leading-relaxed">
+      <p className="text-sm text-[#3D2D1F] mb-8 text-center leading-relaxed">
         Invite someone to try Formial using your coupon code, and when your friend places their order, both of you will receive a ₹200 credit on your next order.
       </p>
 
@@ -86,7 +86,7 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
       {/* Summary Section */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-[#3D2D1F]">Summary</h3>
-        <div className="rounded-xl border border-[#1E3F2B]/30 bg-white px-4 py-4 space-y-3">
+        <div className="rounded-xl border border-[#3D2D1F] bg-white px-4 py-4 space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-[#3D2D1F]">Friends joined</span>
             <span className="text-sm font-medium text-[#3D2D1F]">5</span>
@@ -108,7 +108,7 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
 
       {/* Footer */}
       <div className="flex justify-center mt-8">
-        <p className="text-sm font-bold text-[#3D2D1F]">payments</p>
+        <p className="text-sm font-bold text-[#3D2D1F]">Payments</p>
       </div>
     </motion.div>
   )

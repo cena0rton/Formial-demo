@@ -1,22 +1,110 @@
 'use client'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { FormialPrescription } from '../../../utils/formialApi'
+import { IconMountain, IconUpload } from '@tabler/icons-react'
 
 interface ProgressTimelineProps {
   prescriptions?: FormialPrescription[]
   isLoading?: boolean
 }
 
-const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelineProps) => {
-  const sortedPrescriptions = useMemo(() => {
-    return [...prescriptions].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    )
-  }, [prescriptions])
+interface PhotoGroup {
+  week: number
+  date: string
+  photos: string[]
+}
 
-  const formatDate = (dateString?: string) =>
-    dateString ? new Date(dateString).toLocaleDateString() : "Pending"
+const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelineProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([])
+
+  // Group photos by date and create week-based structure
+  const photoGroups = useMemo(() => {
+    const groups: PhotoGroup[] = []
+    const allPhotos: { url: string; date: string }[] = []
+
+    // Collect all photos from prescriptions
+    prescriptions.forEach((prescription) => {
+      const date = prescription.createdAt
+      ;["front_image", "left_image", "right_image"].forEach((key) => {
+        const url = prescription[key as keyof FormialPrescription]
+        if (url && typeof url === "string") {
+          allPhotos.push({ url, date })
+        }
+      })
+    })
+
+    // Add uploaded photos
+    uploadedPhotos.forEach((url) => {
+      allPhotos.push({ url, date: new Date().toISOString() })
+    })
+
+    // Group by date (group photos taken on the same day)
+    const dateMap = new Map<string, string[]>()
+    allPhotos.forEach((photo) => {
+      const photoDate = new Date(photo.date)
+      const dateKey = photoDate.toISOString().split('T')[0]
+      if (!dateMap.has(dateKey)) {
+        dateMap.set(dateKey, [])
+      }
+      dateMap.get(dateKey)!.push(photo.url)
+    })
+
+    // Convert to groups with week numbers
+    let weekCounter = 1
+    const sortedDates = Array.from(dateMap.keys()).sort(
+      (a, b) => new Date(b).getTime() - new Date(a).getTime()
+    )
+
+    sortedDates.forEach((dateKey) => {
+      const photos = dateMap.get(dateKey)!
+      // Split into groups of 3
+      for (let i = 0; i < photos.length; i += 3) {
+        groups.push({
+          week: weekCounter++,
+          date: dateKey,
+          photos: photos.slice(i, i + 3),
+        })
+      }
+    })
+
+    return groups
+  }, [prescriptions, uploadedPhotos])
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    })
+  }
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+
+    const newPhotos: string[] = []
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const result = event.target?.result as string
+        if (result) {
+          newPhotos.push(result)
+          if (newPhotos.length === Array.from(files).length) {
+            setUploadedPhotos((prev) => [...prev, ...newPhotos])
+          }
+        }
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
   return (
     <motion.div
       key="progress"
@@ -35,67 +123,88 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
       </div>
 
       <div className="relative pl-10">
+        {/* Vertical Timeline Line */}
         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black"></div>
 
         <div className="space-y-10 pb-8">
+          {/* Today Section with Upload */}
           <div className="relative">
             <div className="absolute -left-10 top-3 w-8 h-0.5 bg-black"></div>
             <div className="mb-4">
               <p className="text-sm font-medium text-black">Today</p>
             </div>
-            <div className="rounded-xl border-2 border-dashed border-black bg-gray-50 p-6 flex flex-col gap-2">
-              <p className="text-sm text-black font-medium">Ready for your next upload?</p>
-              <p className="text-xs text-gray-600">
-                Keep your clinician updated with fresh pictures to track progress.
-              </p>
+            <div className="relative">
+              {/* Upload Placeholder */}
+              <div
+                onClick={handleUploadClick}
+                className="rounded-xl border-2 border-dashed border-black bg-gray-50 p-8 flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-gray-100 transition-colors"
+              >
+                <IconMountain className="h-8 w-8 text-black" />
+                <p className="text-sm text-black font-medium">Click to upload</p>
+              </div>
+              
+          
+             
             </div>
+            
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
 
           {isLoading && (
             <div className="space-y-4 animate-pulse">
               {[1, 2].map((item) => (
-                <div key={item} className="h-16 bg-gray-200 rounded-xl" />
+                <div key={item} className="h-32 bg-gray-200 rounded-xl" />
               ))}
             </div>
           )}
 
-          {!isLoading && sortedPrescriptions.length === 0 && (
+          {!isLoading && photoGroups.length === 0 && (
             <p className="text-sm text-gray-600">
-              Once your first prescription is uploaded, it will appear here.
+              Upload your first photos to start tracking your progress.
             </p>
           )}
 
+          {/* Photo Groups - 3 photos per row */}
           {!isLoading &&
-            sortedPrescriptions.map((prescription) => (
-              <div className="relative" key={prescription._id}>
+            photoGroups.map((group, groupIndex) => (
+              <div className="relative" key={`${group.date}-${groupIndex}`}>
                 <div className="absolute -left-10 top-3 w-8 h-0.5 bg-black"></div>
-                <div className="mb-2">
+                <div className="mb-4">
                   <p className="text-sm font-medium text-black">
-                    {formatDate(prescription.createdAt)}
+                    {formatDate(group.date)}
                   </p>
                 </div>
-                <div className="rounded-xl border border-black bg-white p-4 space-y-2">
-                  <p className="text-xs uppercase tracking-wide text-gray-500">
-                    Clinician: {prescription.clinician_name || "Pending"}
-                  </p>
-                  <p className="text-sm text-[#3D2D1F]">
-                    {prescription.clinician_remarks || "Remarks will appear after review."}
-                  </p>
-                  <div className="flex gap-2 flex-wrap">
-                    {["front_image", "left_image", "right_image"].map((key) => {
-                      const url = prescription[key as keyof FormialPrescription]
-                      if (!url || typeof url !== "string") return null
-                      return (
-                        <img
-                          key={key}
-                          src={url}
-                          alt={key}
-                          className="w-16 h-16 object-cover rounded-lg border border-black/20"
-                        />
-                      )
-                    })}
-                  </div>
+                <div className="flex gap-3">
+                  {group.photos.map((photoUrl, photoIndex) => (
+                    <div
+                      key={photoIndex}
+                      className="flex-1 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden"
+                    >
+                      <img
+                        src={photoUrl}
+                        alt={`Week ${group.week} - Photo ${photoIndex + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                  {/* Fill remaining slots if less than 3 */}
+                  {group.photos.length < 3 &&
+                    Array.from({ length: 3 - group.photos.length }).map((_, index) => (
+                      <div
+                        key={`empty-${index}`}
+                        className="flex-1 aspect-square rounded-xl bg-[#6B46C1] border border-black"
+                      />
+                    ))}
                 </div>
+                <p className="text-xs text-gray-600 mt-2">Week-{group.week}</p>
               </div>
             ))}
         </div>

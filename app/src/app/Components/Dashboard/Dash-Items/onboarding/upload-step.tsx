@@ -192,7 +192,7 @@ export default function UploadStep({
               {/* Title */}
               <h2
                 className="text-xl md:text-2xl text-[#5B4331] tracking-tight font-medium leading-tight mb-3"
-                style={{ fontFamily: "var(--font-inter), sans-serif" }}
+                style={{ fontFamily: "Inter, var(--font-geist-sans), sans-serif" }}
               >
                 {UPLOADS[step].label}
               </h2>
