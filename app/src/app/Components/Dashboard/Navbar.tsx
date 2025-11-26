@@ -26,7 +26,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
     itemIndex?: number 
   }[] = [
     { id: 'treatment', label: 'Home', type: 'section', sectionId: 'treatment' },
-    { id: 'refer', label: 'Refer and Earn', type: 'section', sectionId: 'refer' },
+    { id: 'refer', label: 'Refer & Earn', type: 'section', sectionId: 'refer' },
     { id: 'support', label: 'Support', type: 'page', itemIndex: 4 },
     { id: 'details', label: 'Details', type: 'page', itemIndex: 6 },
   ]
@@ -87,18 +87,18 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
       </header>
 
       {/* Centered Navigation Bar - Sticky below green header */}
-      <nav className="sticky top-[72px] md:top-[72px] z-40 bg-[#F2F0E0] ">
-        <div className="max-w-7xl mx-auto px-0 md:px-6">
+      <nav className="sticky top-[72px] md:top-[72px] z-40 bg-[#FEFCE8] border-b border-black/20">
+        <div className="max-w-7xl mx-auto px-0 md:px-6 ">
         
-          <div className="flex items-center justify-center py-3 bg-[#F2F0E0] border-black/10 border-b">
-            <div className="relative flex rounded-full  overflow-hidden w-full md:max-w-xl max-w-md ">
+          <div className="flex items-center justify-center">
+            <div className="relative flex  overflow-hidden w-full md:max-w-2xl max-w-lg mt-3 ">
               {navItems.map((item) => {
                 const isActive = isItemActive(item)
                 return (
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className={`relative flex-1 px-3 py-2.5 rounded-full text-xs md:text-sm text-black font-medium transition-all focus:outline-none z-10 ${
+                    className={`relative flex-1 px-3 pb-4 mt-2 text-xs md:text-sm text-black font-medium transition-all focus:outline-none z-10 ${
                       isActive ? 'text-[#1E3F2B]' : 'text-black'
                     }`}
                   >
@@ -114,7 +114,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
                 return (
                   <motion.div
                     layoutId="activeNavItemMobile"
-                    className="absolute inset-y-0 bg-[#e1dfd2] border border-black/10 rounded-full z-0"
+                    className="absolute  inset-y-0 bg-transparent border-b-2 border-black/60  z-0"
                     initial={false}
                     transition={{
                       type: "spring",

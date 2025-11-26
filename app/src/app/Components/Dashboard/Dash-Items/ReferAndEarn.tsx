@@ -45,46 +45,48 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
       </div>
 
       {/* Headline */}
-      <h2 className="text-xl font-medium text-[#3D2D1F] mb-4">
+      <h2 className="text-2xl md:text-3xl font-medium text-[#3D2D1F] mb-4">
         Share the joy of great skin.
       </h2>
 
       {/* Description */}
-      <p className="text-sm text-[#3D2D1F] mb-6">
+      <p className="text-sm text-[#3D2D1F] mb-8 leading-relaxed">
         Invite someone to try Formial using your coupon code, and when your friend places their order, both of you will receive a ₹200 credit on your next order.
       </p>
 
       {/* Referral Code Section */}
-      <div className="space-y-4 mb-8">
+      <div className="space-y-3 mb-8">
         <p className="text-sm font-medium text-[#3D2D1F]">Referral code</p>
-        <div className="flex items-center gap-3">
+        <div className="relative flex items-center">
           <input
             type="text"
             value={referralCode}
             readOnly
-            className="flex-1 rounded-xl border border-[#1E3F2B] bg-white px-4 py-3 text-sm text-[#3D2D1F] focus:outline-none"
+            className="w-full rounded-xl border border-[#1E3F2B] bg-white px-4 py-3 pr-24 text-sm text-[#3D2D1F] focus:outline-none"
           />
-          <button
-            onClick={handleCopyCode}
-            className="p-3 rounded-lg border border-[#1E3F2B] bg-white hover:bg-[#7CB58D]/10 transition-colors"
-            aria-label="Copy referral code"
-          >
-            <IconCopy className="h-5 w-5 text-[#1E3F2B]" />
-          </button>
-          <button
-            onClick={handleWhatsAppShare}
-            className="p-3 rounded-lg border border-[#1E3F2B] bg-white hover:bg-[#7CB58D]/10 transition-colors"
-            aria-label="Share on WhatsApp"
-          >
-            <IconBrandWhatsapp className="h-5 w-5 text-[#1E3F2B]" />
-          </button>
+          <div className="absolute right-2 flex items-center gap-2">
+            <button
+              onClick={handleCopyCode}
+              className="p-2 rounded-lg hover:bg-[#7CB58D]/10 transition-colors"
+              aria-label="Copy referral code"
+            >
+              <IconCopy className="h-5 w-5 text-[#3D2D1F]" />
+            </button>
+            <button
+              onClick={handleWhatsAppShare}
+              className="p-2 rounded-full hover:bg-[#7CB58D]/10 transition-colors"
+              aria-label="Share on WhatsApp"
+            >
+              <IconBrandWhatsapp className="h-5 w-5 text-[#3D2D1F]" />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Summary Section */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-[#3D2D1F]">Summary</h3>
-        <div className="space-y-3">
+        <div className="rounded-xl border border-[#1E3F2B]/30 bg-white px-4 py-4 space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-[#3D2D1F]">Friends joined</span>
             <span className="text-sm font-medium text-[#3D2D1F]">5</span>
@@ -102,6 +104,11 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
             <span className="text-sm font-bold text-[#1E3F2B]">₹700</span>
           </div>
         </div>
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-center mt-8">
+        <p className="text-sm font-bold text-[#3D2D1F]">payments</p>
       </div>
     </motion.div>
   )

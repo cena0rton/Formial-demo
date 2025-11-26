@@ -24,13 +24,26 @@ const Support = () => {
           </div>
 
           {/* Chat Iframe */}
-          <div className="w-full rounded-3xl overflow-hidden " style={{ height: 'calc(100vh - 250px)', minHeight: '600px', border: 'none' }}>
+          {/* Note: The iframe content is from an external domain (sagepilot.ai).
+              We can only style the container, not the content inside due to cross-origin restrictions.
+              To customize the chat widget appearance, check SagePilot dashboard for theme/customization options. */}
+          <div 
+            className="w-full rounded-3xl overflow-hidden bg-white border border-black/10" 
+            style={{ height: 'calc(100vh - 250px)', minHeight: '600px' }}
+          >
             <iframe
               src="https://app.sagepilot.ai/chat-widget-iframe.html?key=54dd14e1-fed6-4990-8a1b-a181967f50b2:46d8b50c-9414-4e6b-a3a8-feaa061dc9cb&host=https://app.sagepilot.ai"
-              className='w-full h-full border-none outline-none box-shadow-none shadow-none'
-              style={{ width: '100%', height: '100%', border: 'none', outline: 'none', boxShadow: 'none' }}
+              className="w-full h-full border-none outline-none"
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                border: 'none', 
+                outline: 'none',
+                display: 'block'
+              }}
               allow="microphone; camera"
               title="Support Chat"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
             />
           </div>
         </motion.div>
