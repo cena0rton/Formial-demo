@@ -27,8 +27,9 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
   }[] = [
     { id: 'treatment', label: 'Home', type: 'section', sectionId: 'treatment' },
     { id: 'refer', label: 'Refer & Earn', type: 'section', sectionId: 'refer' },
-    { id: 'support', label: 'Support', type: 'page', itemIndex: 4 },
+    { id: 'support', label: 'Consult', type: 'page', itemIndex: 4 },
     { id: 'details', label: 'Details', type: 'page', itemIndex: 6 },
+    // { id: 'orders', label: 'Orders & Subscriptions', type: 'page', itemIndex: 5 },
   ]
 
   const handleNavClick = (item: typeof navItems[0]) => {

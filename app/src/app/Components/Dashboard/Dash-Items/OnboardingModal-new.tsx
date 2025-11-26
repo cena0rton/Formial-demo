@@ -99,23 +99,23 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
         <div className="flex-1 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] max-w-7xl mx-auto w-full pb-12">
           {/* Mobile Progress Bar */}
           {currentStep > 0 && (
-            <div className="lg:hidden w-full px-6 pt-12  md:-pb-0 flex items-center justify-center">
+            <div className="lg:hidden w-full px-6 pt-6  md:-pb-0 flex items-center justify-center">
               <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between gap-6 border border-black/50 tracking-tighter font-lexend-exa"
               
               >
-                <span className={`text-sm font-medium ${currentStep >= 1 && currentStep <= 2 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
+                <span className={`text-xs font-medium ${currentStep >= 1 && currentStep <= 2 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
                   Verification
                 </span>
-                <span className={`text-sm font-medium ${currentStep === 3 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
+                <span className={`text-xs font-medium ${currentStep === 3 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
                  Upload Photos
                 </span>
-                <span className={`text-sm font-medium ${currentStep === 4 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
+                <span className={`text-xs font-medium ${currentStep === 4 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
                   Consult
                 </span>
               </div>
             </div>
           )}
-          <div className="px-0 items-center justify-center -mt-2 md:-mt-0">
+          <div className="px-0 items-center justify-center -mt-6 md:-mt-0">
             <AnimatePresence mode="wait">
               {currentStep === 0 && (
                 <WelcomeStep1 key="welcome1" userName={userFirstName} onNext={handleNext} />
