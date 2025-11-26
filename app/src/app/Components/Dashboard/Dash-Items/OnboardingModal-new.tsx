@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
 import WelcomeStep1 from "./onboarding/welcome-step-1"
@@ -16,15 +16,6 @@ interface OnboardingModalProps {
 
 export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [isOpen, setIsOpen] = useState(false)
-
-  useEffect(() => {
-    // Check if onboarding was already completed
-    const onboardingCompleted = localStorage.getItem('formial-onboarding-completed')
-    if (!onboardingCompleted) {
-      setIsOpen(true)
-    }
-  }, [])
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
   const [userDetails] = useState({
     name: "Pawan",
@@ -79,15 +70,11 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
       }
     }
     
-    localStorage.setItem('formial-onboarding-completed', 'true')
-    setIsOpen(false)
-    // Notify parent component to show dashboard
+    // Notify parent component that onboarding is complete
     if (onComplete) {
       onComplete()
     }
   }
-
-  if (!isOpen) return null
 
   return (
     <AnimatePresence>
@@ -113,17 +100,17 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
           {/* Mobile Progress Bar */}
           {currentStep > 0 && (
             <div className="lg:hidden w-full px-6 pt-12  md:-pb-0 flex items-center justify-center">
-              <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between gap-6 border border-[#5B4331]/50 shadow-[0_10px_30px_rgba(50,90,60,0.25)] border-b-2 tracking-tight"
+              <div className="w-full bg-[#7CB58D] rounded-full px-8 py-4 flex items-center justify-between gap-6 border border-black/50 tracking-tighter font-lexend-exa"
               
               >
-                <span className={`text-sm font-medium ${currentStep >= 1 && currentStep <= 2 ? 'text-[#1E3F2B] font-semibold' : 'text-[#5B4331]'}`}>
+                <span className={`text-sm font-medium ${currentStep >= 1 && currentStep <= 2 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
                   Verification
                 </span>
-                <span className={`text-sm font-medium ${currentStep === 3 ? 'text-[#1E3F2B] font-semibold' : 'text-[#5B4331]'}`}>
+                <span className={`text-sm font-medium ${currentStep === 3 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
                  Upload Photos
                 </span>
-                <span className={`text-sm font-medium ${currentStep === 4 ? 'text-[#1E3F2B] font-semibold' : 'text-[#5B4331]'}`}>
-                  Welcome
+                <span className={`text-sm font-medium ${currentStep === 4 ? 'text-[#1E3F2B] font-bold' : 'text-[#5B4331]/70'}`}>
+                  Consult
                 </span>
               </div>
             </div>

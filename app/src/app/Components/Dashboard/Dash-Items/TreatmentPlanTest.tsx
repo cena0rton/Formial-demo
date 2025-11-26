@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { FormialUser, FormialPrescription } from '../../../utils/formialApi'
 
-interface TreatmentPlanProps {
+interface TreatmentPlanTestProps {
   user?: FormialUser | null
   latestPrescription?: FormialPrescription | null
   isLoading?: boolean
@@ -15,7 +15,7 @@ const fallbackTags = [
   { label: "fine lines", color: "bg-orange-200 text-orange-900 border-orange-300" },
 ]
 
-const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanProps) => {
+const TreatmentPlanTest = ({ user, latestPrescription, isLoading }: TreatmentPlanTestProps) => {
   const treatmentTags = useMemo(() => {
     const allTags: string[] = []
     
@@ -123,7 +123,7 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
         <div className="px-6 py-3 rounded-full bg-[#7CB58D] border border-[#1E3F2B] text-[#1E3F2B] text-sm tracking-tighter font-bold"
         style={{ fontFamily: "var(--font-lexend-exa), sans-serif" }}
         >
-          Treatment Plan
+          Treatment Plan (TEST)
         </div>
       </div>
 
@@ -147,7 +147,7 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
               </span>
             </div>
             <div>
-              <div className="flex gap-2 mt-4">
+              <div className="flex gap-2 mt-4 flex-wrap">
                 {treatmentTags.map((tag, idx) => (
                   <span
                     key={idx}
@@ -211,5 +211,5 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
   )
 }
 
-export default TreatmentPlan
+export default TreatmentPlanTest
 

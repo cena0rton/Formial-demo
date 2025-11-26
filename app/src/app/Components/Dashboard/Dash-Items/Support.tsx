@@ -1,28 +1,8 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import { motion } from 'framer-motion'
-import { IconUser } from '@tabler/icons-react'
 
 const Support = () => {
-  const [message, setMessage] = useState('')
-
-  // Mock messages - in a real app, these would come from an API
-  const messages = [
-    { id: 1, sender: 'assistant', text: "Hello! I'm the Formial Labs assistant. How can I help you today? Lorem Ipsum Lorem Ipsum" },
-    { id: 2, sender: 'user', text: "Hello! I'm the Formial Labs assistant. How can I help you today? Lorem Ipsum Lorem Ipsum" },
-    { id: 3, sender: 'assistant', text: "Hello! I'm the Formial Labs assistant. How can I help you today? Lorem Ipsum Lorem Ipsum" },
-    { id: 4, sender: 'user', text: "Hello! I'm the Formial Labs assistant. How can I help you today? Lorem Ipsum Lorem Ipsum" },
-    { id: 5, sender: 'assistant', text: "Hello! I'm the Formial Labs assistant. How can I help you today? Lorem Ipsum Lorem Ipsum" },
-  ]
-
-  const handleSend = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (message.trim()) {
-      // TODO: Send message to API
-      setMessage('')
-    }
-  }
-
   return (
     <div className="w-full min-h-screen bg-[#F2F0E0]">
       <div className="w-full max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-8">
@@ -32,7 +12,7 @@ const Support = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="flex flex-col h-[calc(100vh-200px)] max-h-[800px]"
+          className="flex flex-col"
         >
           {/* Header Button */}
           <div className="flex items-center justify-center mb-6">
@@ -43,48 +23,16 @@ const Support = () => {
             </div>
           </div>
 
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-6 mb-4 px-2">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex items-start gap-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                {msg.sender === 'assistant' && (
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#7CB58D] flex items-center justify-center">
-                    <IconUser className="h-4 w-4 text-white" />
-                  </div>
-                )}
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                    msg.sender === 'assistant'
-                      ? 'bg-gray-200 text-[#3D2D1F]'
-                      : 'bg-[#1E3F2B] text-white'
-                  }`}
-                >
-                  <p className="text-sm">{msg.text}</p>
-                </div>
-                {msg.sender === 'user' && (
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-black flex items-center justify-center">
-                    <IconUser className="h-4 w-4 text-white" />
-                  </div>
-                )}
-              </div>
-            ))}
+          {/* Chat Iframe */}
+          <div className="w-full rounded-3xl overflow-hidden " style={{ height: 'calc(100vh - 250px)', minHeight: '600px', border: 'none' }}>
+            <iframe
+              src="https://app.sagepilot.ai/chat-widget-iframe.html?key=54dd14e1-fed6-4990-8a1b-a181967f50b2:46d8b50c-9414-4e6b-a3a8-feaa061dc9cb&host=https://app.sagepilot.ai"
+              className='w-full h-full border-none outline-none box-shadow-none shadow-none'
+              style={{ width: '100%', height: '100%', border: 'none', outline: 'none', boxShadow: 'none' }}
+              allow="microphone; camera"
+              title="Support Chat"
+            />
           </div>
-
-          {/* Message Input */}
-          <form onSubmit={handleSend} className="mt-auto">
-            <div className="flex items-center gap-3">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Write a message......"
-                className="flex-1 rounded-xl border border-[#1E3F2B] bg-white px-4 py-3 text-sm text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]/20"
-              />
-            </div>
-          </form>
         </motion.div>
       </div>
     </div>

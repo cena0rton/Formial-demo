@@ -2,7 +2,10 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
-import { IconShieldLock, IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
+import { IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
+import { sendWhatsAppOtp, verifyWhatsAppOtp } from "../../../../utils/otpService"
+import { setAuthToken } from "../../../../utils/authToken"
+import { setUserContact } from "../../../../utils/userContact"
 
 interface WelcomeStep2Props {
   userDetails: {
@@ -37,6 +40,11 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
   const [name, setName] = useState(userDetails.name)
   const [phone, setPhone] = useState(userDetails.phone)
+  const [otpMessage, setOtpMessage] = useState<string | null>(null)
+  const [otpError, setOtpError] = useState<string | null>(null)
+  const [isSendingOtp, setIsSendingOtp] = useState(false)
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false)
+  const [resendCooldown, setResendCooldown] = useState(0)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   const nameInputRef = useRef<HTMLInputElement | null>(null)
   const phoneInputRef = useRef<HTMLInputElement | null>(null)
@@ -45,6 +53,14 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
     // Auto-focus first input on mount
     inputRefs.current[0]?.focus()
   }, [])
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return
+    const timer = window.setInterval(() => {
+      setResendCooldown((prev) => Math.max(prev - 1, 0))
+    }, 1000)
+    return () => window.clearInterval(timer)
+  }, [resendCooldown])
 
   const handleDigitChange = (index: number, value: string) => {
     // Only allow single digit
@@ -108,7 +124,61 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
   }
 
   const allDigitsFilled = otpDigits.every((digit) => digit.length === 1)
-  const isFormValid = name.trim().length > 0 && phone.trim().length > 0 && allDigitsFilled
+  const sanitizedPhone = phone.replace(/\D/g, "")
+  const isFormValid = name.trim().length > 0 && sanitizedPhone.length >= 10 && allDigitsFilled
+
+  const handleSendOtp = async () => {
+    if (isSendingOtp || resendCooldown > 0) return
+    setOtpError(null)
+    setOtpMessage(null)
+
+    if (!sanitizedPhone) {
+      setOtpError("Please enter a valid phone number with country code.")
+      return
+    }
+
+    try {
+      setIsSendingOtp(true)
+      await sendWhatsAppOtp({ phoneNumber: sanitizedPhone, name })
+      setOtpMessage("OTP sent to WhatsApp. Please check your phone.")
+      setResendCooldown(30)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to send OTP."
+      setOtpError(message)
+    } finally {
+      setIsSendingOtp(false)
+    }
+  }
+
+  const handleVerifyAndContinue = async () => {
+    if (!isFormValid || isVerifyingOtp) return
+    const code = otpDigits.join("")
+
+    setOtpError(null)
+    setIsVerifyingOtp(true)
+
+    try {
+      const response = await verifyWhatsAppOtp({
+        phoneNumber: sanitizedPhone,
+        code,
+      })
+
+      if (response?.token) {
+        setAuthToken(response.token)
+      }
+      setUserContact(`+${sanitizedPhone}`)
+
+      setOtpMessage(response?.message || "OTP verified successfully.")
+
+      onNext()
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "OTP verification failed. Please try again."
+      setOtpError(message)
+    } finally {
+      setIsVerifyingOtp(false)
+    }
+  }
 
   return (
     <motion.div
@@ -239,9 +309,19 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
                       aria-label={`OTP digit ${index + 1}`}
                     />
                   ))}
-                  <div className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 text-center">Send OTP</div>
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={isSendingOtp || resendCooldown > 0}
+                    className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 text-center underline-offset-2 hover:underline disabled:opacity-50 disabled:no-underline"
+                  >
+                    {isSendingOtp
+                      ? "Sending..."
+                      : resendCooldown > 0
+                      ? `Resend in ${resendCooldown}s`
+                      : "Send OTP"}
+                  </button>
                 </div>
-           
             </div>
             
           </div>
@@ -257,12 +337,20 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
           </button>
         <button
             type="button"
-          onClick={onNext}
-            disabled={!isFormValid}
+          onClick={handleVerifyAndContinue}
+            disabled={!isFormValid || isVerifyingOtp}
             className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
         >
-         Verify & Continue
+         {isVerifyingOtp ? "Verifying..." : "Verify & Continue"}
         </button>
+        </div>
+        <div className="mt-3 min-h-[1.5rem]" aria-live="polite">
+          {otpMessage && !otpError && (
+            <p className="text-xs text-green-700">{otpMessage}</p>
+          )}
+          {otpError && (
+            <p className="text-xs text-red-600">{otpError}</p>
+          )}
         </div>
       </motion.div>
       </div>

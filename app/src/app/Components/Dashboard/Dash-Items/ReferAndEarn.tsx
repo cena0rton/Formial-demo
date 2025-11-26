@@ -1,13 +1,20 @@
 'use client'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import {
-  IconCopy,
-  IconBrandWhatsapp,
-} from '@tabler/icons-react'
+import { IconCopy, IconBrandWhatsapp } from '@tabler/icons-react'
 
-const ReferAndEarn = () => {
-  const referralCode = "#c5f789b"
+interface ReferAndEarnProps {
+  contact?: string | null
+}
+
+const fallbackCode = "#c5f789b"
+
+const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
+  const referralCode = useMemo(() => {
+    if (!contact) return fallbackCode
+    const lastDigits = contact.replace(/\D/g, '').slice(-6)
+    return lastDigits ? `#${lastDigits}` : fallbackCode
+  }, [contact])
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(referralCode)

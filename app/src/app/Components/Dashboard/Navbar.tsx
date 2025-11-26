@@ -2,8 +2,7 @@
 import { IconMenu2, IconX, IconBell, IconUser } from '@tabler/icons-react'
 import React, { useState } from 'react'
 import Image from 'next/image'
-import MobileSidebar from './Sidebar-Mobile'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 type SectionType = 'treatment' | 'progress' | 'refer'
 
@@ -17,9 +16,8 @@ interface NavbarProps {
 
 const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection}: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
-  // Unified navigation items - all links in one array
+  // Navigation items - simplified for centered navbar
   const navItems: { 
     id: string; 
     label: string; 
@@ -27,8 +25,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
     sectionId?: SectionType; 
     itemIndex?: number 
   }[] = [
-    { id: 'treatment', label: 'Treatment Plan', type: 'section', sectionId: 'treatment' },
-    { id: 'progress', label: 'Progress Timeline', type: 'section', sectionId: 'progress' },
+    { id: 'treatment', label: 'Home', type: 'section', sectionId: 'treatment' },
     { id: 'refer', label: 'Refer and Earn', type: 'section', sectionId: 'refer' },
     { id: 'support', label: 'Support', type: 'page', itemIndex: 4 },
     { id: 'details', label: 'Details', type: 'page', itemIndex: 6 },
@@ -36,20 +33,19 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
 
   const handleNavClick = (item: typeof navItems[0]) => {
     if (item.type === 'section' && item.sectionId) {
-      // Handle section navigation
       if (setActiveSection) {
         setActiveSection(item.sectionId)
       }
       setActiveItem(0)
       ref.current = 0
     } else if (item.type === 'page' && item.itemIndex !== undefined) {
-      // Handle direct page navigation
       setActiveItem(item.itemIndex)
       ref.current = item.itemIndex
       if (setActiveSection) {
         setActiveSection('treatment')
       }
     }
+    setIsOpen(false) // Close mobile menu on click
   }
 
   const isItemActive = (item: typeof navItems[0]) => {
@@ -63,99 +59,79 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
 
   return (
     <>
-      {/* Top Header */}
-      <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#E0E0E0] px-6 md:px-10 py-6 bg-[#1E3F2B] backdrop-blur-sm sticky top-0 z-10">
+      {/* Top Green Header with Logo */}
+      <header className="flex items-center justify-between px-4 md:px-6 py-4 bg-[#1E3F2B] sticky top-0 z-50">
         {/* Logo */}
-        <div className="flex items-center gap-4 text-[#3C403D]">
-          <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial" width={120} height={40} className="md:h-8 w-auto h-6" />
-        </div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex flex-1 justify-end items-center gap-4">
-          {/* Unified Navigation Tabs */}
-          <div className="relative flex rounded-full bg-[#1E3F2B] border border-[#1E3F2B] overflow-hidden">
-            {navItems.map((item) => {
-              const isActive = isItemActive(item)
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item)}
-                  onMouseEnter={() => setHoveredItem(item.id)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  className={`relative px-3 py-2 rounded-full text-sm font-medium transition-all focus:outline-none z-10 ${
-                    hoveredItem === item.id && !isActive
-                      ? 'opacity-80'
-                      : ''
-                  }`}
-                  style={{
-                    color: isActive ? '#1E3F2B' : 'white',
-                  }}
-                >
-                  {item.label}
-                </button>
-              )
-            })}
-            {/* Animated Background - Single element for smooth animation */}
-            {(() => {
-              const activeIndex = navItems.findIndex(item => isItemActive(item))
-              if (activeIndex === -1) return null
-              
-              return (
-                <motion.div
-                  layoutId="activeNavItem"
-                  className="absolute inset-y-0 bg-[#7CB58D] rounded-full z-0 w-fit"
-                  initial={false}
-                  transition={{
-                    type: "spring",
-                    stiffness: 500,
-                    damping: 30,
-                  }}
-                  style={{
-                    width: `${100 / navItems.length}%`,
-                    left: `${activeIndex * (100 / navItems.length)}%`,
-                  }}
-                />
-              )
-            })()}
-          </div>
-          
-          <button className="flex items-center justify-center overflow-hidden rounded-full size-10 bg-[#EAE0D5]/50 hover:bg-[#EAE0D5] text-[#3C403D] transition-colors">
-            <IconBell className="text-xl" />
-          </button>
-          <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 text-[#3C403D] bg-[#EAE0D5]/50 hover:bg-[#EAE0D5] flex items-center justify-center">
-            <IconUser className="text-xl" />
-          </div>
+        <div className="flex items-center">
+          <Image 
+            src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" 
+            alt="Formial" 
+            width={120} 
+            height={40} 
+            className="md:h-8 w-auto h-6" 
+          />
         </div>
 
         {/* Mobile Menu Button */}
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden flex items-center justify-center rounded-full size-8 bg-transparent text-white hover:bg-white/10 transition-colors"
-        >
-          {!isOpen ? <IconMenu2 className="h-5 w-5" /> : <IconX className="h-5 w-5" />}
-        </button>
+    
+
+        {/* Desktop Icons */}
+        <div className="flex items-center gap-3">
+          <button className="flex items-center justify-center overflow-hidden rounded-full size-10 bg-white/10 hover:bg-white/20 text-white transition-colors">
+            <IconBell className="text-xl" />
+          </button>
+          <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 text-white bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+            <IconUser className="text-xl" />
+          </div>
+        </div>
       </header>
 
-      {/* Mobile Sidebar */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 100 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden fixed right-0 w-fit bg-[#1E3F2B] z-20"
-          >
-            <MobileSidebar 
-              activeItem={activeItem} 
-              setActiveItem={setActiveItem} 
-              ref={ref}
-              activeSection={activeSection}
-              setActiveSection={setActiveSection}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Centered Navigation Bar - Sticky below green header */}
+      <nav className="sticky top-[72px] md:top-[72px] z-40 bg-[#F2F0E0] ">
+        <div className="max-w-7xl mx-auto px-0 md:px-6">
+        
+          <div className="flex items-center justify-center py-3 bg-[#F2F0E0] border-black/10 border-b">
+            <div className="relative flex rounded-full  overflow-hidden w-full max-w-md">
+              {navItems.map((item) => {
+                const isActive = isItemActive(item)
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item)}
+                    className={`relative flex-1 px-3 py-2.5 rounded-full text-xs text-black font-medium transition-all focus:outline-none z-10 ${
+                      isActive ? 'text-[#1E3F2B]' : 'text-black'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                )
+              })}
+              
+              {(() => {
+                const activeIndex = navItems.findIndex(item => isItemActive(item))
+                if (activeIndex === -1) return null
+                
+                return (
+                  <motion.div
+                    layoutId="activeNavItemMobile"
+                    className="absolute inset-y-0 bg-[#7CB58D] rounded-full z-0"
+                    initial={false}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                    style={{
+                      width: `${100 / navItems.length}%`,
+                      left: `${activeIndex * (100 / navItems.length)}%`,
+                    }}
+                  />
+                )
+              })()}
+            </div>
+          </div>
+        </div>
+      </nav>
     </>
   )
 }

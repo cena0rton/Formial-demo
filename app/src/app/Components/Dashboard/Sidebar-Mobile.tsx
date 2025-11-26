@@ -62,13 +62,8 @@ const MobileSidebar = ({ activeItem, setActiveItem, ref, activeSection, setActiv
     
   return (
     <div>
-         <div className='bg-[#1E3F2B] py-4 px-2 w-74 fixed top-16 right-0 h-fit border-[#1E3F2B] block md:hidden'>
-            <div className='flex justify-start items-center px-2 mb-8'>
-                <h1 className='text-xl font-medium'>
-                    <Image src="https://formial.in/cdn/shop/files/new-footer-logo.png?v=1760515295&width=240" alt="Formial Logo" height={75} width={75}/>
-                   
-                </h1>
-            </div>
+         <div className='bg-[#1E3F2B] py-4 px-2 w-74 right-0 h-fit block md:hidden rounded-bl-3xl border-br-3xl border border-white/10'>
+          
             
             <nav className='px-2 text-white'>
               {/* Unified Navigation Container */}

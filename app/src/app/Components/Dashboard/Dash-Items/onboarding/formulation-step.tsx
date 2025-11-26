@@ -78,10 +78,10 @@ export default function FormulationStep({ onComplete }: FormulationStepProps) {
         >
           <div className="space-y-6">
             {/* Heading with Rocket Icon */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 text-[#5B4331]">
               <h2
-                className="text-xl md:text-4xl font-bold text-black leading-tight tracking-tight"
-                style={{ fontFamily: "var(--font-lexend-exa), sans-serif" }}
+                className="text-xl md:text-3xl font-medium text-[#5B4331] leading-tight tracking-tight"
+                
               >
                 You&apos;re all set!
               </h2>
@@ -90,12 +90,12 @@ export default function FormulationStep({ onComplete }: FormulationStepProps) {
 
             {/* Description Text */}
             <div className="space-y-4 mt-8">
-              <p className="text-base md:text-lg text-black leading-relaxed tracking-tight"
-              style={{ fontFamily: "var(--font-lexend-exa), sans-serif" }}>
+              <p className="text-base md:text-lg text-[#5B4331] leading-relaxed tracking-tight"
+              >
                 Your secure dashboard now contains your clinical photos, progress insights, and your tailored treatment plan.
               </p>
-              <p className="text-base md:text-lg text-black leading-relaxed tracking-tight"
-              style={{ fontFamily: "var(--font-lexend-exa), sans-serif" }}>
+              <p className="text-base md:text-lg text-[#5B4331] leading-relaxed tracking-tight"
+             >
                 You can access everything anytime
               </p>
             </div>
