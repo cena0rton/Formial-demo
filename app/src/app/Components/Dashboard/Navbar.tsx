@@ -91,14 +91,14 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
         <div className="max-w-7xl mx-auto px-0 md:px-6">
         
           <div className="flex items-center justify-center py-3 bg-[#F2F0E0] border-black/10 border-b">
-            <div className="relative flex rounded-full  overflow-hidden w-full max-w-md">
+            <div className="relative flex rounded-full  overflow-hidden w-full md:max-w-xl max-w-md ">
               {navItems.map((item) => {
                 const isActive = isItemActive(item)
                 return (
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className={`relative flex-1 px-3 py-2.5 rounded-full text-xs text-black font-medium transition-all focus:outline-none z-10 ${
+                    className={`relative flex-1 px-3 py-2.5 rounded-full text-xs md:text-sm text-black font-medium transition-all focus:outline-none z-10 ${
                       isActive ? 'text-[#1E3F2B]' : 'text-black'
                     }`}
                   >
@@ -114,7 +114,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
                 return (
                   <motion.div
                     layoutId="activeNavItemMobile"
-                    className="absolute inset-y-0 bg-[#7CB58D] rounded-full z-0"
+                    className="absolute inset-y-0 bg-[#e1dfd2] border border-black/10 rounded-full z-0"
                     initial={false}
                     transition={{
                       type: "spring",
