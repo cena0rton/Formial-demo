@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { getUserContact } from "../../../utils/userContact"
 import { extractMobileNumber } from "../../../utils/auth"
-import { getUser, updateUserByContact, createPrescription } from "../../../utils/formialApi"
+import { getUser, createPrescription } from "../../../utils/formialApi"
 import { motion, AnimatePresence } from "framer-motion"
 
 import WelcomeStep1 from "./onboarding/welcome-step-1"

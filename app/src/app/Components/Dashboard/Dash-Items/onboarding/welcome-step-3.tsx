@@ -56,7 +56,8 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
           if (typeof firstAddress === 'string') {
             addressText = firstAddress
           } else if (firstAddress && typeof firstAddress === 'object') {
-            addressText = (firstAddress as any).address || (firstAddress as any).street || JSON.stringify(firstAddress)
+            const addrObj = firstAddress as { address?: string; street?: string }
+            addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
           }
           
           if (addressText) {

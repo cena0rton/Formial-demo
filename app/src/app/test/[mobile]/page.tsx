@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { getUserWithAllData, UserWithAllDataResponse, FormialPrescription } from '../../utils/formialApi'
+import { getUserWithAllData, UserWithAllDataResponse } from '../../utils/formialApi'
 import TreatmentPlanTest from '../../Components/Dashboard/Dash-Items/TreatmentPlanTest'
 
 const TestPage = () => {

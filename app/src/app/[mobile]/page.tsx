@@ -58,10 +58,7 @@ export default function UserPage() {
             }
           } catch {
             // User doesn't exist yet - will be created during onboarding
-            // Use name from query params if available
-            if (nameFromQuery && !userName) {
-              setUserName(nameFromQuery)
-            }
+            // Name from query params already set above if available
           }
           setShowOnboarding(true)
           setIsLoading(false)
@@ -107,7 +104,7 @@ export default function UserPage() {
           } else {
             setIsAuthenticated(true)
           }
-        } catch (err) {
+        } catch {
           // User doesn't exist yet - show onboarding which will create the user
           setShowOnboarding(true)
         }
@@ -120,7 +117,7 @@ export default function UserPage() {
     }
 
     checkUserAndAuth()
-  }, [mobileParam])
+  }, [mobileParam, searchParams])
 
   const handleOnboardingComplete = () => {
     // After onboarding, user should be authenticated

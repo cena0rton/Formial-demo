@@ -42,8 +42,6 @@ const checkOnboardingHeuristic = (user: FormialUser): boolean => {
   
   const hasBasicInfo = Boolean(user.name || user.first_name)
   const hasContact = Boolean(user.contact)
-  const hasAddress = user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0
-  const hasPhotoUploaded = user.image_uploaded === true
   const hasConsultationData = Boolean(
     (user.concerns && user.concerns.length > 0) ||
     (user.skin_issues && user.skin_issues.length > 0) ||
@@ -52,8 +50,7 @@ const checkOnboardingHeuristic = (user: FormialUser): boolean => {
   
   // User has completed onboarding if:
   // - Basic info + contact (Step 2)
-  // - AND (address OR consultation data exists)
-  // - Consultation data indicates they reached formulation step
+  // - AND consultation data exists (indicates they reached formulation step)
   return hasBasicInfo && 
          hasContact && 
          hasConsultationData

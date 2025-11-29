@@ -78,7 +78,7 @@ const TreatmentPlanTest = ({ user, latestPrescription, isLoading }: TreatmentPla
     }
 
     return `${clinician} is finalising your personalised formulation.`
-  }, [latestPrescription, clinicianRemarks])
+  }, [latestPrescription, clinicianRemarks, clinician])
 
   const planDescription = buildTreatmentPlan
 

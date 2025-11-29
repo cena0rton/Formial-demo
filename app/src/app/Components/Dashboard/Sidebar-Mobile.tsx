@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import { IconCalendar, IconProgress, IconShare, IconUser, IconUserCircle } from '@tabler/icons-react'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 
 type SectionType = 'treatment' | 'progress' | 'refer'
 
