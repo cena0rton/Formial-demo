@@ -1,6 +1,10 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { getUserContact } from "../../../utils/userContact"
+import { extractMobileNumber } from "../../../utils/auth"
+import { getUser, updateUserByContact, createPrescription } from "../../../utils/formialApi"
 import { motion, AnimatePresence } from "framer-motion"
 
 import WelcomeStep1 from "./onboarding/welcome-step-1"
@@ -12,25 +16,163 @@ import Image from "next/image"
 
 interface OnboardingModalProps {
   onComplete?: () => void
+  mobileNumber?: string | null
+  initialUserName?: string | null
 }
 
-export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
+export default function OnboardingModal({ onComplete, mobileNumber, initialUserName }: OnboardingModalProps) {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
-  const [userDetails] = useState({
-    name: "Pawan",
-    phone: "+91 98765 43210",
-    address: "123, Main Street, blr, INDIA",
+  const [isUploadingPhotos, setIsUploadingPhotos] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [userDetails, setUserDetails] = useState({
+    name: initialUserName || "",
+    phone: mobileNumber || "",
+    address: "",
   })
-  const userFirstName = userDetails.name.split(" ")[0] || userDetails.name
+  
+  const userFirstName = userDetails.name.split(" ")[0] || userDetails.name || "there"
 
-  const handleRefreshDetails = useCallback(() => {
-    console.info("Refresh user details requested")
-  }, [])
+  // Fetch user data when mobile number is available
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!mobileNumber) {
+        // Try to get from stored contact
+        const storedContact = getUserContact()
+        if (storedContact) {
+          try {
+            const user = await getUser(storedContact)
+            if (user) {
+              // Extract address from addresses array
+              let addressText = ""
+              if (user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
+                const firstAddress = user.addresses[0]
+                if (typeof firstAddress === 'string') {
+                  addressText = firstAddress
+                } else if (firstAddress && typeof firstAddress === 'object') {
+                  const addrObj = firstAddress as { address?: string; street?: string }
+                  addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
+                }
+              }
+              
+              setUserDetails({
+                name: user.name || user.first_name || "",
+                phone: user.contact || storedContact,
+                address: addressText,
+              })
+            }
+          } catch {
+            console.error("Failed to fetch user data")
+          }
+        }
+        return
+      }
 
-  const handleNext = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1)
+      // Fetch user data using mobile number
+      try {
+        const user = await getUser(mobileNumber)
+        if (user) {
+          // Extract address from addresses array (use first address if available)
+          let addressText = ""
+          if (user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
+            const firstAddress = user.addresses[0]
+            if (typeof firstAddress === 'string') {
+              addressText = firstAddress
+            } else if (firstAddress && typeof firstAddress === 'object') {
+              // Handle address object format
+              const addrObj = firstAddress as { address?: string; street?: string }
+              addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
+            }
+          }
+          
+          setUserDetails({
+            name: user.name || user.first_name || "",
+            phone: user.contact || mobileNumber,
+            address: addressText,
+          })
+        }
+      } catch {
+        // User doesn't exist yet - that's okay, they'll create it during onboarding
+        // Name will be entered by user during onboarding
+      }
+    }
+
+    fetchUserData()
+  }, [mobileNumber])
+
+  const handleRefreshDetails = useCallback(async () => {
+    const contact = getUserContact() || mobileNumber
+    if (!contact) return
+    
+    try {
+      const user = await getUser(contact)
+      if (user) {
+        // Extract address from addresses array
+        let addressText = ""
+        if (user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
+          const firstAddress = user.addresses[0]
+          if (typeof firstAddress === 'string') {
+            addressText = firstAddress
+          } else if (firstAddress && typeof firstAddress === 'object') {
+            const addrObj = firstAddress as { address?: string; street?: string }
+            addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
+          }
+        }
+        
+        setUserDetails({
+          name: user.name || user.first_name || "",
+          phone: user.contact || contact,
+          address: addressText,
+        })
+      }
+    } catch {
+      console.error("Failed to refresh user details")
+    }
+  }, [mobileNumber])
+
+  const handleNext = async () => {
+    // If user just completed UploadStep (step 3), upload photos to backend
+    if (currentStep === 3 && uploadedPhotos.length === 3) {
+      const contact = getUserContact() || mobileNumber
+      if (!contact) {
+        setUploadError("Contact number not found. Please verify your number.")
+        return
+      }
+
+      // Check if all 3 photos are valid File objects
+      const [frontImage, leftImage, rightImage] = uploadedPhotos
+      if (!frontImage || !leftImage || !rightImage) {
+        setUploadError("Please upload all 3 photos before continuing.")
+        return
+      }
+
+      setIsUploadingPhotos(true)
+      setUploadError(null)
+
+      try {
+        await createPrescription(contact, {
+          front_image: frontImage,
+          left_image: leftImage,
+          right_image: rightImage,
+        })
+        
+        // Upload successful, proceed to next step
+        setCurrentStep(4)
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Failed to upload photos. Please try again."
+        setUploadError(errorMessage)
+        console.error("Photo upload error:", error)
+        // Don't proceed if upload fails
+        return
+      } finally {
+        setIsUploadingPhotos(false)
+      }
+    } else {
+      // For other steps, just proceed normally
+      if (currentStep < 4) {
+        setCurrentStep(currentStep + 1)
+      }
     }
   }
 
@@ -47,32 +189,25 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
   }
 
   const handleComplete = async () => {
-    // Save uploaded photos to localStorage as data URLs
-    if (uploadedPhotos.length > 0) {
-      const photoDataUrls: string[] = []
-      for (const photo of uploadedPhotos) {
-        if (photo) {
-          try {
-            const dataUrl = await new Promise<string>((resolve, reject) => {
-              const reader = new FileReader()
-              reader.onload = () => resolve(reader.result as string)
-              reader.onerror = reject
-              reader.readAsDataURL(photo)
-            })
-            photoDataUrls.push(dataUrl)
-          } catch (error) {
-            console.error('Error converting photo to data URL:', error)
-          }
-        }
-      }
-      if (photoDataUrls.length > 0) {
-        localStorage.setItem('formial-uploaded-photos', JSON.stringify(photoDataUrls))
-      }
-    }
+    // Photos are already uploaded to backend in handleNext when user completes UploadStep
+    // No need to save to localStorage anymore
     
-    // Notify parent component that onboarding is complete
-    if (onComplete) {
-      onComplete()
+    // Get user contact and redirect to their mobile number URL
+    const contact = getUserContact() || mobileNumber
+    if (contact) {
+      const mobileForUrl = extractMobileNumber(contact)
+      // Notify parent first (if in user page context)
+      if (onComplete) {
+        onComplete()
+      } else {
+        // If standalone, redirect directly
+        router.push(`/${mobileForUrl}`)
+      }
+    } else {
+      // No contact found, just notify parent
+      if (onComplete) {
+        onComplete()
+      }
     }
   }
 
@@ -127,6 +262,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   onNext={handleNext}
                   onBack={handleBack}
                   onRefresh={handleRefreshDetails}
+                  mobileNumber={mobileNumber}
                 />
               )}
               {currentStep === 2 && (
@@ -135,6 +271,7 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                   userDetails={userDetails}
                   onBack={handleBack}
                   onNext={handleNext}
+                  mobileNumber={mobileNumber}
                 />
               )}
               {currentStep === 3 && (
@@ -146,6 +283,8 @@ export default function OnboardingModal({ onComplete }: OnboardingModalProps) {
                     onNext={handleNext}
                     onBack={handleBack}
                     onSkip={handleSkip}
+                    isUploading={isUploadingPhotos}
+                    uploadError={uploadError}
                   />
                 </div>
               )}

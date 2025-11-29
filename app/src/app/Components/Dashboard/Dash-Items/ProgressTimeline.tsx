@@ -1,8 +1,9 @@
 'use client'
-import React, { useMemo, useState, useRef } from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { FormialPrescription } from '../../../utils/formialApi'
-import { IconMountain, IconUpload } from '@tabler/icons-react'
+import { IconMountain } from '@tabler/icons-react'
 
 interface ProgressTimelineProps {
   prescriptions?: FormialPrescription[]
@@ -16,15 +17,12 @@ interface PhotoGroup {
 }
 
 const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelineProps) => {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([])
-
   // Group photos by date and create week-based structure
   const photoGroups = useMemo(() => {
     const groups: PhotoGroup[] = []
     const allPhotos: { url: string; date: string }[] = []
 
-    // Collect all photos from prescriptions
+    // Collect all photos from prescriptions (from backend)
     prescriptions.forEach((prescription) => {
       const date = prescription.createdAt
       ;["front_image", "left_image", "right_image"].forEach((key) => {
@@ -33,11 +31,6 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
           allPhotos.push({ url, date })
         }
       })
-    })
-
-    // Add uploaded photos
-    uploadedPhotos.forEach((url) => {
-      allPhotos.push({ url, date: new Date().toISOString() })
     })
 
     // Group by date (group photos taken on the same day)
@@ -70,7 +63,7 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
     })
 
     return groups
-  }, [prescriptions, uploadedPhotos])
+  }, [prescriptions])
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -81,28 +74,10 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
     })
   }
 
+  // Photo upload from dashboard - TODO: Implement later
+  // For now, photos are only uploaded during onboarding via POST /prescription
   const handleUploadClick = () => {
-    fileInputRef.current?.click()
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files) return
-
-    const newPhotos: string[] = []
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        const result = event.target?.result as string
-        if (result) {
-          newPhotos.push(result)
-          if (newPhotos.length === Array.from(files).length) {
-            setUploadedPhotos((prev) => [...prev, ...newPhotos])
-          }
-        }
-      }
-      reader.readAsDataURL(file)
-    })
+    // Placeholder for future dashboard upload functionality
   }
 
   return (
@@ -147,15 +122,7 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
              
             </div>
             
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileChange}
-              className="hidden"
-            />
+            {/* TODO: Add file input for dashboard uploads */}
           </div>
 
           {isLoading && (
@@ -188,10 +155,12 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
                       key={photoIndex}
                       className="flex-1 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden"
                     >
-                      <img
+                      <Image
                         src={photoUrl}
                         alt={`Week ${group.week} - Photo ${photoIndex + 1}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                     </div>
                   ))}

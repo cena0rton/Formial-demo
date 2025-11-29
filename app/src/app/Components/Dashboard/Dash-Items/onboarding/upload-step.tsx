@@ -16,6 +16,8 @@ interface UploadStepProps {
   onNext: () => void;
   onBack: () => void;
   onSkip: () => void;
+  isUploading?: boolean;
+  uploadError?: string | null;
 }
 
 const UPLOADS = [
@@ -82,6 +84,8 @@ export default function UploadStep({
   setUploadedPhotos,
   onNext,
   onBack,
+  isUploading = false,
+  uploadError = null,
 }: UploadStepProps) {
   const [step, setStep] = React.useState<number>(0);
   const [direction, setDirection] = React.useState(0);
@@ -271,20 +275,31 @@ export default function UploadStep({
           </button>
           <button
             onClick={handleNextLocal}
-            disabled={!uploadedPhotos[step]}
+            disabled={!uploadedPhotos[step] || isUploading}
                   className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A]  rounded-full font-medium text-white flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
                   type="button"
             aria-label={
               step < UPLOADS.length - 1
                 ? "Next Photo"
-                : "Done and continue"
+                : isUploading ? "Uploading photos..." : "Done and continue"
             }
           >
-            {step < UPLOADS.length - 1 ? "Next" : "Continue"}
+            {isUploading 
+              ? "Uploading..." 
+              : step < UPLOADS.length - 1 
+              ? "Next" 
+              : "Continue"}
           </button>
               </div>
         </motion.div>
           </AnimatePresence>
+          
+          {/* Upload Error Message */}
+          {uploadError && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{uploadError}</p>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

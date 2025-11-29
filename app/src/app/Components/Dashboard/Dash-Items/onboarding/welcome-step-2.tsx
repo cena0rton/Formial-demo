@@ -6,6 +6,8 @@ import { IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
 import { sendWhatsAppOtp, verifyWhatsAppOtp } from "../../../../utils/otpService"
 import { setAuthToken } from "../../../../utils/authToken"
 import { setUserContact } from "../../../../utils/userContact"
+import { getUser, updateUserByContact } from "../../../../utils/formialApi"
+import { useRouter } from "next/navigation"
 
 interface WelcomeStep2Props {
   userDetails: {
@@ -16,6 +18,7 @@ interface WelcomeStep2Props {
   onNext: () => void
   onBack: () => void
   onRefresh?: () => void
+  mobileNumber?: string | null
 }
 
 const timeline = [
@@ -36,18 +39,44 @@ const timeline = [
   },
 ]
 
-export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeStep2Props) {
+export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber }: WelcomeStep2Props) {
+  const router = useRouter()
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
   const [name, setName] = useState(userDetails.name)
   const [phone, setPhone] = useState(userDetails.phone)
+  const [originalData, setOriginalData] = useState({ name: userDetails.name, phone: userDetails.phone })
   const [otpMessage, setOtpMessage] = useState<string | null>(null)
   const [otpError, setOtpError] = useState<string | null>(null)
   const [isSendingOtp, setIsSendingOtp] = useState(false)
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false)
   const [resendCooldown, setResendCooldown] = useState(0)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   const nameInputRef = useRef<HTMLInputElement | null>(null)
   const phoneInputRef = useRef<HTMLInputElement | null>(null)
+  
+  // Fetch user data when component mounts or mobileNumber changes
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!mobileNumber) return
+      
+      try {
+        const user = await getUser(mobileNumber)
+        if (user) {
+          const fetchedName = user.name || user.first_name || ""
+          const fetchedPhone = user.contact || mobileNumber
+          
+          setName(fetchedName)
+          setPhone(fetchedPhone)
+          setOriginalData({ name: fetchedName, phone: fetchedPhone })
+        }
+      } catch {
+        // User doesn't exist yet - use provided userDetails
+      }
+    }
+    
+    fetchUserData()
+  }, [mobileNumber])
 
   useEffect(() => {
     // Auto-focus first input on mount
@@ -156,6 +185,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
 
     setOtpError(null)
     setIsVerifyingOtp(true)
+    setIsUpdating(false)
 
     try {
       const response = await verifyWhatsAppOtp({
@@ -166,11 +196,48 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
       if (response?.token) {
         setAuthToken(response.token)
       }
-      setUserContact(`+${sanitizedPhone}`)
+      
+      const normalizedMobile = `+${sanitizedPhone}`
+      setUserContact(normalizedMobile)
+
+      // Check if user data has changed and needs to be updated
+      const hasChanges = name !== originalData.name || sanitizedPhone !== originalData.phone.replace(/\D/g, "")
+      
+      if (hasChanges && normalizedMobile) {
+        setIsUpdating(true)
+        try {
+          const updatePayload: { name?: string; contact?: string } = {}
+          if (name !== originalData.name) {
+            updatePayload.name = name
+          }
+          if (sanitizedPhone !== originalData.phone.replace(/\D/g, "")) {
+            updatePayload.contact = normalizedMobile
+          }
+          
+          await updateUserByContact(normalizedMobile, updatePayload)
+        } catch (updateError) {
+          console.error("Failed to update user data:", updateError)
+          // Continue even if update fails
+        } finally {
+          setIsUpdating(false)
+        }
+      }
 
       setOtpMessage(response?.message || "OTP verified successfully.")
 
-      onNext()
+      // Check if user already has a profile (profile: true means user exists)
+      // If user exists, redirect to dashboard directly
+      if (response?.profile === true) {
+        // Extract mobile number without + for URL
+        const mobileForUrl = sanitizedPhone
+        // Small delay to show success message
+        setTimeout(() => {
+          router.push(`/${mobileForUrl}`)
+        }, 1000)
+      } else {
+        // New user - continue with onboarding
+        onNext()
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "OTP verification failed. Please try again."
@@ -338,10 +405,10 @@ export default function WelcomeStep2({ userDetails, onNext, onBack }: WelcomeSte
         <button
             type="button"
           onClick={handleVerifyAndContinue}
-            disabled={!isFormValid || isVerifyingOtp}
+            disabled={!isFormValid || isVerifyingOtp || isUpdating}
             className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity disabled:opacity-60 disabled:cursor-not-allowed text-sm"
         >
-         {isVerifyingOtp ? "Verifying..." : "Verify & Continue"}
+         {isUpdating ? "Updating..." : isVerifyingOtp ? "Verifying..." : "Verify & Continue"}
         </button>
         </div>
         <div className="mt-3 min-h-[1.5rem]" aria-live="polite">

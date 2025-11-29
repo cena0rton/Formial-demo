@@ -1,8 +1,10 @@
 "use client"
 
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
+import { getUser, updateUserByContact } from "../../../../utils/formialApi"
+import { getUserContact } from "../../../../utils/userContact"
 
 interface WelcomeStep3Props {
   userDetails: {
@@ -12,6 +14,7 @@ interface WelcomeStep3Props {
   }
   onNext: () => void
   onBack?: () => void
+  mobileNumber?: string | null
 }
 
 const timeline = [
@@ -32,9 +35,42 @@ const timeline = [
   },
 ]
 
-export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeStep3Props) {
+export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber }: WelcomeStep3Props) {
   const [address, setAddress] = useState(userDetails.address)
+  const [originalAddress, setOriginalAddress] = useState(userDetails.address)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [updateMessage, setUpdateMessage] = useState<string | null>(null)
   const addressInputRef = useRef<HTMLInputElement | null>(null)
+
+  // Fetch user data when component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const contact = mobileNumber || getUserContact()
+      if (!contact) return
+      
+      try {
+        const user = await getUser(contact)
+        if (user && user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
+          const firstAddress = user.addresses[0]
+          let addressText = ""
+          if (typeof firstAddress === 'string') {
+            addressText = firstAddress
+          } else if (firstAddress && typeof firstAddress === 'object') {
+            addressText = (firstAddress as any).address || (firstAddress as any).street || JSON.stringify(firstAddress)
+          }
+          
+          if (addressText) {
+            setAddress(addressText)
+            setOriginalAddress(addressText)
+          }
+        }
+      } catch {
+        // User doesn't exist or failed to fetch - use provided userDetails
+      }
+    }
+    
+    fetchUserData()
+  }, [mobileNumber])
 
   return (
     <motion.div
@@ -132,13 +168,60 @@ export default function WelcomeStep3({ userDetails, onNext, onBack }: WelcomeSte
           )}
           <button
             type="button"
-            onClick={onNext}
-            disabled={!address.trim()}
+            onClick={async () => {
+              const contact = mobileNumber || getUserContact()
+              if (!contact) {
+                onNext()
+                return
+              }
+
+              // Check if address has changed and needs to be updated
+              const hasAddressChanged = address.trim() !== originalAddress.trim()
+              
+              if (hasAddressChanged && address.trim()) {
+                setIsUpdating(true)
+                setUpdateMessage(null)
+                try {
+                  // Format address as array of address objects (as per API)
+                  const addressUpdate = address.trim()
+                  await updateUserByContact(contact, {
+                    addresses: [addressUpdate]
+                  })
+                  setUpdateMessage("Address updated successfully")
+                  setOriginalAddress(address)
+                  // Small delay to show success message
+                  setTimeout(() => {
+                    onNext()
+                  }, 500)
+                } catch (error) {
+                  console.error("Failed to update address:", error)
+                  setUpdateMessage("Failed to update address. Continuing...")
+                  // Continue anyway
+                  setTimeout(() => {
+                    onNext()
+                  }, 1000)
+                } finally {
+                  setIsUpdating(false)
+                }
+              } else {
+                // No changes or empty address - just continue
+                onNext()
+              }
+            }}
+            disabled={!address.trim() || isUpdating}
             className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed text-sm uppercase ml-auto"
           >
-            Next
+            {isUpdating ? "Updating..." : "Next"}
           </button>
         </div>
+        
+        {updateMessage && (
+          <div className="mt-3 min-h-[1.5rem]" aria-live="polite">
+            <p className={`text-xs ${updateMessage.includes("successfully") ? "text-green-700" : "text-yellow-600"}`}>
+              {updateMessage}
+            </p>
+          </div>
+        )}
       </motion.div>
       </div>
     </motion.div>

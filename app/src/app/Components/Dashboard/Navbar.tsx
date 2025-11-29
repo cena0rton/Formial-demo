@@ -1,6 +1,6 @@
 "use client"
-import { IconMenu2, IconX, IconBell, IconUser } from '@tabler/icons-react'
-import React, { useState } from 'react'
+import { IconBell, IconUser } from '@tabler/icons-react'
+import React from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 
@@ -15,7 +15,6 @@ interface NavbarProps {
 }
 
 const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection}: NavbarProps) => {
-  const [isOpen, setIsOpen] = useState(false)
 
   // Navigation items - simplified for centered navbar
   const navItems: { 
@@ -27,6 +26,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
   }[] = [
     { id: 'treatment', label: 'Home', type: 'section', sectionId: 'treatment' },
     { id: 'refer', label: 'Refer & Earn', type: 'section', sectionId: 'refer' },
+    { id: 'discover', label: 'Discover', type: 'page', itemIndex: 2 },
     { id: 'support', label: 'Consult', type: 'page', itemIndex: 4 },
     { id: 'details', label: 'Details', type: 'page', itemIndex: 6 },
     // { id: 'orders', label: 'Orders & Subscriptions', type: 'page', itemIndex: 5 },
@@ -46,7 +46,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
         setActiveSection('treatment')
       }
     }
-    setIsOpen(false) // Close mobile menu on click
+    // Navigation handled
   }
 
   const isItemActive = (item: typeof navItems[0]) => {

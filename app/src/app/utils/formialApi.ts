@@ -94,6 +94,8 @@ export interface FormialUser {
   duration?: string | null
   source?: string | null
   addresses?: unknown[]
+  onboardingCompleted?: boolean // Explicit flag for onboarding completion
+  onboardingCompletedAt?: string // Timestamp when onboarding was completed
   createdAt?: string
   updatedAt?: string
   [key: string]: unknown
@@ -150,4 +152,57 @@ export const updateUserByContact = (contact: string, payload: Partial<FormialUse
     body: JSON.stringify(payload),
   })
 
+export interface CreatePrescriptionResponse {
+  success: boolean
+  prescription: FormialPrescription
+}
+
+/**
+ * Upload photos and create a prescription record
+ * @param contact User's contact number
+ * @param files Object containing front_image, left_image, right_image File objects
+ * @returns Created prescription response
+ */
+export const createPrescription = async (
+  contact: string,
+  files: {
+    front_image: File
+    left_image: File
+    right_image: File
+  }
+): Promise<CreatePrescriptionResponse> => {
+  const url = buildUrl(`/prescription?number=${encodeContact(contact)}`)
+  const headers = defaultHeaders()
+  
+  // Don't set Content-Type - browser will set it with boundary for multipart/form-data
+  headers.delete("Content-Type")
+
+  const formData = new FormData()
+  formData.append("front_image", files.front_image)
+  formData.append("left_image", files.left_image)
+  formData.append("right_image", files.right_image)
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers,
+    body: formData,
+    cache: "no-store",
+  })
+
+  if (!response.ok) {
+    let errorMessage = `Failed to upload photos: ${response.status}`
+    try {
+      const errorData = await response.json()
+      errorMessage = errorData?.error || errorData?.message || errorMessage
+    } catch {
+      const text = await response.text()
+      if (text) {
+        errorMessage = text
+      }
+    }
+    throw new Error(errorMessage)
+  }
+
+  return (await response.json()) as CreatePrescriptionResponse
+}
 
