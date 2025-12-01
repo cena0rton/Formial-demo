@@ -3,8 +3,54 @@
 import React, { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
-import { getUser, updateUserByContact } from "../../../../utils/formialApi"
+import { getUser, updateUserByContact, FormialUser } from "../../../../utils/formialApi"
 import { getUserContact } from "../../../../utils/userContact"
+
+interface AddressObject {
+  first_name?: string
+  last_name?: string
+  company?: string | null
+  address1?: string
+  address2?: string
+  city?: string
+  province?: string
+  zip?: string
+  country?: string
+  phone?: string
+}
+
+const formatAddress = (address: AddressObject): string => {
+  const parts: string[] = []
+  
+  if (address.address1) parts.push(address.address1)
+  if (address.address2 && address.address2.trim()) parts.push(address.address2)
+  if (address.city) parts.push(address.city)
+  
+  const stateZip = [address.province, address.zip].filter(Boolean).join(' ')
+  if (stateZip) parts.push(stateZip)
+  
+  if (address.country) parts.push(address.country)
+  
+  return parts.join(', ')
+}
+
+const extractAddress = (user: FormialUser | null | undefined): string => {
+  if (!user?.addresses || !Array.isArray(user.addresses) || user.addresses.length === 0) {
+    return ''
+  }
+  
+  const firstAddress = user.addresses[0]
+  if (typeof firstAddress === 'string') {
+    return firstAddress
+  }
+  
+  if (firstAddress && typeof firstAddress === 'object') {
+    const addrObj = firstAddress as AddressObject
+    return formatAddress(addrObj)
+  }
+  
+  return ''
+}
 
 interface WelcomeStep3Props {
   userDetails: {
@@ -50,16 +96,8 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
       
       try {
         const user = await getUser(contact)
-        if (user && user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
-          const firstAddress = user.addresses[0]
-          let addressText = ""
-          if (typeof firstAddress === 'string') {
-            addressText = firstAddress
-          } else if (firstAddress && typeof firstAddress === 'object') {
-            const addrObj = firstAddress as { address?: string; street?: string }
-            addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
-          }
-          
+        if (user) {
+          const addressText = extractAddress(user)
           if (addressText) {
             setAddress(addressText)
             setOriginalAddress(addressText)
@@ -183,8 +221,18 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
                 setIsUpdating(true)
                 setUpdateMessage(null)
                 try {
-                  // Format address as array of address objects (as per API)
-                  const addressUpdate = address.trim()
+                  // Parse the address string back into address object structure
+                  // For now, we'll store it as address1 since the user entered it as a single string
+                  // In a full implementation, you might want separate fields for address1, city, etc.
+                  const addressUpdate: AddressObject = {
+                    address1: address.trim(),
+                    address2: '',
+                    city: '',
+                    province: '',
+                    zip: '',
+                    country: '',
+                  }
+                  
                   await updateUserByContact(contact, {
                     addresses: [addressUpdate]
                   })

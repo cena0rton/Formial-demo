@@ -10,15 +10,43 @@ interface PersonalDetailsProps {
   onSave?: (payload: { name: string; whatsapp: string; address?: string }) => Promise<void>
 }
 
+interface AddressObject {
+  first_name?: string
+  last_name?: string
+  company?: string | null
+  address1?: string
+  address2?: string
+  city?: string
+  province?: string
+  zip?: string
+  country?: string
+  phone?: string
+}
+
+const formatAddress = (address: AddressObject): string => {
+  const parts: string[] = []
+  
+  if (address.address1) parts.push(address.address1)
+  if (address.address2 && address.address2.trim()) parts.push(address.address2)
+  if (address.city) parts.push(address.city)
+  
+  const stateZip = [address.province, address.zip].filter(Boolean).join(' ')
+  if (stateZip) parts.push(stateZip)
+  
+  if (address.country) parts.push(address.country)
+  
+  return parts.join(', ')
+}
+
 const extractAddress = (user?: FormialUser | null) => {
   const addresses = user?.addresses
   if (!Array.isArray(addresses) || addresses.length === 0) return ''
   const first = addresses[0]
   if (typeof first === 'string') return first
   if (first && typeof first === 'object') {
-    return Object.values(first)
-      .filter((value) => typeof value === 'string' && value.trim().length > 0)
-      .join(', ')
+    // New address structure with address1, address2, city, province, zip, country
+    const addrObj = first as AddressObject
+    return formatAddress(addrObj)
   }
   return ''
 }

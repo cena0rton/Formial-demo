@@ -36,7 +36,21 @@ const Page = () => {
       if (payload.whatsapp) {
         updatePayload.contact = normalizeContactInput(payload.whatsapp)
       }
-      // addresses API contract is flexible; skip until backend spec is confirmed
+      
+      // Update address in new format
+      if (payload.address) {
+        // Parse address string into address object structure
+        // For now, store the full address as address1 since user enters it as a single string
+        // In a full implementation, you might want separate fields for address1, city, etc.
+        updatePayload.addresses = [{
+          address1: payload.address.trim(),
+          address2: '',
+          city: '',
+          province: '',
+          zip: '',
+          country: '',
+        }]
+      }
 
       await updateUserByContact(contact, updatePayload)
       await refetch(contact)
@@ -73,6 +87,7 @@ const Page = () => {
               user={user}
               prescriptions={prescriptions}
               isLoading={isLoading}
+              onRefetch={() => refetch(contact)}
             />
           )}
           {ref.current === 1 && <SkinProgress />}

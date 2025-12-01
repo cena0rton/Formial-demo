@@ -12,6 +12,7 @@ interface DashHomeProps {
   user?: FormialUser | null
   prescriptions?: FormialPrescription[]
   isLoading?: boolean
+  onRefetch?: () => void
 }
 
 const DashHome = ({
@@ -19,6 +20,7 @@ const DashHome = ({
   user,
   prescriptions = [],
   isLoading,
+  onRefetch,
 }: DashHomeProps) => {
   // Get the latest prescription (most recent by createdAt)
   const latestPrescription = useMemo(() => {
@@ -40,11 +42,20 @@ const DashHome = ({
               latestPrescription={latestPrescription}
               isLoading={isLoading}
             />
-            <ProgressTimeline prescriptions={prescriptions} isLoading={isLoading} />
+            <ProgressTimeline 
+              prescriptions={prescriptions} 
+              isLoading={isLoading}
+              contact={user?.contact || null}
+              onRefetch={onRefetch}
+            />
           </>
         )}
         {activeSection === 'progress' && (
-          <ProgressTimeline prescriptions={prescriptions} isLoading={isLoading} />
+          <ProgressTimeline 
+            prescriptions={prescriptions} 
+            isLoading={isLoading}
+            contact={user?.contact || null}
+          />
         )}
         {activeSection === 'refer' && <ReferAndEarn contact={user?.contact || null} />}
       </div>

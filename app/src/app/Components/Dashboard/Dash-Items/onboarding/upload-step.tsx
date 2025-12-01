@@ -18,6 +18,7 @@ interface UploadStepProps {
   onSkip: () => void;
   isUploading?: boolean;
   uploadError?: string | null;
+  hideTimeline?: boolean; // Hide timeline section when used in ProgressTimeline
 }
 
 const UPLOADS = [
@@ -86,6 +87,7 @@ export default function UploadStep({
   onBack,
   isUploading = false,
   uploadError = null,
+  hideTimeline = false,
 }: UploadStepProps) {
   const [step, setStep] = React.useState<number>(0);
   const [direction, setDirection] = React.useState(0);
@@ -143,36 +145,38 @@ export default function UploadStep({
     >
       <div className="flex flex-col lg:flex-row gap-10 items-center justify-center px-0 py-0 md:py-30">
       {/* Left Panel - Timeline */}
-      <motion.div
-        initial={{ opacity: 0, x: -15 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.15, duration: 0.45 }}
-        className="w-full lg:max-w-sm h-full"
-      >
-        <div className="relative lg:bg-[#7CB58D] bg-transparent text-[#1E3F2B] rounded-[32px] px-6 py-2 lg:px-8 lg:py-10 lg:border border-[#325A3C] lg:shadow-[0_10px_30px_rgba(50,90,60,0.25)]">
-          <div className="absolute left-12 top-16 bottom-16 w-[2px] bg-[#1E3F2B]/50 hidden md:block" />
-          <div className="flex lg:flex-col flex-row lg:gap-8 gap-2 justify-center items-center lg:justify-start lg:items-start">
-            {timeline.map((stepItem, idx) => (
-              <div key={stepItem.title} className="relative flex lg:items-start gap-4">
-                <div
-                  className={`
-                    hidden lg:flex relative z-10 mt-1 h-10 w-10 items-center justify-center rounded-2xl text-[#1E3F2B] shadow-md border border-black/60
-                    ${idx === 1 ? "bg-white" : idx < 1 ? "bg-white" : "bg-gray-300"}
-                  `}
-                >
-                  {stepItem.icon}
+      {!hideTimeline && (
+        <motion.div
+          initial={{ opacity: 0, x: -15 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.15, duration: 0.45 }}
+          className="w-full lg:max-w-sm h-full"
+        >
+          <div className="relative lg:bg-[#7CB58D] bg-transparent text-[#1E3F2B] rounded-[32px] px-6 py-2 lg:px-8 lg:py-10 lg:border border-[#325A3C] lg:shadow-[0_10px_30px_rgba(50,90,60,0.25)]">
+            <div className="absolute left-12 top-16 bottom-16 w-[2px] bg-[#1E3F2B]/50 hidden md:block" />
+            <div className="flex lg:flex-col flex-row lg:gap-8 gap-2 justify-center items-center lg:justify-start lg:items-start">
+              {timeline.map((stepItem, idx) => (
+                <div key={stepItem.title} className="relative flex lg:items-start gap-4">
+                  <div
+                    className={`
+                      hidden lg:flex relative z-10 mt-1 h-10 w-10 items-center justify-center rounded-2xl text-[#1E3F2B] shadow-md border border-black/60
+                      ${idx === 1 ? "bg-white" : idx < 1 ? "bg-white" : "bg-gray-300"}
+                    `}
+                  >
+                    {stepItem.icon}
+                  </div>
+                  <div>
+                    <p className="hidden lg:block font-medium text-lg tracking-tight">
+                      {stepItem.title}
+                    </p>
+                    <p className="hidden lg:block text-sm text-[#1E3F2B]/80">{stepItem.subtitle}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="hidden lg:block font-medium text-lg tracking-tight">
-                    {stepItem.title}
-                  </p>
-                  <p className="hidden lg:block text-sm text-[#1E3F2B]/80">{stepItem.subtitle}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* Right Panel - Upload Area */}
       <motion.div

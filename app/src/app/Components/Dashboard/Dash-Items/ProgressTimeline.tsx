@@ -1,65 +1,59 @@
 'use client'
-import React, { useMemo } from 'react'
-import { motion } from 'framer-motion'
+import React, { useMemo, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import { FormialPrescription } from '../../../utils/formialApi'
+import { FormialPrescription, createPrescription } from '../../../utils/formialApi'
 import { IconMountain } from '@tabler/icons-react'
+import UploadStep from './onboarding/upload-step'
+import { getUserContact } from '../../../utils/userContact'
 
 interface ProgressTimelineProps {
   prescriptions?: FormialPrescription[]
   isLoading?: boolean
+  onRefetch?: () => void
+  contact?: string | null
 }
 
-interface PhotoGroup {
+interface PrescriptionGroup {
   week: number
   date: string
-  photos: string[]
+  front_image: string | null
+  left_image: string | null
+  right_image: string | null
 }
 
-const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelineProps) => {
-  // Group photos by date and create week-based structure
-  const photoGroups = useMemo(() => {
-    const groups: PhotoGroup[] = []
-    const allPhotos: { url: string; date: string }[] = []
+const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }: ProgressTimelineProps) => {
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
-    // Collect all photos from prescriptions (from backend)
-    prescriptions.forEach((prescription) => {
-      const date = prescription.createdAt
-      ;["front_image", "left_image", "right_image"].forEach((key) => {
-        const url = prescription[key as keyof FormialPrescription]
-        if (url && typeof url === "string") {
-          allPhotos.push({ url, date })
-        }
-      })
-    })
-
-    // Group by date (group photos taken on the same day)
-    const dateMap = new Map<string, string[]>()
-    allPhotos.forEach((photo) => {
-      const photoDate = new Date(photo.date)
-      const dateKey = photoDate.toISOString().split('T')[0]
-      if (!dateMap.has(dateKey)) {
-        dateMap.set(dateKey, [])
-      }
-      dateMap.get(dateKey)!.push(photo.url)
-    })
-
-    // Convert to groups with week numbers
-    let weekCounter = 1
-    const sortedDates = Array.from(dateMap.keys()).sort(
-      (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  // Group prescriptions by date - each prescription has 3 images (front, left, right)
+  const prescriptionGroups = useMemo(() => {
+    const groups: PrescriptionGroup[] = []
+    
+    // Sort prescriptions by date (newest first)
+    const sortedPrescriptions = [...prescriptions].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
 
-    sortedDates.forEach((dateKey) => {
-      const photos = dateMap.get(dateKey)!
-      // Split into groups of 3
-      for (let i = 0; i < photos.length; i += 3) {
-        groups.push({
-          week: weekCounter++,
-          date: dateKey,
-          photos: photos.slice(i, i + 3),
-        })
-      }
+    let weekCounter = 1
+    sortedPrescriptions.forEach((prescription) => {
+      const date = new Date(prescription.createdAt)
+      const dateKey = date.toISOString().split('T')[0]
+      
+      // Extract image URLs - handle both string and null/undefined
+      const frontImg = typeof prescription.front_image === 'string' ? prescription.front_image : null
+      const leftImg = typeof prescription.left_image === 'string' ? prescription.left_image : null
+      const rightImg = typeof prescription.right_image === 'string' ? prescription.right_image : null
+      
+      groups.push({
+        week: weekCounter++,
+        date: dateKey,
+        front_image: frontImg,
+        left_image: leftImg,
+        right_image: rightImg,
+      })
     })
 
     return groups
@@ -74,10 +68,51 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
     })
   }
 
-  // Photo upload from dashboard - TODO: Implement later
-  // For now, photos are only uploaded during onboarding via POST /prescription
   const handleUploadClick = () => {
-    // Placeholder for future dashboard upload functionality
+    setIsUploadModalOpen(true)
+    setUploadedPhotos([])
+    setUploadError(null)
+  }
+
+  const handleCloseModal = () => {
+    setIsUploadModalOpen(false)
+    setUploadedPhotos([])
+    setUploadError(null)
+  }
+
+  const handleUploadComplete = async () => {
+    if (uploadedPhotos.length !== 3) {
+      setUploadError("Please upload all three photos (front, left, right).")
+      return
+    }
+
+    const userContact = contact || getUserContact()
+    if (!userContact) {
+      setUploadError("User contact not found. Cannot upload photos.")
+      return
+    }
+
+    setIsUploading(true)
+    setUploadError(null)
+
+    try {
+      await createPrescription(userContact, {
+        front_image: uploadedPhotos[0],
+        left_image: uploadedPhotos[1],
+        right_image: uploadedPhotos[2],
+      })
+      
+      // Close modal and refresh data
+      handleCloseModal()
+      if (onRefetch) {
+        onRefetch()
+      }
+    } catch (error) {
+      console.error("Photo upload failed:", error)
+      setUploadError(error instanceof Error ? error.message : "Failed to upload photos. Please try again.")
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
@@ -99,30 +134,29 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
 
       <div className="relative pl-10">
         {/* Vertical Timeline Line */}
-        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black"></div>
+        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black/40 rounded-full"></div>
 
         <div className="space-y-10 pb-8">
           {/* Today Section with Upload */}
           <div className="relative">
-            <div className="absolute -left-10 top-3 w-8 h-0.5 bg-black"></div>
-            <div className="mb-4">
+            <div className="absolute -left-10 top-2 w-8 h-0.5 bg-black"></div>
+            <div className="mb-4 flex items-center gap-2">
               <p className="text-sm font-medium text-black">Today</p>
+              {/* Purple "A" Badge */}
+              <div className="w-6 h-6 rounded-full bg-[#6B46C1] border border-black flex items-center justify-center shadow-md">
+                <span className="text-white text-xs font-bold">A</span>
+              </div>
             </div>
             <div className="relative">
               {/* Upload Placeholder */}
               <div
                 onClick={handleUploadClick}
-                className="rounded-xl border-2 border-dashed border-black bg-gray-50 p-8 flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-gray-100 transition-colors"
+                className="rounded-xl border-2 border-dashed border-black/50 bg-gray-50 p-8 flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-gray-100 transition-colors w-40"
               >
                 <IconMountain className="h-8 w-8 text-black" />
                 <p className="text-sm text-black font-medium">Click to upload</p>
               </div>
-              
-          
-             
             </div>
-            
-            {/* TODO: Add file input for dashboard uploads */}
           </div>
 
           {isLoading && (
@@ -133,15 +167,15 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
             </div>
           )}
 
-          {!isLoading && photoGroups.length === 0 && (
+          {!isLoading && prescriptionGroups.length === 0 && (
             <p className="text-sm text-gray-600">
               Upload your first photos to start tracking your progress.
             </p>
           )}
 
-          {/* Photo Groups - 3 photos per row */}
+          {/* Prescription Groups - 3 photos per row (front, left, right) */}
           {!isLoading &&
-            photoGroups.map((group, groupIndex) => (
+            prescriptionGroups.map((group, groupIndex) => (
               <div className="relative" key={`${group.date}-${groupIndex}`}>
                 <div className="absolute -left-10 top-3 w-8 h-0.5 bg-black"></div>
                 <div className="mb-4">
@@ -149,35 +183,102 @@ const ProgressTimeline = ({ prescriptions = [], isLoading }: ProgressTimelinePro
                     {formatDate(group.date)}
                   </p>
                 </div>
-                <div className="flex gap-3">
-                  {group.photos.map((photoUrl, photoIndex) => (
-                    <div
-                      key={photoIndex}
-                      className="flex-1 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden"
-                    >
+                <div className="flex gap-3 w-full">
+                  {/* Front Image */}
+                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden relative">
+                    {group.front_image ? (
                       <Image
-                        src={photoUrl}
-                        alt={`Week ${group.week} - Photo ${photoIndex + 1}`}
+                        src={group.front_image}
+                        alt={`Week ${group.week} - Front`}
                         fill
                         className="object-cover"
+                        sizes="(max-width: 768px) 33vw, 33vw"
                         unoptimized
                       />
-                    </div>
-                  ))}
-                  {/* Fill remaining slots if less than 3 */}
-                  {group.photos.length < 3 &&
-                    Array.from({ length: 3 - group.photos.length }).map((_, index) => (
-                      <div
-                        key={`empty-${index}`}
-                        className="flex-1 aspect-square rounded-xl bg-[#6B46C1] border border-black"
+                    ) : (
+                      <div className="w-full h-full bg-[#6B46C1]" />
+                    )}
+                  </div>
+                  {/* Left Image */}
+                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden relative">
+                    {group.left_image ? (
+                      <Image
+                        src={group.left_image}
+                        alt={`Week ${group.week} - Left`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 33vw, 33vw"
+                        unoptimized
                       />
-                    ))}
+                    ) : (
+                      <div className="w-full h-full bg-[#6B46C1]" />
+                    )}
+                  </div>
+                  {/* Right Image */}
+                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden relative">
+                    {group.right_image ? (
+                      <Image
+                        src={group.right_image}
+                        alt={`Week ${group.week} - Right`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 33vw, 33vw"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#6B46C1]" />
+                    )}
+                  </div>
                 </div>
                 <p className="text-xs text-gray-600 mt-2">Week-{group.week}</p>
               </div>
             ))}
         </div>
       </div>
+
+      {/* Upload Modal */}
+      <AnimatePresence>
+        {isUploadModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={handleCloseModal}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white rounded-2xl max-w-3xl w-full h-full overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-[#1E3F2B]">Upload Progress Photos</h2>
+                  <button
+                    onClick={handleCloseModal}
+                    className="text-gray-500 hover:text-gray-700 text-2xl"
+                    aria-label="Close modal"
+                  >
+                    ×
+                  </button>
+                </div>
+                <UploadStep
+                  uploadedPhotos={uploadedPhotos}
+                  setUploadedPhotos={setUploadedPhotos}
+                  onNext={handleUploadComplete}
+                  onBack={handleCloseModal}
+                  onSkip={handleCloseModal}
+                  isUploading={isUploading}
+                  uploadError={uploadError}
+                  hideTimeline={true}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

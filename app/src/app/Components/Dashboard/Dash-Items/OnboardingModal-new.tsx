@@ -4,7 +4,54 @@ import { useState, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { getUserContact } from "../../../utils/userContact"
 import { extractMobileNumber } from "../../../utils/auth"
-import { getUser, createPrescription } from "../../../utils/formialApi"
+import { getUser, createPrescription, FormialUser } from "../../../utils/formialApi"
+
+interface AddressObject {
+  first_name?: string
+  last_name?: string
+  company?: string | null
+  address1?: string
+  address2?: string
+  city?: string
+  province?: string
+  zip?: string
+  country?: string
+  phone?: string
+}
+
+const formatAddress = (address: AddressObject): string => {
+  const parts: string[] = []
+  
+  if (address.address1) parts.push(address.address1)
+  if (address.address2 && address.address2.trim()) parts.push(address.address2)
+  if (address.city) parts.push(address.city)
+  
+  const stateZip = [address.province, address.zip].filter(Boolean).join(' ')
+  if (stateZip) parts.push(stateZip)
+  
+  if (address.country) parts.push(address.country)
+  
+  return parts.join(', ')
+}
+
+const extractAddress = (user: FormialUser | null | undefined): string => {
+  if (!user?.addresses || !Array.isArray(user.addresses) || user.addresses.length === 0) {
+    return ''
+  }
+  
+  const firstAddress = user.addresses[0]
+  if (typeof firstAddress === 'string') {
+    return firstAddress
+  }
+  
+  if (firstAddress && typeof firstAddress === 'object') {
+    const addrObj = firstAddress as AddressObject
+    return formatAddress(addrObj)
+  }
+  
+  return ''
+}
+
 import { motion, AnimatePresence } from "framer-motion"
 
 import WelcomeStep1 from "./onboarding/welcome-step-1"
@@ -44,22 +91,10 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
           try {
             const user = await getUser(storedContact)
             if (user) {
-              // Extract address from addresses array
-              let addressText = ""
-              if (user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
-                const firstAddress = user.addresses[0]
-                if (typeof firstAddress === 'string') {
-                  addressText = firstAddress
-                } else if (firstAddress && typeof firstAddress === 'object') {
-                  const addrObj = firstAddress as { address?: string; street?: string }
-                  addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
-                }
-              }
-              
               setUserDetails({
                 name: user.name || user.first_name || "",
                 phone: user.contact || storedContact,
-                address: addressText,
+                address: extractAddress(user),
               })
             }
           } catch {
@@ -73,23 +108,10 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
       try {
         const user = await getUser(mobileNumber)
         if (user) {
-          // Extract address from addresses array (use first address if available)
-          let addressText = ""
-          if (user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
-            const firstAddress = user.addresses[0]
-            if (typeof firstAddress === 'string') {
-              addressText = firstAddress
-            } else if (firstAddress && typeof firstAddress === 'object') {
-              // Handle address object format
-              const addrObj = firstAddress as { address?: string; street?: string }
-              addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
-            }
-          }
-          
           setUserDetails({
             name: user.name || user.first_name || "",
             phone: user.contact || mobileNumber,
-            address: addressText,
+            address: extractAddress(user),
           })
         }
       } catch {
@@ -108,22 +130,10 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
     try {
       const user = await getUser(contact)
       if (user) {
-        // Extract address from addresses array
-        let addressText = ""
-        if (user.addresses && Array.isArray(user.addresses) && user.addresses.length > 0) {
-          const firstAddress = user.addresses[0]
-          if (typeof firstAddress === 'string') {
-            addressText = firstAddress
-          } else if (firstAddress && typeof firstAddress === 'object') {
-            const addrObj = firstAddress as { address?: string; street?: string }
-            addressText = addrObj.address || addrObj.street || JSON.stringify(firstAddress)
-          }
-        }
-        
         setUserDetails({
           name: user.name || user.first_name || "",
           phone: user.contact || contact,
-          address: addressText,
+          address: extractAddress(user),
         })
       }
     } catch {

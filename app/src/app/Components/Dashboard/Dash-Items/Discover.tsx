@@ -15,13 +15,63 @@ const Discover = () => {
   const faqs: FAQItem[] = [
     {
       id: '1',
-      question: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit?',
-      answer: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.',
+      question: 'Who will be supervising my treatment?',
+      answer: 'Your treatment will be supervised by licensed dermatologists. They will create a personalized combination and dosage of medical ingredients for you and support you in better understanding your skin. The medical team is available to you at any time during your treatment for questions and advice. You can access them via the support tab.',
     },
     {
       id: '2',
-      question: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit?',
-      answer: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.',
+      question: 'What is the diagnostic process?',
+      answer: 'To gain a comprehensive understanding of your skin, the medical team analyzes your answers to your medical history questionnaire and carefully evaluates the images. Naturally, your data and images are subject to medical confidentiality and are accessible only to the medical team. Based on your skin issues and skin type, the medical team will develop an individualized treatment plan that includes skincare, cleansing, and a medical formula.',
+    },
+    {
+      id: '3',
+      question: 'Do you use AI to diagnose and manage me?',
+      answer: 'At Formial Labs, personal care is our top priority. Our team of doctors and support staff are real people who individually address every message and diagnosis. You can be sure: Every response you receive has been written by an experienced professional – with extensive expertise and genuine care. 💙 While we do use an AI chatbot that can help with some questions and guide users, if you don\'t get the answer you need your query does get escalated to a human. You\'ll always be assisted by our support team – competent, personal, and 100% human. In short: At Formial you are in the best hands with real experts – and not with a machine! But please note we are not an emergency service and the human service takes time - that\'s what humans do!',
+    },
+    {
+      id: '4',
+      question: 'How does Formial differ from other products?',
+      answer: 'Our products combine prescription and over-the-counter active ingredients to target your skin imperfections more effectively. Our doctors adhere strictly to evidence-based guidelines (meaning: making the best possible decisions in pharmaceutical matters) and combine the ingredients to be individually tailored to you and your skin.',
+    },
+    {
+      id: '5',
+      question: 'Why does Formial have such a short expiry date? Can I use the product after the expiry date?',
+      answer: 'Formial formulations are freshly compounded, made-to-order, and designed without heavy preservatives—so they naturally have a shorter, safety-focused expiry period. This ensures the actives remain potent and the product stays microbiologically stable. We don\'t recommend using your formulation past its expiry date. For best results and safety, please refill with a fresh batch.',
+    },
+    {
+      id: '6',
+      question: 'What are my payment options?',
+      answer: 'If you are not a new user of Formial you can purchase Formial directly through the product page on our website if you wish to purchase the product on an ad hoc basis. However, skin issues are chronic conditions and skincare should be ongoing hence to reward consistency we have a very convenient autopay system which works out much cheaper and better for you. You can pause or cancel your subscription anytime but please do give us feedback on what we can do to improve our service.',
+    },
+    {
+      id: '7',
+      question: 'How do I apply my treatment?',
+      answer: 'Use treatment once a day, at night. Do not use it during the day.\n\n• Wash your face with a mild cleanser and dry your face.\n• Use 1-2 pumps. Spread it thinly across your whole face (forehead, cheeks and chin) with your fingertip.\n• Wash hands immediately after application.\n\nTry to avoid applying the treatment close to your eyelids, mouth, lips, or the angles of your nose because these areas are sensitive.\n\nIf you experience side effects, apply a moisturiser 10 minutes before and after applying your treatment. This will help to buffer the strength of the treatment.\n\nStore this medication in a cool, dry place, below 25°C. In summer climates and hot areas the formula can be stored in the fridge (never freeze it). Keep out of reach of children.\n\n**Patch Testing**\n\nPlease note: Conducting a patch test can help predict if you may have a negative initial reaction to a new product. Therefore, we recommended you perform a patch test before incorporating this new product into your routine by following the instructions below:\n\nApply the product as directed to a small area once a day for three days to test if you are sensitive to this product. If you develop severe irritation, hives, swelling of the eyes and mouth, blistering, or difficulty breathing, rinse off, cease use and consult a physician right away.',
+    },
+    {
+      id: '8',
+      question: 'Acne treatment during pregnancy and breastfeeding?',
+      answer: 'There\'s nothing wrong with acne treatment during pregnancy, even while breastfeeding. However, not all active ingredients can be used during this time. There are no studies in which pregnant women were or are given pharmaceuticals. What we do know comes from women who underwent acne treatment during pregnancy. Many dermatologists believe that the safest options for acne treatment during pregnancy are creams containing either benzoyl peroxide, azelaic acid, or anti-inflammatory agents. At Formial we do not advise using retinoids, spironolactone and antibiotics during pregnancy. Above all, we recommend discussing everything with your gynecologist and general practitioner and following their advice.',
+    },
+    {
+      id: '9',
+      question: 'Where is Formial manufactured?',
+      answer: 'Your formulation is made in our accredited pharmaceutical lab in Bangalore.',
+    },
+    {
+      id: '10',
+      question: 'Can I combine this formula with other skin treatments?',
+      answer: 'In the initial stages of treatment with Formial we do not recommend that you use Formial with other actives or cosmetic procedures. Once your skin adjusts you may be able to cycle other actives although in most cases this is not necessary. If your formulation contains tretinoin this is a useful blog about using it when considering procedures: https://formial.in/blogs/skindeep/can-you-combine-tretinoin-with-cosmetic-procedures-heres-what-you-should-know',
+    },
+    {
+      id: '11',
+      question: 'I am not seeing progress. What do I do?',
+      answer: 'Please note that using customised skincare is a journey and there can be ups and downs. Most people start seeing changes in their skin by 3 - 4 weeks of regular use. As we start on a low dose to allow your skin to adjust this can take slightly longer in some people. But 8 - 12 weeks of regular usage is a good time to judge whether any progress has been made. In case you have concerns please reach out to us in the support tab and we will be happy to help.',
+    },
+    {
+      id: '12',
+      question: 'What can I do about hyperpigmentation and redness?',
+      answer: 'Hyperpigmentation and redness are often remnants of old acne breakouts, which can take several months to heal completely. Some ingredients, such as azelaic acid, can support and accelerate this healing process. Since the sun promotes hyperpigmentation, you should always apply sunscreen (at least SPF 30, ideally SPF 50). Even on cloudy days, UV rays still penetrate the cloud cover. Therefore, we recommend using sunscreen even in bad weather and during the winter. Still have questions? Please message us in the support tab.',
     },
   ]
 
@@ -80,8 +130,8 @@ const Discover = () => {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="rounded-xl bg-[#7CB58D] border border-[#1E3F2B] px-4 py-3 mt-2">
-                          <p className="text-sm text-white]">
+                        <div className="rounded-xl bg-[#FEFCE8] border border-[#1E3F2B] px-4 py-3 mt-2">
+                          <p className="text-sm text-[#1E3F2B] whitespace-pre-line">
                             {faq.answer}
                           </p>
                         </div>
