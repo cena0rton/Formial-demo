@@ -34,22 +34,44 @@ const formatAddress = (address: AddressObject): string => {
   return parts.join(', ')
 }
 
-const extractAddress = (user: FormialUser | null | undefined): string => {
+interface AddressFormData {
+  address1: string
+  address2: string
+  city: string
+  state: string
+  pincode: string
+}
+
+const extractAddressData = (user: FormialUser | null | undefined): AddressFormData => {
+  const defaultAddress: AddressFormData = {
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    pincode: '',
+  }
+
   if (!user?.addresses || !Array.isArray(user.addresses) || user.addresses.length === 0) {
-    return ''
+    return defaultAddress
   }
   
   const firstAddress = user.addresses[0]
   if (typeof firstAddress === 'string') {
-    return firstAddress
+    return { ...defaultAddress, address1: firstAddress }
   }
   
   if (firstAddress && typeof firstAddress === 'object') {
     const addrObj = firstAddress as AddressObject
-    return formatAddress(addrObj)
+    return {
+      address1: addrObj.address1 || '',
+      address2: addrObj.address2 || '',
+      city: addrObj.city || '',
+      state: addrObj.province || '',
+      pincode: addrObj.zip || '',
+    }
   }
   
-  return ''
+  return defaultAddress
 }
 
 interface WelcomeStep3Props {
@@ -82,11 +104,22 @@ const timeline = [
 ]
 
 export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber }: WelcomeStep3Props) {
-  const [address, setAddress] = useState(userDetails.address)
-  const [originalAddress, setOriginalAddress] = useState(userDetails.address)
+  const [addressData, setAddressData] = useState<AddressFormData>({
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    pincode: '',
+  })
+  const [originalAddress, setOriginalAddress] = useState<AddressFormData>({
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    pincode: '',
+  })
   const [isUpdating, setIsUpdating] = useState(false)
   const [updateMessage, setUpdateMessage] = useState<string | null>(null)
-  const addressInputRef = useRef<HTMLInputElement | null>(null)
 
   // Fetch user data when component mounts
   useEffect(() => {
@@ -97,11 +130,9 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
       try {
         const user = await getUser(contact)
         if (user) {
-          const addressText = extractAddress(user)
-          if (addressText) {
-            setAddress(addressText)
-            setOriginalAddress(addressText)
-          }
+          const address = extractAddressData(user)
+          setAddressData(address)
+          setOriginalAddress(address)
         }
       } catch {
         // User doesn't exist or failed to fetch - use provided userDetails
@@ -110,6 +141,20 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
     
     fetchUserData()
   }, [mobileNumber])
+
+  const handleAddressChange = (field: keyof AddressFormData, value: string) => {
+    setAddressData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const hasAddressChanged = () => {
+    return (
+      addressData.address1 !== originalAddress.address1 ||
+      addressData.address2 !== originalAddress.address2 ||
+      addressData.city !== originalAddress.city ||
+      addressData.state !== originalAddress.state ||
+      addressData.pincode !== originalAddress.pincode
+    )
+  }
 
   return (
     <motion.div
@@ -174,23 +219,99 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
         <div className="mt-6 space-y-6">
           <div className="space-y-4">
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Address</span>
+            
+            {/* Address Line 1 */}
             <div className="relative">
               <input
-                ref={addressInputRef}
                 type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                value={addressData.address1}
+                onChange={(e) => handleAddressChange('address1', e.target.value)}
                 className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
-                placeholder="Enter your address"
+                placeholder="Address Line 1"
               />
               <button
                 type="button"
-                onClick={() => addressInputRef.current?.focus()}
                 className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
                 aria-label="Edit address"
               >
                 <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
               </button>
+            </div>
+
+            {/* Address Line 2 */}
+            <div className="relative">
+              <input
+                type="text"
+                value={addressData.address2}
+                onChange={(e) => handleAddressChange('address2', e.target.value)}
+                className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                placeholder="Address Line 2 (Optional)"
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                aria-label="Edit address"
+              >
+                <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+              </button>
+            </div>
+
+            {/* City, State, Pincode Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* City */}
+              <div className="relative">
+                <input
+                  type="text"
+                  value={addressData.city}
+                  onChange={(e) => handleAddressChange('city', e.target.value)}
+                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                  placeholder="City"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                  aria-label="Edit city"
+                >
+                  <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* State */}
+              <div className="relative">
+                <input
+                  type="text"
+                  value={addressData.state}
+                  onChange={(e) => handleAddressChange('state', e.target.value)}
+                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                  placeholder="State"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                  aria-label="Edit state"
+                >
+                  <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* Pincode */}
+              <div className="relative">
+                <input
+                  type="text"
+                  value={addressData.pincode}
+                  onChange={(e) => handleAddressChange('pincode', e.target.value.replace(/\D/g, ''))}
+                  maxLength={6}
+                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                  placeholder="Pincode"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                  aria-label="Edit pincode"
+                >
+                  <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -215,29 +336,26 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
               }
 
               // Check if address has changed and needs to be updated
-              const hasAddressChanged = address.trim() !== originalAddress.trim()
+              const changed = hasAddressChanged()
               
-              if (hasAddressChanged && address.trim()) {
+              if (changed && addressData.address1.trim()) {
                 setIsUpdating(true)
                 setUpdateMessage(null)
                 try {
-                  // Parse the address string back into address object structure
-                  // For now, we'll store it as address1 since the user entered it as a single string
-                  // In a full implementation, you might want separate fields for address1, city, etc.
                   const addressUpdate: AddressObject = {
-                    address1: address.trim(),
-                    address2: '',
-                    city: '',
-                    province: '',
-                    zip: '',
-                    country: '',
+                    address1: addressData.address1.trim(),
+                    address2: addressData.address2.trim() || '',
+                    city: addressData.city.trim() || '',
+                    province: addressData.state.trim() || '',
+                    zip: addressData.pincode.trim() || '',
+                    country: 'India',
                   }
                   
                   await updateUserByContact(contact, {
                     addresses: [addressUpdate]
                   })
                   setUpdateMessage("Address updated successfully")
-                  setOriginalAddress(address)
+                  setOriginalAddress({ ...addressData })
                   // Small delay to show success message
                   setTimeout(() => {
                     onNext()
@@ -257,10 +375,10 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
                 onNext()
               }
             }}
-            disabled={!address.trim() || isUpdating}
+            disabled={!addressData.address1.trim() || isUpdating}
             className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed text-sm uppercase ml-auto"
           >
-            {isUpdating ? "Updating..." : "Next"}
+            {isUpdating ? "Updating..." : hasAddressChanged() ? "Update & Next" : "Next"}
           </button>
         </div>
         

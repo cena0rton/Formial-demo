@@ -7,7 +7,7 @@ import { FormialUser } from '../../../utils/formialApi'
 interface PersonalDetailsProps {
   user?: FormialUser | null
   isLoading?: boolean
-  onSave?: (payload: { name: string; whatsapp: string; address?: string }) => Promise<void>
+  onSave?: (payload: { name: string; whatsapp: string; address?: AddressFormData }) => Promise<void>
 }
 
 interface AddressObject {
@@ -23,32 +23,44 @@ interface AddressObject {
   phone?: string
 }
 
-const formatAddress = (address: AddressObject): string => {
-  const parts: string[] = []
-  
-  if (address.address1) parts.push(address.address1)
-  if (address.address2 && address.address2.trim()) parts.push(address.address2)
-  if (address.city) parts.push(address.city)
-  
-  const stateZip = [address.province, address.zip].filter(Boolean).join(' ')
-  if (stateZip) parts.push(stateZip)
-  
-  if (address.country) parts.push(address.country)
-  
-  return parts.join(', ')
+export interface AddressFormData {
+  address1: string
+  address2: string
+  city: string
+  state: string
+  pincode: string
 }
 
-const extractAddress = (user?: FormialUser | null) => {
-  const addresses = user?.addresses
-  if (!Array.isArray(addresses) || addresses.length === 0) return ''
-  const first = addresses[0]
-  if (typeof first === 'string') return first
-  if (first && typeof first === 'object') {
-    // New address structure with address1, address2, city, province, zip, country
-    const addrObj = first as AddressObject
-    return formatAddress(addrObj)
+const extractAddressData = (user?: FormialUser | null): AddressFormData => {
+  const defaultAddress: AddressFormData = {
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    pincode: '',
   }
-  return ''
+
+  const addresses = user?.addresses
+  if (!Array.isArray(addresses) || addresses.length === 0) return defaultAddress
+  
+  const first = addresses[0]
+  if (typeof first === 'string') {
+    // Legacy string format - put it in address1
+    return { ...defaultAddress, address1: first }
+  }
+  
+  if (first && typeof first === 'object') {
+    const addrObj = first as AddressObject
+    return {
+      address1: addrObj.address1 || '',
+      address2: addrObj.address2 || '',
+      city: addrObj.city || '',
+      state: addrObj.province || '',
+      pincode: addrObj.zip || '',
+    }
+  }
+  
+  return defaultAddress
 }
 
 const sanitizePhone = (value: string) => {
@@ -61,25 +73,50 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
   const [formData, setFormData] = useState({
     name: '',
     whatsapp: '',
-    address: '',
+  })
+  const [addressData, setAddressData] = useState<AddressFormData>({
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    pincode: '',
+  })
+  const [originalData, setOriginalData] = useState({
+    name: '',
+    whatsapp: '',
+    address: {
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      pincode: '',
+    },
   })
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-  const [otp, setOtp] = useState(['', '', '', ''])
-  const otpInputRefs = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-  ]
+  
+  // Refs for input fields
+  const nameInputRef = useRef<HTMLInputElement>(null)
+  const whatsappInputRef = useRef<HTMLInputElement>(null)
+  const address1InputRef = useRef<HTMLInputElement>(null)
+  const address2InputRef = useRef<HTMLInputElement>(null)
+  const cityInputRef = useRef<HTMLInputElement>(null)
+  const stateInputRef = useRef<HTMLInputElement>(null)
+  const pincodeInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (user) {
-      setFormData({
-        name: user.name || user.first_name || '',
-        whatsapp: user.contact || '',
-        address: extractAddress(user),
+      const name = user.name || user.first_name || ''
+      const whatsapp = user.contact || ''
+      const address = extractAddressData(user)
+      
+      setFormData({ name, whatsapp })
+      setAddressData(address)
+      setOriginalData({
+        name,
+        whatsapp,
+        address,
       })
     }
   }, [user])
@@ -88,21 +125,21 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) return
-    const newOtp = [...otp]
-    newOtp[index] = value
-    setOtp(newOtp)
-    if (value && index < 3) {
-      otpInputRefs[index + 1].current?.focus()
-    }
+  const handleAddressChange = (field: keyof AddressFormData, value: string) => {
+    setAddressData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      otpInputRefs[index - 1].current?.focus()
-    }
-  }
+  const hasChanges = useMemo(() => {
+    return (
+      formData.name !== originalData.name ||
+      formData.whatsapp !== originalData.whatsapp ||
+      addressData.address1 !== originalData.address.address1 ||
+      addressData.address2 !== originalData.address.address2 ||
+      addressData.city !== originalData.address.city ||
+      addressData.state !== originalData.address.state ||
+      addressData.pincode !== originalData.address.pincode
+    )
+  }, [formData, addressData, originalData])
 
   const handleSave = async () => {
     if (!onSave) return
@@ -113,8 +150,16 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
       await onSave({
         name: formData.name,
         whatsapp: sanitizePhone(formData.whatsapp || user?.contact || ''),
-        address: formData.address,
+        address: addressData,
       })
+      
+      // Update original data after successful save
+      setOriginalData({
+        name: formData.name,
+        whatsapp: formData.whatsapp,
+        address: { ...addressData },
+      })
+      
       setStatusMessage('Details updated successfully.')
     } catch (error) {
       const message =
@@ -157,73 +202,167 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
               <label className="text-sm font-medium text-[#3D2D1F]">Name</label>
               <div className="relative">
                 <input
+                  ref={nameInputRef}
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleChange('name', e.target.value)}
                   disabled={isLoading}
-                  className="w-full rounded-xl border border-[#1E3F2B] bg-white px-4 py-3 pr-10 text-sm text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]/20 disabled:opacity-60"
+                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
                 />
-                <IconEdit className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#1E3F2B]" />
+                <button
+                  type="button"
+                  onClick={() => nameInputRef.current?.focus()}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer mt-1"
+                  aria-label="Edit name"
+                >
+                  <IconEdit className="h-5 w-5" strokeWidth={2} />
+                </button>
               </div>
-            </div>
+          </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-[#3D2D1F]">WhatsApp Number</label>
-              <div className="flex items-start gap-3">
-                <div className="relative flex-1">
+              <div className="relative">
+                <input
+                  ref={whatsappInputRef}
+                  type="tel"
+                  value={formData.whatsapp}
+                  onChange={(e) => handleChange('whatsapp', e.target.value)}
+                  disabled={isLoading}
+                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                />
+                <button
+                  type="button"
+                  onClick={() => whatsappInputRef.current?.focus()}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
+                  aria-label="Edit WhatsApp number"
+                >
+                  <IconEdit className="h-5 w-5" strokeWidth={2} />
+                </button>
+              </div>
+            </div>
+
+            {/* Address Fields */}
+            <div className="space-y-4">
+              <label className="text-sm font-medium text-[#3D2D1F]">Address</label>
+              
+              {/* Address Line 1 */}
+              <div className="relative">
+                <input
+                  ref={address1InputRef}
+                  type="text"
+                  value={addressData.address1}
+                  onChange={(e) => handleAddressChange('address1', e.target.value)}
+                  disabled={isLoading}
+                  placeholder="Address Line 1"
+                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                />
+                <button
+                  type="button"
+                  onClick={() => address1InputRef.current?.focus()}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
+                  aria-label="Edit address line 1"
+                >
+                  <IconEdit className="h-5 w-5" strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* Address Line 2 */}
+              <div className="relative">
+                <input
+                  ref={address2InputRef}
+                  type="text"
+                  value={addressData.address2}
+                  onChange={(e) => handleAddressChange('address2', e.target.value)}
+                  disabled={isLoading}
+                  placeholder="Address Line 2 (Optional)"
+                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                />
+                <button
+                  type="button"
+                  onClick={() => address2InputRef.current?.focus()}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
+                  aria-label="Edit address line 2"
+                >
+                  <IconEdit className="h-5 w-5" strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* City, State, Pincode Row */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* City */}
+                <div className="relative">
                   <input
-                    type="tel"
-                    value={formData.whatsapp}
-                    onChange={(e) => handleChange('whatsapp', e.target.value)}
+                    ref={cityInputRef}
+                    type="text"
+                    value={addressData.city}
+                    onChange={(e) => handleAddressChange('city', e.target.value)}
                     disabled={isLoading}
-                    className="w-full rounded-xl border border-[#1E3F2B] bg-white px-4 py-3 pr-10 text-sm text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]/20 disabled:opacity-60"
+                    placeholder="City"
+                    className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
                   />
-                  <IconEdit className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#1E3F2B]" />
+                  <button
+                    type="button"
+                    onClick={() => cityInputRef.current?.focus()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
+                    aria-label="Edit city"
+                  >
+                    <IconEdit className="h-5 w-5" strokeWidth={2} />
+                  </button>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <div className="flex gap-2">
-                    {otp.map((digit, index) => (
-                      <input
-                        key={index}
-                        ref={otpInputRefs[index]}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleOtpChange(index, e.target.value)}
-                        onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                        className="w-10 h-10 rounded-full border border-[#1E3F2B] bg-white text-center text-sm text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]/20"
-                      />
-                    ))}
-                  </div>
-                  <button className="text-xs text-[#1E3F2B] font-medium hover:underline" type="button">
-                    Verify OTP
+
+                {/* State */}
+                <div className="relative">
+                  <input
+                    ref={stateInputRef}
+                    type="text"
+                    value={addressData.state}
+                    onChange={(e) => handleAddressChange('state', e.target.value)}
+                    disabled={isLoading}
+                    placeholder="State"
+                    className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => stateInputRef.current?.focus()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
+                    aria-label="Edit state"
+                  >
+                    <IconEdit className="h-5 w-5" strokeWidth={2} />
+                  </button>
+                </div>
+
+                {/* Pincode */}
+                <div className="relative">
+                  <input
+                    ref={pincodeInputRef}
+                    type="text"
+                    value={addressData.pincode}
+                    onChange={(e) => handleAddressChange('pincode', e.target.value.replace(/\D/g, ''))}
+                    disabled={isLoading}
+                    placeholder="Pincode"
+                    maxLength={6}
+                    className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => pincodeInputRef.current?.focus()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
+                    aria-label="Edit pincode"
+                  >
+                    <IconEdit className="h-5 w-5" strokeWidth={2} />
                   </button>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#3D2D1F]">Address</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={formData.address}
-                  onChange={(e) => handleChange('address', e.target.value)}
-                  disabled={isLoading}
-                  className="w-full rounded-xl border border-[#1E3F2B] bg-white px-4 py-3 pr-10 text-sm text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D]/20 disabled:opacity-60"
-                />
-                <IconEdit className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#1E3F2B]" />
-              </div>
-            </div>
-
             <button
               onClick={handleSave}
-              disabled={isSaving || isLoading}
-              className="w-full py-3 rounded-full bg-[#1E3F2B] text-white text-sm font-bold hover:bg-[#1E3F2B]/90 transition-colors mt-6 disabled:opacity-60"
+              disabled={isSaving || isLoading || !hasChanges}
+              className="w-full py-3 rounded-full bg-[#1E3F2B] text-white text-sm font-bold hover:bg-[#1E3F2B]/90 transition-colors mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
               style={{ fontFamily: 'var(--font-lexend-exa), sans-serif' }}
             >
-              {isSaving ? 'Saving...' : 'SAVE'}
+              {isSaving ? 'Updating...' : hasChanges ? 'UPDATE' : 'SAVE'}
             </button>
 
             <div className="min-h-[1.5rem]" aria-live="polite">
@@ -231,9 +370,9 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
                 <p className="text-xs text-green-700">{statusMessage}</p>
               )}
               {errorMessage && <p className="text-xs text-red-600">{errorMessage}</p>}
-            </div>
-          </div>
-        </motion.div>
+                  </div>
+                </div>
+              </motion.div>
       </div>
     </div>
   )

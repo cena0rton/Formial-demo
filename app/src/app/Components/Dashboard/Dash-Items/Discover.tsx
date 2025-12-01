@@ -108,7 +108,7 @@ const Discover = () => {
                   {/* Question - Green Background */}
                   <button
                     onClick={() => toggleFAQ(faq.id)}
-                    className="w-full rounded-xl bg-white border border-[#1E3F2B] px-4 py-3 flex items-center justify-between text-left"
+                    className="w-full rounded-3xl bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-5 py-3 flex items-center justify-between text-left transition-all"
                   >
                     <span className="text-sm font-medium text-[#1E3F2B] pr-4">
                       {faq.question}
@@ -130,7 +130,7 @@ const Discover = () => {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="rounded-xl bg-[#FEFCE8] border border-[#1E3F2B] px-4 py-3 mt-2">
+                        <div className="rounded-3xl bg-[#FEFCE8] border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-5 py-3 mt-2">
                           <p className="text-sm text-[#1E3F2B] whitespace-pre-line">
                             {faq.answer}
                           </p>

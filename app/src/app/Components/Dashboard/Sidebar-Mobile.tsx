@@ -57,12 +57,12 @@ const MobileSidebar = ({ activeItem, setActiveItem, ref, activeSection, setActiv
         return activeItem === item.itemIndex
       }
       return false
-    }
+      }
     
   return (
     <div>
          <div className='bg-[#1E3F2B] py-4 px-2 w-74 right-0 h-fit block md:hidden rounded-bl-3xl border-br-3xl border border-white/10'>
-          
+                   
             
             <nav className='px-2 text-white'>
               {/* Unified Navigation Container */}
@@ -70,25 +70,25 @@ const MobileSidebar = ({ activeItem, setActiveItem, ref, activeSection, setActiv
                 {navItems.map((item) => {
                   const isActive = isItemActive(item)
                   return (
-                    <button
+                  <button
                       key={item.id}
                       onClick={() => handleNavClick(item)}
                       onMouseEnter={() => setHoveredItem(item.id)}
                       onMouseLeave={() => setHoveredItem(null)}
-                      className={`relative flex items-center justify-start space-x-3 px-4 py-3 rounded-full text-sm font-medium transition-all focus:outline-none z-10 ${
+                    className={`relative flex items-center justify-start space-x-3 px-4 py-3 rounded-full text-sm font-medium transition-all focus:outline-none z-10 ${
                         hoveredItem === item.id && !isActive
-                          ? 'opacity-80'
-                          : ''
-                      }`}
-                      style={{
+                        ? 'opacity-80'
+                        : ''
+                    }`}
+                    style={{
                         color: isActive ? '#1E3F2B' : 'white',
-                      }}
-                    >
+                    }}
+                  >
                       <span className='h-5 w-5' style={{ color: isActive ? '#1E3F2B' : 'white' }}>
                         {item.icon}
-                      </span>
+                    </span>
                       <span>{item.label}</span>
-                    </button>
+                  </button>
                   )
                 })}
                 {/* Animated Background - Single element for smooth animation */}
@@ -97,20 +97,20 @@ const MobileSidebar = ({ activeItem, setActiveItem, ref, activeSection, setActiv
                   if (activeIndex === -1) return null
                   
                   return (
-                    <motion.div
+                  <motion.div
                       layoutId="activeNavItemMobile"
-                      className="absolute inset-x-0 bg-[#7CB58D] rounded-full z-0"
-                      initial={false}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 30,
-                      }}
-                      style={{
+                    className="absolute inset-x-0 bg-[#7CB58D] rounded-full z-0"
+                    initial={false}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                    style={{
                         height: `${100 / navItems.length}%`,
                         top: `${activeIndex * (100 / navItems.length)}%`,
-                      }}
-                    />
+                    }}
+                  />
                   )
                 })()}
               </div>

@@ -28,7 +28,7 @@ const Support = () => {
               We can only style the container, not the content inside due to cross-origin restrictions.
               To customize the chat widget appearance, check SagePilot dashboard for theme/customization options. */}
           <div 
-            className="w-full rounded-3xl overflow-hidden bg-white border border-black/10" 
+            className="w-full rounded-3xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD]" 
             style={{ height: 'calc(100vh - 250px)', minHeight: '600px' }}
           >
             <iframe

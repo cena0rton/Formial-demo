@@ -25,9 +25,9 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
     itemIndex?: number 
   }[] = [
     { id: 'treatment', label: 'Home', type: 'section', sectionId: 'treatment' },
+    { id: 'support', label: 'Consult', type: 'page', itemIndex: 4 },
     { id: 'refer', label: 'Refer & Earn', type: 'section', sectionId: 'refer' },
     { id: 'discover', label: 'Discover', type: 'page', itemIndex: 2 },
-    { id: 'support', label: 'Consult', type: 'page', itemIndex: 4 },
     { id: 'details', label: 'Details', type: 'page', itemIndex: 6 },
     // { id: 'orders', label: 'Orders & Subscriptions', type: 'page', itemIndex: 5 },
   ]

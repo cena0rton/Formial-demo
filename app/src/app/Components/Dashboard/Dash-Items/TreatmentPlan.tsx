@@ -127,7 +127,7 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl border border-black px-6 py-6">
+      <div className="bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-6 py-6">
         {isLoading && (
           <div className="animate-pulse space-y-4">
             <div className="h-4 bg-gray-200 rounded w-1/3" />

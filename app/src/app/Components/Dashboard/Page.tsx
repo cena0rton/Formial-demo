@@ -28,7 +28,7 @@ const Page = () => {
   const prescriptions = data?.prescriptions || []
 
   const handleSavePersonalDetails = useCallback(
-    async (payload: { name: string; whatsapp: string; address?: string }) => {
+    async (payload: { name: string; whatsapp: string; address?: { address1: string; address2: string; city: string; state: string; pincode: string } }) => {
       if (!contact) throw new Error('Contact not available. Please verify your number again.')
 
       const updatePayload: Partial<FormialUser> = {}
@@ -39,16 +39,13 @@ const Page = () => {
       
       // Update address in new format
       if (payload.address) {
-        // Parse address string into address object structure
-        // For now, store the full address as address1 since user enters it as a single string
-        // In a full implementation, you might want separate fields for address1, city, etc.
         updatePayload.addresses = [{
-          address1: payload.address.trim(),
-          address2: '',
-          city: '',
-          province: '',
-          zip: '',
-          country: '',
+          address1: payload.address.address1 || '',
+          address2: payload.address.address2 || '',
+          city: payload.address.city || '',
+          province: payload.address.state || '',
+          zip: payload.address.pincode || '',
+          country: 'India', // Default to India, can be made configurable
         }]
       }
 

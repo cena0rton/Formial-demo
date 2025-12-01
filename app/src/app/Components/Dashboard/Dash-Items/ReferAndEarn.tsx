@@ -62,7 +62,7 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
             type="text"
             value={referralCode}
             readOnly
-            className="w-full rounded-xl border border-[#1E3F2B] bg-white px-4 py-3 pr-24 text-sm text-[#3D2D1F] focus:outline-none"
+            className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-24 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
           />
           <div className="absolute right-2 flex items-center gap-2">
             <button
@@ -86,7 +86,7 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
       {/* Summary Section */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-[#3D2D1F]">Summary</h3>
-        <div className="rounded-xl border border-[#3D2D1F] bg-white px-4 py-4 space-y-3">
+        <div className="rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-4 space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-[#3D2D1F]">Friends joined</span>
             <span className="text-sm font-medium text-[#3D2D1F]">5</span>
