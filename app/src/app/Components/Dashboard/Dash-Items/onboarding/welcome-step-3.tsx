@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
 import { getUser, updateUserByContact, FormialUser } from "../../../../utils/formialApi"
@@ -19,20 +19,21 @@ interface AddressObject {
   phone?: string
 }
 
-const formatAddress = (address: AddressObject): string => {
-  const parts: string[] = []
-  
-  if (address.address1) parts.push(address.address1)
-  if (address.address2 && address.address2.trim()) parts.push(address.address2)
-  if (address.city) parts.push(address.city)
-  
-  const stateZip = [address.province, address.zip].filter(Boolean).join(' ')
-  if (stateZip) parts.push(stateZip)
-  
-  if (address.country) parts.push(address.country)
-  
-  return parts.join(', ')
-}
+// formatAddress function - kept for potential future use
+// const formatAddress = (address: AddressObject): string => {
+//   const parts: string[] = []
+//   
+//   if (address.address1) parts.push(address.address1)
+//   if (address.address2 && address.address2.trim()) parts.push(address.address2)
+//   if (address.city) parts.push(address.city)
+//   
+//   const stateZip = [address.province, address.zip].filter(Boolean).join(' ')
+//   if (stateZip) parts.push(stateZip)
+//   
+//   if (address.country) parts.push(address.country)
+//   
+//   return parts.join(', ')
+// }
 
 interface AddressFormData {
   address1: string
@@ -103,7 +104,7 @@ const timeline = [
   },
 ]
 
-export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber }: WelcomeStep3Props) {
+export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack, mobileNumber }: WelcomeStep3Props) {
   const [addressData, setAddressData] = useState<AddressFormData>({
     address1: '',
     address2: '',

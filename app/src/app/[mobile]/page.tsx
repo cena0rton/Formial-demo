@@ -239,7 +239,7 @@ export default function UserPage() {
           {/* Error Message */}
           <div className="space-y-6">
             <p className="text-base md:text-lg text-[#1E3F2B] leading-relaxed">
-              Sorry we don't have you registered at Formial yet.
+              Sorry we don&apos;t have you registered at Formial yet.
             </p>
             <p className="text-base md:text-lg text-[#1E3F2B] leading-relaxed">
               Visit{" "}

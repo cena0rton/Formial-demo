@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react"
 import OnboardingModal from "./Components/Dashboard/Dash-Items/OnboardingModal-new"
 import MobileNumberModal from "./Components/Dashboard/Dash-Items/MobileNumberModal"
-import Page from "./Components/Dashboard/Page"
 import { getAuthToken } from "./utils/authToken"
 import { getUserContact } from "./utils/userContact"
 
 export default function Home() {
-  const [showMobileModal, setShowMobileModal] = useState(true)
+  const [showMobileModal] = useState(true)
   const [isChecking, setIsChecking] = useState(true)
 
   // Check if user already has a token (already logged in)
