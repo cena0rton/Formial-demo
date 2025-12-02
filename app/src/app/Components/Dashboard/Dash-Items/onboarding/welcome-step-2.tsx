@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation"
 
 interface WelcomeStep2Props {
   userDetails: {
-    name: string
+    firstName: string
+    lastName: string
     phone: string
     address: string
   }
@@ -42,9 +43,10 @@ const timeline = [
 export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber }: WelcomeStep2Props) {
   const router = useRouter()
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
-  const [name, setName] = useState(userDetails.name)
+  const [firstName, setFirstName] = useState(userDetails.firstName)
+  const [lastName, setLastName] = useState(userDetails.lastName)
   const [phone, setPhone] = useState(userDetails.phone)
-  const [originalData, setOriginalData] = useState({ name: userDetails.name, phone: userDetails.phone })
+  const [originalData, setOriginalData] = useState({ firstName: userDetails.firstName, lastName: userDetails.lastName, phone: userDetails.phone })
   const [otpMessage, setOtpMessage] = useState<string | null>(null)
   const [otpError, setOtpError] = useState<string | null>(null)
   const [isSendingOtp, setIsSendingOtp] = useState(false)
@@ -52,7 +54,8 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
   const [isUpdating, setIsUpdating] = useState(false)
   const [resendCooldown, setResendCooldown] = useState(0)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
-  const nameInputRef = useRef<HTMLInputElement | null>(null)
+  const firstNameInputRef = useRef<HTMLInputElement | null>(null)
+  const lastNameInputRef = useRef<HTMLInputElement | null>(null)
   const phoneInputRef = useRef<HTMLInputElement | null>(null)
   
   // Fetch user data when component mounts or mobileNumber changes
@@ -63,12 +66,14 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
       try {
         const user = await getUser(mobileNumber)
         if (user) {
-          const fetchedName = user.name || user.first_name || ""
+          const fetchedFirstName = user.first_name || (user.name ? user.name.split(' ')[0] : '') || ""
+          const fetchedLastName = user.last_name || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || ""
           const fetchedPhone = user.contact || mobileNumber
           
-          setName(fetchedName)
+          setFirstName(fetchedFirstName)
+          setLastName(fetchedLastName)
           setPhone(fetchedPhone)
-          setOriginalData({ name: fetchedName, phone: fetchedPhone })
+          setOriginalData({ firstName: fetchedFirstName, lastName: fetchedLastName, phone: fetchedPhone })
         }
       } catch {
         // User doesn't exist yet - use provided userDetails
@@ -154,7 +159,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
 
   const allDigitsFilled = otpDigits.every((digit) => digit.length === 1)
   const sanitizedPhone = phone.replace(/\D/g, "")
-  const isFormValid = name.trim().length > 0 && sanitizedPhone.length >= 10 && allDigitsFilled
+  const isFormValid = firstName.trim().length > 0 && sanitizedPhone.length >= 10 && allDigitsFilled
 
   const handleSendOtp = async () => {
     if (isSendingOtp || resendCooldown > 0) return
@@ -168,7 +173,8 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
 
     try {
       setIsSendingOtp(true)
-      await sendWhatsAppOtp({ phoneNumber: sanitizedPhone, name })
+      const fullName = `${firstName} ${lastName}`.trim()
+      await sendWhatsAppOtp({ phoneNumber: sanitizedPhone, name: fullName })
       setOtpMessage("OTP sent to WhatsApp. Please check your phone.")
       setResendCooldown(30)
     } catch (error) {
@@ -193,49 +199,62 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
         code,
       })
 
-      if (response?.token) {
-        setAuthToken(response.token)
-      }
-      
       const normalizedMobile = `+${sanitizedPhone}`
-      setUserContact(normalizedMobile)
-
-      // Check if user data has changed and needs to be updated
-      const hasChanges = name !== originalData.name || sanitizedPhone !== originalData.phone.replace(/\D/g, "")
       
-      if (hasChanges && normalizedMobile) {
-        setIsUpdating(true)
-        try {
-          const updatePayload: { name?: string; contact?: string } = {}
-          if (name !== originalData.name) {
-            updatePayload.name = name
-          }
-          if (sanitizedPhone !== originalData.phone.replace(/\D/g, "")) {
-            updatePayload.contact = normalizedMobile
-          }
-          
-          await updateUserByContact(normalizedMobile, updatePayload)
-        } catch (updateError) {
-          console.error("Failed to update user data:", updateError)
-          // Continue even if update fails
-        } finally {
-          setIsUpdating(false)
-        }
-      }
-
-      setOtpMessage(response?.message || "OTP verified successfully.")
-
-      // Check if user already has a profile (profile: true means user exists)
-      // If user exists, redirect to dashboard directly
+      // Handle Case A & B: User exists + OTP match (profile: true, token provided)
       if (response?.profile === true) {
-        // Extract mobile number without + for URL
+        // Store token and contact for existing users
+        if (response.token) {
+          setAuthToken(response.token)
+          setUserContact(normalizedMobile)
+        } else {
+          // Token missing for existing user - unexpected but handle gracefully
+          console.warn("Token not provided for existing user profile")
+        }
+
+        // Check if user data has changed and needs to be updated
+        const hasChanges = firstName !== originalData.firstName || lastName !== originalData.lastName || sanitizedPhone !== originalData.phone.replace(/\D/g, "")
+        
+        // Always update if there are changes
+        if (hasChanges && normalizedMobile) {
+          setIsUpdating(true)
+          try {
+            const updatePayload: { first_name?: string; last_name?: string; contact?: string } = {}
+            if (firstName !== originalData.firstName) {
+              updatePayload.first_name = firstName.trim()
+            }
+            if (lastName !== originalData.lastName) {
+              updatePayload.last_name = lastName.trim()
+            }
+            if (sanitizedPhone !== originalData.phone.replace(/\D/g, "")) {
+              updatePayload.contact = normalizedMobile
+            }
+            
+            // Send PATCH request to update user details
+            await updateUserByContact(normalizedMobile, updatePayload)
+            
+            // Update original data after successful save
+            setOriginalData({ firstName, lastName, phone: sanitizedPhone })
+          } catch (updateError) {
+            console.error("Failed to update user data:", updateError)
+            // Continue even if update fails - don't block user progress
+          } finally {
+            setIsUpdating(false)
+          }
+        }
+
+        setOtpMessage(response?.message || "OTP verified successfully.")
+
+        // Existing user - redirect to dashboard directly
         const mobileForUrl = sanitizedPhone
-        // Small delay to show success message
         setTimeout(() => {
           router.push(`/${mobileForUrl}`)
         }, 1000)
       } else {
-        // New user - continue with onboarding
+        // Handle Case C: User does not exist + OTP match (profile: false, no token)
+        // New user - store contact and continue with onboarding
+        setUserContact(normalizedMobile)
+        setOtpMessage(response?.message || "OTP verified. Please complete your profile.")
         onNext()
       }
     } catch (error) {
@@ -310,24 +329,51 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
 
         <div className="mt-6 space-y-6">
           <div className="space-y-4">
-            <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Name</span>
-            <div className="relative">
-              <input
-                ref={nameInputRef}
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
-                placeholder="Enter your name"
-              />
-              <button
-                type="button"
-                onClick={() => nameInputRef.current?.focus()}
-                className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
-                aria-label="Edit name"
-              >
-                <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
-              </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* First Name */}
+              <div className="space-y-2">
+                <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">First Name</span>
+                <div className="relative">
+                  <input
+                    ref={firstNameInputRef}
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                    placeholder="First Name"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => firstNameInputRef.current?.focus()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                    aria-label="Edit first name"
+                  >
+                    <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+                  </button>
+                </div>
+              </div>
+              {/* Last Name */}
+              <div className="space-y-2">
+                <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Last Name</span>
+                <div className="relative">
+                  <input
+                    ref={lastNameInputRef}
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
+                    placeholder="Last Name"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => lastNameInputRef.current?.focus()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
+                    aria-label="Edit last name"
+                  >
+                    <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -354,7 +400,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
                     <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
                   </button>
                 </div>
-                <span className="text-xs text-[#6F5B4C]">Please ensure this is your personal WhatsApp number</span>
+                <span className="text-xs text-[#6F5B4C]">Please ensure this is your personal WhatsApp number and Check your WhatsApp on <span className="font-bold">Phone</span> for the OTP.</span>
                 </div>
                 <div className="flex items-start justify-start gap-4 relative flex-wrap sm:flex-nowrap">
                   {otpDigits.map((digit, index) => (

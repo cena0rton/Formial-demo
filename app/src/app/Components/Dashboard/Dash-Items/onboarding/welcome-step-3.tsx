@@ -338,12 +338,13 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
               // Check if address has changed and needs to be updated
               const changed = hasAddressChanged()
               
-              if (changed && addressData.address1.trim()) {
+              // If there are changes, send PATCH request to update address
+              if (changed) {
                 setIsUpdating(true)
                 setUpdateMessage(null)
                 try {
                   const addressUpdate: AddressObject = {
-                    address1: addressData.address1.trim(),
+                    address1: addressData.address1.trim() || '',
                     address2: addressData.address2.trim() || '',
                     city: addressData.city.trim() || '',
                     province: addressData.state.trim() || '',
@@ -351,19 +352,23 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
                     country: 'India',
                   }
                   
+                  // Send PATCH request to update address in database
                   await updateUserByContact(contact, {
                     addresses: [addressUpdate]
                   })
+                  
                   setUpdateMessage("Address updated successfully")
+                  // Update original address after successful save
                   setOriginalAddress({ ...addressData })
-                  // Small delay to show success message
+                  
+                  // Small delay to show success message, then proceed
                   setTimeout(() => {
                     onNext()
                   }, 500)
                 } catch (error) {
                   console.error("Failed to update address:", error)
                   setUpdateMessage("Failed to update address. Continuing...")
-                  // Continue anyway
+                  // Continue anyway - don't block user progress
                   setTimeout(() => {
                     onNext()
                   }, 1000)
@@ -371,7 +376,7 @@ export default function WelcomeStep3({ userDetails, onNext, onBack, mobileNumber
                   setIsUpdating(false)
                 }
               } else {
-                // No changes or empty address - just continue
+                // No changes - move forward normally without API call
                 onNext()
               }
             }}

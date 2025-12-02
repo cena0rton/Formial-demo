@@ -68,7 +68,7 @@ export const verifyWhatsAppOtp = async ({
   const sanitizedPhone = sanitizePhoneNumber(phoneNumber)
 
   if (!sanitizedPhone || !code) {
-    throw new Error("Phone number and OTP code are required.")
+    throw new Error("Please input number and code")
   }
 
   const params = new URLSearchParams({
@@ -81,13 +81,39 @@ export const verifyWhatsAppOtp = async ({
     cache: "no-store",
   })
 
+  // Handle error responses (400 status)
+  if (!response.ok) {
+    let errorMessage = "Wrong phone number or code :("
+    
+    try {
+      const errorPayload = await response.json()
+      if (errorPayload?.message) {
+        errorMessage = errorPayload.message
+      }
+    } catch {
+      // If JSON parsing fails, try text
+      try {
+        const errorText = await response.text()
+        if (errorText) {
+          errorMessage = errorText
+        }
+      } catch {
+        // Use default error message
+      }
+    }
+    
+    throw new Error(errorMessage)
+  }
+
+  // Parse successful response
   const payload = await response.json().catch(async () => {
     const fallback = await response.text()
-    return { message: fallback }
+    throw new Error(fallback || "Invalid response from server")
   })
 
-  if (!response.ok) {
-    throw new Error(payload?.message || "OTP verification failed. Please try again.")
+  // Validate response structure
+  if (typeof payload !== 'object' || payload === null) {
+    throw new Error("Invalid response format from server")
   }
 
   return payload as {

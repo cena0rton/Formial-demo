@@ -65,21 +65,24 @@ interface OnboardingModalProps {
   onComplete?: () => void
   mobileNumber?: string | null
   initialUserName?: string | null
+  skipToOTP?: boolean // If true, skip to OTP step (welcome-step-2) for users who already have images
+  userHasImages?: boolean // If true, user has images and should go to dashboard after OTP
 }
 
-export default function OnboardingModal({ onComplete, mobileNumber, initialUserName }: OnboardingModalProps) {
+export default function OnboardingModal({ onComplete, mobileNumber, initialUserName, skipToOTP = false, userHasImages = false }: OnboardingModalProps) {
   const router = useRouter()
-  const [currentStep, setCurrentStep] = useState(0)
+  const [currentStep, setCurrentStep] = useState(skipToOTP ? 1 : 0)
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [userDetails, setUserDetails] = useState({
-    name: initialUserName || "",
+    firstName: initialUserName ? initialUserName.split(" ")[0] : "",
+    lastName: initialUserName ? initialUserName.split(" ").slice(1).join(" ") : "",
     phone: mobileNumber || "",
     address: "",
   })
   
-  const userFirstName = userDetails.name.split(" ")[0] || userDetails.name || "there"
+  const userFirstName = userDetails.firstName || "there"
 
   // Fetch user data when mobile number is available
   useEffect(() => {
@@ -92,7 +95,8 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
             const user = await getUser(storedContact)
             if (user) {
               setUserDetails({
-                name: user.name || user.first_name || "",
+                firstName: user.first_name || (user.name ? user.name.split(' ')[0] : '') || "",
+                lastName: user.last_name || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || "",
                 phone: user.contact || storedContact,
                 address: extractAddress(user),
               })
@@ -109,7 +113,8 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
         const user = await getUser(mobileNumber)
         if (user) {
           setUserDetails({
-            name: user.name || user.first_name || "",
+            firstName: user.first_name || (user.name ? user.name.split(' ')[0] : '') || "",
+            lastName: user.last_name || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || "",
             phone: user.contact || mobileNumber,
             address: extractAddress(user),
           })
@@ -131,7 +136,8 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
       const user = await getUser(contact)
       if (user) {
         setUserDetails({
-          name: user.name || user.first_name || "",
+          firstName: user.first_name || (user.name ? user.name.split(' ')[0] : '') || "",
+          lastName: user.last_name || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || "",
           phone: user.contact || contact,
           address: extractAddress(user),
         })
@@ -187,6 +193,10 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
   }
 
   const handleBack = () => {
+    // If skipToOTP is true, don't allow going back to step 0 (welcome screen)
+    if (skipToOTP && currentStep === 1) {
+      return // Don't allow going back from OTP step if user has images
+    }
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
     }
@@ -269,7 +279,12 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
                 <WelcomeStep2
                   key="welcome2"
                   userDetails={userDetails}
-                  onNext={handleNext}
+                  onNext={userHasImages ? () => {
+                    // If user has images, go directly to dashboard after OTP
+                    if (onComplete) {
+                      onComplete()
+                    }
+                  } : handleNext}
                   onBack={handleBack}
                   onRefresh={handleRefreshDetails}
                   mobileNumber={mobileNumber}

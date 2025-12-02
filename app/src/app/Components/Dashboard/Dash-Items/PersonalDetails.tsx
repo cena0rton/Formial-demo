@@ -7,7 +7,7 @@ import { FormialUser } from '../../../utils/formialApi'
 interface PersonalDetailsProps {
   user?: FormialUser | null
   isLoading?: boolean
-  onSave?: (payload: { name: string; whatsapp: string; address?: AddressFormData }) => Promise<void>
+  onSave?: (payload: { firstName: string; lastName: string; whatsapp: string; address?: AddressFormData }) => Promise<void>
 }
 
 interface AddressObject {
@@ -71,7 +71,8 @@ const sanitizePhone = (value: string) => {
 
 const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     whatsapp: '',
   })
   const [addressData, setAddressData] = useState<AddressFormData>({
@@ -82,7 +83,8 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
     pincode: '',
   })
   const [originalData, setOriginalData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     whatsapp: '',
     address: {
       address1: '',
@@ -97,7 +99,8 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
   const [isSaving, setIsSaving] = useState(false)
   
   // Refs for input fields
-  const nameInputRef = useRef<HTMLInputElement>(null)
+  const firstNameInputRef = useRef<HTMLInputElement>(null)
+  const lastNameInputRef = useRef<HTMLInputElement>(null)
   const whatsappInputRef = useRef<HTMLInputElement>(null)
   const address1InputRef = useRef<HTMLInputElement>(null)
   const address2InputRef = useRef<HTMLInputElement>(null)
@@ -107,14 +110,16 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
 
   useEffect(() => {
     if (user) {
-      const name = user.name || user.first_name || ''
+      const firstName = user.first_name || (user.name ? user.name.split(' ')[0] : '') || ''
+      const lastName = user.last_name || (user.name ? user.name.split(' ').slice(1).join(' ') : '') || ''
       const whatsapp = user.contact || ''
       const address = extractAddressData(user)
       
-      setFormData({ name, whatsapp })
+      setFormData({ firstName, lastName, whatsapp })
       setAddressData(address)
       setOriginalData({
-        name,
+        firstName,
+        lastName,
         whatsapp,
         address,
       })
@@ -131,7 +136,8 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
 
   const hasChanges = useMemo(() => {
     return (
-      formData.name !== originalData.name ||
+      formData.firstName !== originalData.firstName ||
+      formData.lastName !== originalData.lastName ||
       formData.whatsapp !== originalData.whatsapp ||
       addressData.address1 !== originalData.address.address1 ||
       addressData.address2 !== originalData.address.address2 ||
@@ -148,14 +154,16 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
     setIsSaving(true)
     try {
       await onSave({
-        name: formData.name,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         whatsapp: sanitizePhone(formData.whatsapp || user?.contact || ''),
         address: addressData,
       })
       
       // Update original data after successful save
       setOriginalData({
-        name: formData.name,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         whatsapp: formData.whatsapp,
         address: { ...addressData },
       })
@@ -198,38 +206,67 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
           <p className="text-center text-sm text-[#3D2D1F]/70 mb-6">{headerDescription}</p>
 
           <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[#3D2D1F]">Name</label>
-              <div className="relative">
-                <input
-                  ref={nameInputRef}
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  disabled={isLoading}
-                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
-                />
-                <button
-                  type="button"
-                  onClick={() => nameInputRef.current?.focus()}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer mt-1"
-                  aria-label="Edit name"
-                >
-                  <IconEdit className="h-5 w-5" strokeWidth={2} />
-                </button>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* First Name */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[#3D2D1F]">First Name</label>
+                  <div className="relative">
+                    <input
+                      ref={firstNameInputRef}
+                      type="text"
+                      value={formData.firstName}
+                      onChange={(e) => handleChange('firstName', e.target.value)}
+                      disabled={isLoading}
+                      placeholder="First Name"
+                      className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => firstNameInputRef.current?.focus()}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer mt-1"
+                      aria-label="Edit first name"
+                    >
+                      <IconEdit className="h-5 w-5" strokeWidth={2} />
+                    </button>
+                  </div>
+                </div>
+                {/* Last Name */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[#3D2D1F]">Last Name</label>
+                  <div className="relative">
+                    <input
+                      ref={lastNameInputRef}
+                      type="text"
+                      value={formData.lastName}
+                      onChange={(e) => handleChange('lastName', e.target.value)}
+                      disabled={isLoading}
+                      placeholder="Last Name"
+                      className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => lastNameInputRef.current?.focus()}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer mt-1"
+                      aria-label="Edit last name"
+                    >
+                      <IconEdit className="h-5 w-5" strokeWidth={2} />
+                    </button>
+                  </div>
+                </div>
               </div>
           </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-[#3D2D1F]">WhatsApp Number</label>
-              <div className="relative">
+              <div className="relative w-fit">
                 <input
                   ref={whatsappInputRef}
                   type="tel"
                   value={formData.whatsapp}
                   onChange={(e) => handleChange('whatsapp', e.target.value)}
                   disabled={isLoading}
-                  className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+                  className="w-fit rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
                 />
                 <button
                   type="button"
@@ -291,7 +328,7 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
               {/* City, State, Pincode Row */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* City */}
-                <div className="relative">
+                <div className="relative w-fit">
                   <input
                     ref={cityInputRef}
                     type="text"
@@ -312,7 +349,7 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
                 </div>
 
                 {/* State */}
-                <div className="relative">
+                <div className="relative w-fit">
                   <input
                     ref={stateInputRef}
                     type="text"
@@ -333,7 +370,7 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
                 </div>
 
                 {/* Pincode */}
-                <div className="relative">
+                <div className="relative w-fit">
                   <input
                     ref={pincodeInputRef}
                     type="text"

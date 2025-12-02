@@ -110,7 +110,7 @@ const Discover = () => {
                     onClick={() => toggleFAQ(faq.id)}
                     className="w-full rounded-3xl bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-5 py-3 flex items-center justify-between text-left transition-all"
                   >
-                    <span className="text-sm font-medium text-[#1E3F2B] pr-4">
+                    <span className="text-sm font-bold text-[#1E3F2B] pr-4">
                       {faq.question}
                     </span>
                     {openFAQ === faq.id ? (
@@ -130,10 +130,44 @@ const Discover = () => {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="rounded-3xl bg-[#FEFCE8] border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-5 py-3 mt-2">
-                          <p className="text-sm text-[#1E3F2B] whitespace-pre-line">
-                            {faq.answer}
-                          </p>
+                        <div className="rounded-3xl bg-[#faf9ef] border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-5 py-4 mt-2">
+                          <div className="text-sm text-[#1E3F2B] leading-relaxed space-y-3">
+                            {faq.answer.split('\n\n').map((paragraph, idx) => {
+                              // Handle bullet points
+                              if (paragraph.trim().startsWith('•') || paragraph.trim().startsWith('**')) {
+                                // Check if it's a markdown-style bold header
+                                if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
+                                  return (
+                                    <h4 key={idx} className="font-bold text-[#1E3F2B] mt-4 mb-2">
+                                      {paragraph.replace(/\*\*/g, '')}
+                                    </h4>
+                                  )
+                                }
+                                // Handle bullet list
+                                const lines = paragraph.split('\n')
+                                return (
+                                  <ul key={idx} className="list-none space-y-2 pl-0">
+                                    {lines.map((line, lineIdx) => {
+                                      const cleanLine = line.replace(/^[•\-\*]\s*/, '').trim()
+                                      if (!cleanLine) return null
+                                      return (
+                                        <li key={lineIdx} className="flex items-center gap-2">
+                                          <span className="text-[#1E3F2B] flex-shrink-0">•</span>
+                                          <span className="flex-1">{cleanLine}</span>
+                                        </li>
+                                      )
+                                    })}
+                                  </ul>
+                                )
+                              }
+                              // Regular paragraph
+                              return (
+                                <p key={idx} className="text-[#1E3F2B]">
+                                  {paragraph.trim()}
+                                </p>
+                              )
+                            })}
+                          </div>
                         </div>
                       </motion.div>
                     )}

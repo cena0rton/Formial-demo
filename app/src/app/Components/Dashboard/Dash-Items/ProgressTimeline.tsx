@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { FormialPrescription, createPrescription } from '../../../utils/formialApi'
-import { IconMountain } from '@tabler/icons-react'
+import { IconArrowUp, IconCheck } from '@tabler/icons-react'
 import UploadStep from './onboarding/upload-step'
 import { getUserContact } from '../../../utils/userContact'
 
@@ -132,30 +132,55 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
         </div>
       </div>
 
-      <div className="relative pl-10">
-        {/* Vertical Timeline Line */}
-        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-black/40 rounded-full"></div>
+      <div className="relative pl-12 md:pl-14">
+        {/* Vertical Timeline Line - Subtle green */}
+        <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-[#7CB58D]/30 rounded-full"></div>
 
         <div className="space-y-10 pb-8">
           {/* Today Section with Upload */}
           <div className="relative">
-            <div className="absolute -left-10 top-2 w-8 h-0.5 bg-black"></div>
-            <div className="mb-4 flex items-center gap-2">
-              <p className="text-sm font-medium text-black">Today</p>
-              {/* Purple "A" Badge */}
-              <div className="w-6 h-6 rounded-full bg-[#6B46C1] border border-black flex items-center justify-center shadow-md">
-                <span className="text-white text-xs font-bold">A</span>
-              </div>
+            {/* Green circular marker for Today */}
+            <div className="absolute -left-8 md:-left-10 top-0 w-4 h-4 rounded-full bg-[#7CB58D] border-2 border-white shadow-sm z-10"></div>
+            
+            <div className="mb-6 flex items-center gap-2">
+              <p className="text-sm font-semibold text-[#1E3F2B]">Today</p>
             </div>
+            
+            {/* Beautiful Upload Button */}
             <div className="relative">
-              {/* Upload Placeholder */}
-              <div
+              <motion.button
                 onClick={handleUploadClick}
-                className="rounded-xl border-2 border-dashed border-black/50 bg-gray-50 p-8 flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-gray-100 transition-colors w-40"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative w-full max-w-[280px] rounded-2xl bg-[#7CB58D]/20 border-2 border-[#1E3F2B]/20 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
               >
-                <IconMountain className="h-8 w-8 text-black" />
-                <p className="text-sm text-black font-medium">Click to upload</p>
-              </div>
+                {/* Animated background gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                {/* Content */}
+                <div className="relative px-8 py-6 flex flex-col items-center justify-center gap-3">
+                  {/* Icon with animated background */}
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-white/20 rounded-full blur-md group-hover:bg-white/30 transition-all duration-300"></div>
+                    <div className="relative size-12 rounded-full bg-white/20 flex items-center justify-center border border-[#1E3F2B]/20 transition-all duration-300">
+                      <IconArrowUp className="size-6 text-[#1E3F2B] group-hover:text-[#7CB58D] transition-colors duration-300" strokeWidth={2.5} />
+                    </div>
+                  </div>
+                  
+                  {/* Text */}
+                  <div className="text-center">
+                    <p className="text-base font-medium text-[#1E3F2B] mb-1 group-hover:text-white/95 transition-colors tracking-tight">
+                      Click to upload
+                    </p>
+                    <p className="text-xs text-[#1E3F2B]/80 font-medium tracking-tight">
+                      Track your progress
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Shine effect on hover */}
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              </motion.button>
             </div>
           </div>
 
@@ -177,60 +202,82 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
           {!isLoading &&
             prescriptionGroups.map((group, groupIndex) => (
               <div className="relative" key={`${group.date}-${groupIndex}`}>
-                <div className="absolute -left-10 top-3 w-8 h-0.5 bg-black"></div>
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-black">
+                {/* Green circular marker for dated entries */}
+                <div className="absolute -left-8 md:-left-10 top-1 w-4 h-4 rounded-full bg-[#7CB58D] border-2 border-white shadow-sm z-10"></div>
+                {/* Connecting line from marker */}
+               
+                
+                <div className="mb-3">
+                  <p className="text-sm font-medium text-[#1E3F2B]">
                     {formatDate(group.date)}
                   </p>
                 </div>
-                <div className="flex gap-3 w-full">
+                <div className="flex gap-3 w-full mb-2">
                   {/* Front Image */}
-                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden relative">
+                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.front_image ? (
-                      <Image
-                        src={group.front_image}
-                        alt={`Week ${group.week} - Front`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 33vw, 33vw"
-                        unoptimized
-                      />
+                      <div className="w-full h-full rounded-lg overflow-hidden relative">
+                        <Image
+                          src={group.front_image}
+                          alt={`Week ${group.week} - Front`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 33vw, 33vw"
+                          unoptimized
+                        />
+                        {/* Checkmark icon */}
+                        <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#7CB58D] flex items-center justify-center shadow-sm z-10">
+                          <IconCheck className="h-3 w-3 text-white" strokeWidth={3} />
+                        </div>
+                      </div>
                     ) : (
-                      <div className="w-full h-full bg-[#6B46C1]" />
+                      <div className="w-full h-full bg-gray-100 rounded-lg" />
                     )}
                   </div>
                   {/* Left Image */}
-                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden relative">
+                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.left_image ? (
-                      <Image
-                        src={group.left_image}
-                        alt={`Week ${group.week} - Left`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 33vw, 33vw"
-                        unoptimized
-                      />
+                      <div className="w-full h-full rounded-lg overflow-hidden relative">
+                        <Image
+                          src={group.left_image}
+                          alt={`Week ${group.week} - Left`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 33vw, 33vw"
+                          unoptimized
+                        />
+                        {/* Checkmark icon */}
+                        <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#7CB58D] flex items-center justify-center shadow-sm z-10">
+                          <IconCheck className="h-3 w-3 text-white" strokeWidth={3} />
+                        </div>
+                      </div>
                     ) : (
-                      <div className="w-full h-full bg-[#6B46C1]" />
+                      <div className="w-full h-full bg-gray-100 rounded-lg" />
                     )}
                   </div>
                   {/* Right Image */}
-                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-[#6B46C1] border border-black overflow-hidden relative">
+                  <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.right_image ? (
-                      <Image
-                        src={group.right_image}
-                        alt={`Week ${group.week} - Right`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 33vw, 33vw"
-                        unoptimized
-                      />
+                      <div className="w-full h-full rounded-lg overflow-hidden relative">
+                        <Image
+                          src={group.right_image}
+                          alt={`Week ${group.week} - Right`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 33vw, 33vw"
+                          unoptimized
+                        />
+                        {/* Checkmark icon */}
+                        <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#7CB58D] flex items-center justify-center shadow-sm z-10">
+                          <IconCheck className="h-3 w-3 text-white" strokeWidth={3} />
+                        </div>
+                      </div>
                     ) : (
-                      <div className="w-full h-full bg-[#6B46C1]" />
+                      <div className="w-full h-full bg-gray-100 rounded-lg" />
                     )}
                   </div>
                 </div>
-                <p className="text-xs text-gray-600 mt-2">Week-{group.week}</p>
+                <p className="text-xs text-[#1E3F2B]/70 font-medium mt-1">Week-{group.week}</p>
               </div>
             ))}
         </div>

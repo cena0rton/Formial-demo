@@ -9,36 +9,36 @@ interface TreatmentPlanProps {
   isLoading?: boolean
 }
 
-const fallbackTags = [
-  { label: "pimples", color: "bg-pink-200 text-pink-900 border-pink-300" },
-  { label: "dullness", color: "bg-yellow-200 text-yellow-900 border-yellow-300" },
-  { label: "fine lines", color: "bg-orange-200 text-orange-900 border-orange-300" },
+const tagColors = [
+  "bg-pink-200 text-pink-900 border-pink-300",
+  "bg-yellow-200 text-yellow-900 border-yellow-300",
+  "bg-orange-200 text-orange-900 border-orange-300"
 ]
 
 const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanProps) => {
   const treatmentTags = useMemo(() => {
     const allTags: string[] = []
-    
+
     // Add concerns
     if (user?.concerns?.length) {
       allTags.push(...user.concerns)
     }
-    
+
     // Add skin_issues
     if (user?.skin_issues?.length) {
       allTags.push(...user.skin_issues)
     }
-    
-    // If we have tags, map them with colors
+
+    // Only return tags if present, else empty array
     if (allTags.length > 0) {
       return allTags.map((label, index) => ({
         label,
-        color: fallbackTags[index % fallbackTags.length].color,
+        color: tagColors[index % tagColors.length],
       }))
     }
-    
-    // Fallback to default tags if no user data
-    return fallbackTags
+
+    // No default tags!
+    return []
   }, [user?.concerns, user?.skin_issues])
 
   const statusLabel = useMemo(() => {
@@ -56,15 +56,15 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
     }
 
     const components: string[] = []
-    
+
     if (latestPrescription.tretinoin !== undefined && latestPrescription.tretinoin > 0) {
       components.push(`Tretinoin ${latestPrescription.tretinoin}%`)
     }
-    
+
     if (latestPrescription.niacinamide !== undefined && latestPrescription.niacinamide > 0) {
       components.push(`Niacinamide ${latestPrescription.niacinamide}%`)
     }
-    
+
     if (latestPrescription.azelaic_acid !== undefined && latestPrescription.azelaic_acid > 0) {
       components.push(`Azelaic Acid ${latestPrescription.azelaic_acid}%`)
     }
@@ -142,21 +142,27 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
           <div className="flex flex-col w-full items-start gap-2">
             <div className="flex w-full items-center justify-between">
               <p className="text-sm text-[#3D2D1F]">Your plan is</p>
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-[#7CB58D] text-[#1E3F2B] border border-[#1E3F2B]">
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-600 border border-green-400">
                 {statusLabel}
               </span>
             </div>
             <div>
-              <div className="flex gap-2 mt-4">
-                {treatmentTags.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border ${tag.color}`}
-                  >
-                    {tag.label}
-                  </span>
-                ))}
-              </div>
+              {treatmentTags.length > 0 ? (
+                <div className="flex gap-2 mt-4">
+                  {treatmentTags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className={`px-3 py-1 rounded-full text-xs font-medium border ${tag.color}`}
+                    >
+                      {tag.label}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-4 text-xs italic text-[#777]">
+                  Wait till we review your pictures type
+                </div>
+              )}
             </div>
           </div>
         </div>

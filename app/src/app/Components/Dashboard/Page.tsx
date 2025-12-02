@@ -28,11 +28,12 @@ const Page = () => {
   const prescriptions = data?.prescriptions || []
 
   const handleSavePersonalDetails = useCallback(
-    async (payload: { name: string; whatsapp: string; address?: { address1: string; address2: string; city: string; state: string; pincode: string } }) => {
+    async (payload: { firstName: string; lastName: string; whatsapp: string; address?: { address1: string; address2: string; city: string; state: string; pincode: string } }) => {
       if (!contact) throw new Error('Contact not available. Please verify your number again.')
 
       const updatePayload: Partial<FormialUser> = {}
-      if (payload.name) updatePayload.name = payload.name
+      if (payload.firstName) updatePayload.first_name = payload.firstName
+      if (payload.lastName) updatePayload.last_name = payload.lastName
       if (payload.whatsapp) {
         updatePayload.contact = normalizeContactInput(payload.whatsapp)
       }
