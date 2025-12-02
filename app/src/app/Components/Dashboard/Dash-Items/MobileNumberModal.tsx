@@ -129,7 +129,7 @@ export default function MobileNumberModal({ isOpen, onClose }: MobileNumberModal
                   {/* Logo */}
                   <div className="flex justify-center mb-8 mx-auto w-fit">
                     <Image 
-                      src="/greenFormial.png" 
+                      src="/greenFormial.webp" 
                       alt="Formial" 
                       width={80} 
                       height={55} 
