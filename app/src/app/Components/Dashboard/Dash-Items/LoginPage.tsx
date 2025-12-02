@@ -5,14 +5,16 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import { sendWhatsAppOtp, verifyWhatsAppOtp } from "../../../utils/otpService"
 import { setUserContact } from "../../../utils/userContact"
+import { setAuthToken } from "../../../utils/authToken"
+import { useRouter } from "next/navigation"
 
 interface LoginPageProps {
   userName: string
   mobileNumber: string
-  onLoginSuccess: () => void
 }
 
-export default function LoginPage({ userName, mobileNumber, onLoginSuccess }: LoginPageProps) {
+export default function LoginPage({ userName, mobileNumber }: LoginPageProps) {
+  const router = useRouter()
   const [phone] = useState(mobileNumber)
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
   const [otpMessage, setOtpMessage] = useState<string | null>(null)
@@ -139,8 +141,15 @@ export default function LoginPage({ userName, mobileNumber, onLoginSuccess }: Lo
   const handleVerifyOtp = async (otp?: string) => {
     const otpCode = otp || otpDigits.join("")
     
+    // Strict validation: Must be exactly 4 digits
     if (otpCode.length !== 4) {
       setOtpError("Please enter a valid 4-digit OTP.")
+      return
+    }
+
+    // Ensure it's only digits
+    if (!/^\d{4}$/.test(otpCode)) {
+      setOtpError("OTP must contain only numbers.")
       return
     }
 
@@ -155,24 +164,45 @@ export default function LoginPage({ userName, mobileNumber, onLoginSuccess }: Lo
     setOtpMessage(null)
 
     try {
-      await verifyWhatsAppOtp({
+      const response = await verifyWhatsAppOtp({
         phoneNumber: sanitizedPhone,
         code: otpCode,
       })
 
-      // Store contact
+      // Additional validation: Ensure response indicates successful verification
+      if (!response || typeof response !== 'object') {
+        throw new Error("Invalid response from server. Please try again.")
+      }
+
+      // Validate that the message indicates successful verification
+      const message = response.message?.toLowerCase() || ''
+      if (!message.includes('verified')) {
+        throw new Error(response.message || "OTP verification failed. Please check your code and try again.")
+      }
+
+      // Store JWT token and contact for session persistence
       const normalizedMobile = `+${sanitizedPhone}`
+      
+      // Save JWT token if provided
+      if (response.token) {
+        setAuthToken(response.token)
+        console.log('[LoginPage] JWT token saved to localStorage')
+      }
+      
+      // Save contact
       setUserContact(normalizedMobile)
 
       setOtpMessage("OTP verified successfully.")
 
-      // Call success callback to go to dashboard
+      // Redirect to dashboard route
+      const mobileForUrl = sanitizedPhone
       setTimeout(() => {
-        onLoginSuccess()
+        router.push(`/dashboard/${mobileForUrl}`)
       }, 1000)
     } catch (error) {
       const message = error instanceof Error ? error.message : "OTP verification failed. Please try again."
       setOtpError(message)
+      console.error('[LoginPage] OTP verification error:', error)
       // Clear OTP on error
       setOtpDigits(Array(4).fill(""))
       inputRefs.current[0]?.focus()

@@ -6,9 +6,10 @@ import Image from "next/image"
 import Page from "../Components/Dashboard/Page"
 import OnboardingModal from "../Components/Dashboard/Dash-Items/OnboardingModal-new"
 import LoginPage from "../Components/Dashboard/Dash-Items/LoginPage"
-import { normalizeMobileFromUrl } from "../utils/auth"
+import { verifyUserAuth, normalizeMobileFromUrl } from "../utils/auth"
 import { getUser, getUserWithAllData } from "../utils/formialApi"
-import { setUserContact } from "../utils/userContact"
+import { setUserContact, getUserContact } from "../utils/userContact"
+import { getAuthToken, clearAuthToken } from "../utils/authToken"
 
 export default function UserPage() {
   const params = useParams()
@@ -43,6 +44,45 @@ export default function UserPage() {
       // Normalize mobile number
       const normalizedMobile = normalizeMobileFromUrl(mobileParam)
       setMobileNumber(normalizedMobile)
+      
+      // FIRST: Check if user has a valid JWT token - verify it before proceeding
+      const existingToken = getAuthToken()
+      const existingContact = getUserContact()
+      
+      if (existingToken) {
+        // Normalize contacts for comparison
+        const normalizeForComparison = (contact: string) => {
+          return contact.replace(/[\s+]/g, '').replace(/\D/g, '')
+        }
+        
+        const existingContactNormalized = existingContact ? normalizeForComparison(existingContact) : ''
+        const urlContactNormalized = normalizeForComparison(normalizedMobile)
+        
+        // If contacts match (or no contact stored), verify JWT token
+        if (!existingContact || existingContactNormalized === urlContactNormalized) {
+          try {
+            const authResult = await verifyUserAuth(normalizedMobile)
+            if (authResult.isValid) {
+              // JWT token is valid - redirect to dashboard route
+              setUserContact(normalizedMobile)
+              const mobileForUrl = mobileParam.replace(/^\+/, '').replace(/\D/g, '')
+              router.push(`/dashboard/${mobileForUrl}`)
+              return
+            } else {
+              // JWT token is invalid - clear it and continue with normal flow
+              console.log('[UserPage] JWT token invalid, clearing:', authResult.error)
+              clearAuthToken()
+            }
+          } catch (authError) {
+            console.error('[UserPage] JWT verification error:', authError)
+            clearAuthToken()
+          }
+        } else {
+          // Contact mismatch - clear token and continue
+          console.log('[UserPage] Contact mismatch, clearing session')
+          clearAuthToken()
+        }
+      }
       
       try {
         setIsLoading(true)
@@ -200,13 +240,12 @@ export default function UserPage() {
   }, [mobileParam, searchParams])
 
   const handleOnboardingComplete = () => {
-    // After onboarding, user should be authenticated
-    // If user has images, they completed OTP verification, so go to dashboard
-    if (userHasImages && mobileNumber) {
+    // After onboarding, redirect to dashboard route
+    if (mobileNumber) {
       setUserContact(mobileNumber)
+      const mobileForUrl = mobileNumber.replace(/^\+/, '').replace(/\D/g, '')
+      router.push(`/dashboard/${mobileForUrl}`)
     }
-    setIsAuthenticated(true)
-    setShowOnboarding(false)
   }
 
   if (isLoading) {
@@ -281,16 +320,6 @@ export default function UserPage() {
       <LoginPage
         userName={userName}
         mobileNumber={mobileNumber}
-        onLoginSuccess={() => {
-          // After successful OTP verification, user with images goes directly to dashboard
-          if (mobileNumber) {
-            setUserContact(mobileNumber)
-            setShowLogin(false)
-            setIsAuthenticated(true)
-            // Don't show onboarding for users with images
-            setShowOnboarding(false)
-          }
-        }}
       />
     )
   }
@@ -306,9 +335,19 @@ export default function UserPage() {
     )
   }
 
-  // Show dashboard for authenticated users
-  if (isAuthenticated) {
-    return <Page />
+  // This route should never show dashboard - redirect authenticated users to dashboard route
+  // Dashboard is only shown on /dashboard/{mobileNumber} route
+  if (isAuthenticated && mobileNumber) {
+    const mobileForUrl = mobileNumber.replace(/^\+/, '').replace(/\D/g, '')
+    router.push(`/dashboard/${mobileForUrl}`)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#F2F0E0]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E3F2B] mx-auto mb-4"></div>
+          <p className="text-[#3D2D1F]">Redirecting to dashboard...</p>
+        </div>
+      </div>
+    )
   }
 
   return null

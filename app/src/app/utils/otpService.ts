@@ -66,22 +66,41 @@ export const verifyWhatsAppOtp = async ({
 }) => {
   const baseUrl = ensureBaseUrl()
   const sanitizedPhone = sanitizePhoneNumber(phoneNumber)
+  const trimmedCode = code.trim()
 
-  if (!sanitizedPhone || !code) {
-    throw new Error("Please input number and code")
+  // Validate inputs before making API call
+  if (!sanitizedPhone || sanitizedPhone.length < 10) {
+    throw new Error("Please input a valid phone number")
+  }
+
+  if (!trimmedCode || trimmedCode.length !== 4) {
+    throw new Error("Please input a valid 4-digit OTP code")
+  }
+
+  // Ensure code is exactly 4 digits
+  if (!/^\d{4}$/.test(trimmedCode)) {
+    throw new Error("OTP code must be exactly 4 digits")
   }
 
   const params = new URLSearchParams({
     phonenumber: sanitizedPhone,
-    code: code.trim(),
+    code: trimmedCode,
   })
 
+  console.log('[verifyWhatsAppOtp] Verifying OTP:', { 
+    phoneNumber: sanitizedPhone, 
+    codeLength: trimmedCode.length,
+    code: trimmedCode.replace(/\d/g, '*') // Mask code in logs for security
+  })
+  
   const response = await fetch(`${baseUrl}/VerifyWAOTPUser?${params.toString()}`, {
     method: "GET",
     cache: "no-store",
   })
 
-  // Handle error responses (400 status)
+  console.log('[verifyWhatsAppOtp] Response status:', response.status, response.statusText)
+
+  // Handle error responses (400 status) - According to API docs, 400 means wrong OTP
   if (!response.ok) {
     let errorMessage = "Wrong phone number or code :("
     
@@ -94,14 +113,23 @@ export const verifyWhatsAppOtp = async ({
       // If JSON parsing fails, try text
       try {
         const errorText = await response.text()
-        if (errorText) {
-          errorMessage = errorText
+        if (errorText && errorText.trim()) {
+          // Try to parse as JSON if it looks like JSON
+          try {
+            const parsed = JSON.parse(errorText)
+            if (parsed?.message) {
+              errorMessage = parsed.message
+            }
+          } catch {
+            errorMessage = errorText
+          }
         }
       } catch {
         // Use default error message
       }
     }
     
+    console.error('[verifyWhatsAppOtp] OTP verification failed:', errorMessage)
     throw new Error(errorMessage)
   }
 
@@ -116,6 +144,30 @@ export const verifyWhatsAppOtp = async ({
     throw new Error("Invalid response format from server")
   }
 
+  // CRITICAL: Validate that the response indicates successful verification
+  // According to API docs, successful response should have message "User is Verified!!"
+  const message = payload.message?.toLowerCase() || ''
+  console.log('[verifyWhatsAppOtp] Response payload:', { 
+    message: payload.message, 
+    profile: payload.profile, 
+    hasToken: !!payload.token 
+  })
+  
+  // Strict validation: Message must contain "verified" (case-insensitive)
+  // According to API docs, all successful responses have "User is Verified!!"
+  if (!message || !message.includes('verified')) {
+    // If message doesn't indicate verification, treat as error
+    console.error('[verifyWhatsAppOtp] Invalid verification response - message does not indicate verification:', payload)
+    throw new Error(payload.message || "OTP verification failed. Please check your code and try again.")
+  }
+
+  // Additional validation: Ensure we have a valid response structure
+  if (typeof payload.profile !== 'boolean') {
+    console.error('[verifyWhatsAppOtp] Invalid response structure - profile is not boolean:', payload)
+    throw new Error("Invalid response from server. Please try again.")
+  }
+
+  console.log('[verifyWhatsAppOtp] OTP verified successfully')
   return payload as {
     message: string
     profile: boolean

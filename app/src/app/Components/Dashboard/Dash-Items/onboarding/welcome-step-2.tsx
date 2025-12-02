@@ -189,6 +189,18 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
     if (!isFormValid || isVerifyingOtp) return
     const code = otpDigits.join("")
 
+    // Strict validation: Must be exactly 4 digits
+    if (code.length !== 4) {
+      setOtpError("Please enter a valid 4-digit OTP.")
+      return
+    }
+
+    // Ensure it's only digits
+    if (!/^\d{4}$/.test(code)) {
+      setOtpError("OTP must contain only numbers.")
+      return
+    }
+
     setOtpError(null)
     setIsVerifyingOtp(true)
     setIsUpdating(false)
@@ -198,6 +210,17 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
         phoneNumber: sanitizedPhone,
         code,
       })
+
+      // Additional validation: Ensure response indicates successful verification
+      if (!response || typeof response !== 'object') {
+        throw new Error("Invalid response from server. Please try again.")
+      }
+
+      // Validate that the message indicates successful verification
+      const message = response.message?.toLowerCase() || ''
+      if (!message || !message.includes('verified')) {
+        throw new Error(response.message || "OTP verification failed. Please check your code and try again.")
+      }
 
       const normalizedMobile = `+${sanitizedPhone}`
       
@@ -245,14 +268,19 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
 
         setOtpMessage(response?.message || "OTP verified successfully.")
 
-        // Existing user - redirect to dashboard directly
+        // Existing user - redirect to dashboard route
         const mobileForUrl = sanitizedPhone
         setTimeout(() => {
-          router.push(`/${mobileForUrl}`)
+          router.push(`/dashboard/${mobileForUrl}`)
         }, 1000)
       } else {
         // Handle Case C: User does not exist + OTP match (profile: false, no token)
         // New user - store contact and continue with onboarding
+        // Still save token if provided (API might return token even for new users)
+        if (response.token) {
+          setAuthToken(response.token)
+          console.log('[WelcomeStep2] JWT token saved to localStorage for new user')
+        }
         setUserContact(normalizedMobile)
         setOtpMessage(response?.message || "OTP verified. Please complete your profile.")
         onNext()

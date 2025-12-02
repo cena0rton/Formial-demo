@@ -140,7 +140,7 @@ export default function MobileNumberModal({ isOpen, onClose }: MobileNumberModal
                   {/* Title */}
                   <div className="text-center mb-8">
                     <h2 className="text-lg md:text-xl font-medium tracking-tight text-[#4d3927] mb-3">
-                      Please enter your mobile number
+                      Enter your WhatsApp Mobile number
                     </h2>
                     <p className="text-xs md:text-sm text-[#3D2D1F]/80 leading-relaxed">
                       We&apos;ll verify your number to continue to your dashboard
@@ -151,7 +151,7 @@ export default function MobileNumberModal({ isOpen, onClose }: MobileNumberModal
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label className="block text-sm  font-medium text-[#1E3F2B] mb-3 tracking-tight">
-                      Mobile Number
+                     Registered Mobile Number
                     </label>
                     <div className="flex items-stretch gap-0 shadow-sm rounded-full">
                       <span className="flex items-center text-[#1E3F2B] font-medium px-4 py-4 bg-[#F2F0E0]/30 rounded-l-full border border-r-0 border-[#CBBEAD] text-base">
