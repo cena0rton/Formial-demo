@@ -293,7 +293,11 @@ export default function OnboardingModal({ onComplete, mobileNumber, initialUserN
               {currentStep === 2 && (
                 <WelcomeStep3
                   key="welcome3"
-                  userDetails={userDetails}
+                  userDetails={{
+                    name: `${userDetails.firstName} ${userDetails.lastName}`.trim(),
+                    phone: userDetails.phone,
+                    address: userDetails.address,
+                  }}
                   onBack={handleBack}
                   onNext={handleNext}
                   mobileNumber={mobileNumber}

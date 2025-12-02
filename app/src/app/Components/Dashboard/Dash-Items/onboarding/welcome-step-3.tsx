@@ -76,7 +76,7 @@ const extractAddressData = (user: FormialUser | null | undefined): AddressFormDa
 }
 
 interface WelcomeStep3Props {
-  userDetails: {
+  userDetails?: {
     name: string
     phone: string
     address: string
@@ -104,6 +104,7 @@ const timeline = [
   },
 ]
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack, mobileNumber }: WelcomeStep3Props) {
   const [addressData, setAddressData] = useState<AddressFormData>({
     address1: '',

@@ -178,7 +178,7 @@ export default function MobileNumberModal({ isOpen, onClose }: MobileNumberModal
                       animate={{ opacity: 1, y: 0 }}
                       className="p-3 rounded-xl border border-red-200"
                     >
-                      <p className="text-sm text-center text-red-700 font-medium">
+                      <p className="text-sm text-center text-red-400 font-medium">
                         {error.includes('Formial.in') ? (
                           <>
                             Sorry, we don&apos;t have you registered at Formial yet. Visit{' '}
@@ -186,7 +186,7 @@ export default function MobileNumberModal({ isOpen, onClose }: MobileNumberModal
                               href="https://formial.in"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-red-500 font-medium underline transition-colors"
+                              className="text-red-600 underline transition-colors"
                             >
                               formial.in
                             </a>
