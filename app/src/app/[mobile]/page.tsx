@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
-import Page from "../Components/Dashboard/Page"
 import OnboardingModal from "../Components/Dashboard/Dash-Items/OnboardingModal-new"
 import LoginPage from "../Components/Dashboard/Dash-Items/LoginPage"
 import { verifyUserAuth, normalizeMobileFromUrl } from "../utils/auth"
@@ -18,7 +17,7 @@ export default function UserPage() {
   const mobileParam = params?.mobile as string
   
   const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated] = useState(false) // Used for redirect check, but never set since we redirect immediately
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
   const [userNotFound, setUserNotFound] = useState(false)

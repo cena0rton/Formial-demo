@@ -102,18 +102,24 @@ export const verifyWhatsAppOtp = async ({
 
   // CRITICAL: Read response body once and store it
   // We need to read it before checking status because response body can only be read once
-  let responseBody: any
+  type ResponseBody = {
+    message?: string
+    profile?: boolean
+    token?: string
+  } | null
+  
+  let responseBody: ResponseBody = null
   const contentType = response.headers.get('content-type') || ''
   
   try {
     if (contentType.includes('application/json')) {
-      responseBody = await response.json()
+      responseBody = await response.json() as ResponseBody
     } else {
       const textBody = await response.text()
       try {
-        responseBody = JSON.parse(textBody)
+        responseBody = JSON.parse(textBody) as ResponseBody
       } catch {
-        responseBody = { message: textBody || 'Unknown error' }
+        responseBody = { message: textBody || 'Unknown error' } as ResponseBody
       }
     }
   } catch (parseError) {
