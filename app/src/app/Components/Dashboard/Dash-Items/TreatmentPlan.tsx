@@ -15,7 +15,38 @@ const tagColors = [
   "bg-orange-200 text-orange-900 border-orange-300"
 ]
 
+function getFirstName(user: FormialUser | null | undefined): string {
+  if (!user) return "there"
+  if (typeof user === "object") {
+    // Try all possible user name props in order
+    if (
+      "full_name" in user &&
+      typeof user.full_name === "string" &&
+      user.full_name.trim().length > 0
+    ) {
+      return user.full_name.split(" ")[0]
+    }
+    if (
+      "first_name" in user &&
+      typeof user.first_name === "string" &&
+      user.first_name.trim().length > 0
+    ) {
+      return user.first_name
+    }
+    if (
+      "name" in user &&
+      typeof user.name === "string" &&
+      user.name.trim().length > 0
+    ) {
+      return user.name.split(" ")[0]
+    }
+  }
+  return "there"
+}
+
 const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanProps) => {
+  const userFirstName = getFirstName(user)
+
   const treatmentTags = useMemo(() => {
     const allTags: string[] = []
 
@@ -82,13 +113,63 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
 
   const planDescription = buildTreatmentPlan
 
-  // Calculate next shipment date: current date + 30 days
-  // Show this if user has a prescription or is subscribed
+  // Calculate next shipment date based on plan start date
+  // Track months from plan start: if plan started on day X of month M, 
+  // next shipment is day X of the next month from plan start
   const nextShipmentDate = useMemo(() => {
-    if (!user && !latestPrescription) return null
+    if (!latestPrescription?.createdAt) {
+      // Fallback: if no prescription, use current date + 30 days
+      if (!user) return null
+      const today = new Date()
+      const nextShipment = new Date(today)
+      nextShipment.setDate(today.getDate() + 30)
+      return nextShipment
+    }
+
+    // Get plan start date from prescription createdAt
+    const planStartDate = new Date(latestPrescription.createdAt)
+    const planStartDay = planStartDate.getDate() // Day of month (1-31)
+    const planStartMonth = planStartDate.getMonth() // Month (0-11)
+    const planStartYear = planStartDate.getFullYear()
+
+    // Get current date
     const today = new Date()
-    const nextShipment = new Date(today)
-    nextShipment.setDate(today.getDate() + 30)
+    const currentMonth = today.getMonth()
+    const currentYear = today.getFullYear()
+
+    // Calculate how many months have passed since plan start
+    const monthsSinceStart = (currentYear - planStartYear) * 12 + (currentMonth - planStartMonth)
+
+    // Next shipment is the same day of the NEXT month from plan start
+    let nextShipmentMonth = planStartMonth + monthsSinceStart + 1
+    let nextShipmentYear = planStartYear
+
+    // Handle year rollover
+    while (nextShipmentMonth > 11) {
+      nextShipmentMonth -= 12
+      nextShipmentYear += 1
+    }
+
+    // Create next shipment date with the same day as plan start
+    const nextShipment = new Date(nextShipmentYear, nextShipmentMonth, planStartDay)
+
+    // If the calculated date is in the past, move to the next month
+    if (nextShipment < today) {
+      nextShipmentMonth += 1
+      if (nextShipmentMonth > 11) {
+        nextShipmentMonth = 0
+        nextShipmentYear += 1
+      }
+      nextShipment.setFullYear(nextShipmentYear)
+      nextShipment.setMonth(nextShipmentMonth)
+    }
+
+    // Handle edge case: if plan started on day 31 and next month has fewer days
+    const lastDayOfMonth = new Date(nextShipmentYear, nextShipmentMonth + 1, 0).getDate()
+    if (planStartDay > lastDayOfMonth) {
+      nextShipment.setDate(lastDayOfMonth)
+    }
+
     return nextShipment
   }, [user, latestPrescription])
 
@@ -138,10 +219,12 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
         {!isLoading && (
         <>
         {/* Top Row: Status, Tags, and Active Badge */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 tracking-tight">
           <div className="flex flex-col w-full items-start gap-2">
             <div className="flex w-full items-center justify-between">
-              <p className="text-sm text-[#3D2D1F]">Your plan is</p>
+              <p className="text-sm text-[#3D2D1F]">
+                Hey {userFirstName}, Your plan is
+              </p>
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-600 border border-green-400">
                 {statusLabel}
               </span>

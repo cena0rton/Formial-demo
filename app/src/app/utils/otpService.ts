@@ -100,44 +100,58 @@ export const verifyWhatsAppOtp = async ({
 
   console.log('[verifyWhatsAppOtp] Response status:', response.status, response.statusText)
 
-  // Handle error responses (400 status) - According to API docs, 400 means wrong OTP
-  if (!response.ok) {
-    let errorMessage = "Wrong phone number or code :("
-    
-    try {
-      const errorPayload = await response.json()
-      if (errorPayload?.message) {
-        errorMessage = errorPayload.message
-      }
-    } catch {
-      // If JSON parsing fails, try text
+  // CRITICAL: Read response body once and store it
+  // We need to read it before checking status because response body can only be read once
+  let responseBody: any
+  const contentType = response.headers.get('content-type') || ''
+  
+  try {
+    if (contentType.includes('application/json')) {
+      responseBody = await response.json()
+    } else {
+      const textBody = await response.text()
       try {
-        const errorText = await response.text()
-        if (errorText && errorText.trim()) {
-          // Try to parse as JSON if it looks like JSON
-          try {
-            const parsed = JSON.parse(errorText)
-            if (parsed?.message) {
-              errorMessage = parsed.message
-            }
-          } catch {
-            errorMessage = errorText
-          }
-        }
+        responseBody = JSON.parse(textBody)
       } catch {
-        // Use default error message
+        responseBody = { message: textBody || 'Unknown error' }
       }
     }
-    
-    console.error('[verifyWhatsAppOtp] OTP verification failed:', errorMessage)
+  } catch (parseError) {
+    console.error('[verifyWhatsAppOtp] Failed to parse response:', parseError)
+    throw new Error("Invalid response from server. Please try again.")
+  }
+
+  // CRITICAL: Handle error responses (400 status) - According to API docs, 400 means wrong OTP
+  // Check status code FIRST before processing response
+  if (response.status === 400) {
+    const errorMessage = responseBody?.message || "Wrong phone number or code :("
+    console.error('[verifyWhatsAppOtp] ❌ OTP verification FAILED - Status 400:', {
+      errorMessage,
+      responseBody,
+      phoneNumber: sanitizedPhone,
+      codeLength: trimmedCode.length
+    })
     throw new Error(errorMessage)
   }
 
-  // Parse successful response
-  const payload = await response.json().catch(async () => {
-    const fallback = await response.text()
-    throw new Error(fallback || "Invalid response from server")
-  })
+  // CRITICAL: Only accept 200 OK status for successful verification
+  // If backend returns any other status, reject it
+  if (response.status !== 200) {
+    const errorMessage = responseBody?.message || `Unexpected response status: ${response.status}`
+    console.error('[verifyWhatsAppOtp] ❌ Unexpected status code:', {
+      status: response.status,
+      statusText: response.statusText,
+      responseBody,
+      phoneNumber: sanitizedPhone
+    })
+    throw new Error(errorMessage)
+  }
+
+  // At this point, we have a 200 OK response
+  console.log('[verifyWhatsAppOtp] ✅ Received 200 OK response')
+
+  // Use the already-parsed response body
+  const payload = responseBody
 
   // Validate response structure
   if (typeof payload !== 'object' || payload === null) {

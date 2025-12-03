@@ -23,6 +23,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
   const [showLogoutMenu, setShowLogoutMenu] = useState(false)
   const [userName, setUserName] = useState<string | null>(null)
   const [userPhone, setUserPhone] = useState<string | null>(null)
+  const [showReferTooltip, setShowReferTooltip] = useState(false)
 
   // Fetch user details for dropdown
   useEffect(() => {
@@ -154,15 +155,29 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
           <button className="flex items-center justify-center overflow-hidden rounded-full size-10 bg-white/10 hover:bg-white/20 text-white transition-colors">
             <IconBell className="text-xl" />
           </button>
-          <button
-            onClick={handleReferEarnClick}
-            className={`flex items-center justify-center overflow-hidden rounded-full size-10 bg-white/10 hover:bg-white/20 text-white transition-colors ${
-              activeSection === 'refer' && activeItem === 0 ? 'bg-white/20' : ''
-            }`}
-            aria-label="Refer & Earn"
-          >
-            <IconGift className="text-xl" />
-          </button>
+          
+          {/* Refer & Earn Button with Tooltip */}
+          <div className="relative">
+            <button
+              onClick={handleReferEarnClick}
+              onMouseEnter={() => setShowReferTooltip(true)}
+              onMouseLeave={() => setShowReferTooltip(false)}
+              className={`flex items-center justify-center overflow-hidden rounded-full size-10 bg-white/10 hover:bg-white/20 text-white transition-colors ${
+                activeSection === 'refer' && activeItem === 0 ? 'bg-white/20' : ''
+              }`}
+              aria-label="Refer & Earn"
+            >
+              <IconGift className="text-xl" />
+            </button>
+            {showReferTooltip && (
+              <div className="absolute right-0 top-full mt-2 px-3 py-1.5 bg-[#1E3F2B] text-white text-xs rounded-lg whitespace-nowrap z-50 shadow-lg">
+                Refer and Earn
+                <div className="absolute -top-1 right-4 w-2 h-2 bg-[#1E3F2B] rotate-45"></div>
+              </div>
+            )}
+          </div>
+          
+          {/* User Button with Dropdown */}
           <div className="relative">
             <button
               onClick={() => setShowLogoutMenu(!showLogoutMenu)}
@@ -172,7 +187,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
               <IconUser className="text-xl" />
             </button>
             
-            {/* Logout Dropdown Menu */}
+            {/* User Details Dropdown Menu */}
             <AnimatePresence>
               {showLogoutMenu && (
                 <>

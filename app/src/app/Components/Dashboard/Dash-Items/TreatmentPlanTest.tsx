@@ -82,13 +82,67 @@ const TreatmentPlanTest = ({ user, latestPrescription, isLoading }: TreatmentPla
 
   const planDescription = buildTreatmentPlan
 
-  // Calculate next shipment date: current date + 30 days
-  // Show this if user has a prescription or is subscribed
+  // Calculate next shipment date based on plan start date
+  // Track months from plan start: if plan started on day X of month M, 
+  // next shipment is day X of the next month from plan start
   const nextShipmentDate = useMemo(() => {
-    if (!user && !latestPrescription) return null
+    if (!latestPrescription?.createdAt) {
+      // Fallback: if no prescription, use current date + 30 days
+      if (!user) return null
+      const today = new Date()
+      const nextShipment = new Date(today)
+      nextShipment.setDate(today.getDate() + 30)
+      return nextShipment
+    }
+
+    // Get plan start date from prescription createdAt
+    const planStartDate = new Date(latestPrescription.createdAt)
+    const planStartDay = planStartDate.getDate() // Day of month (1-31)
+    const planStartMonth = planStartDate.getMonth() // Month (0-11)
+    const planStartYear = planStartDate.getFullYear()
+
+    // Get current date
     const today = new Date()
-    const nextShipment = new Date(today)
-    nextShipment.setDate(today.getDate() + 30)
+    const currentMonth = today.getMonth()
+    const currentYear = today.getFullYear()
+
+    // Calculate how many months have passed since plan start
+    const monthsSinceStart = (currentYear - planStartYear) * 12 + (currentMonth - planStartMonth)
+
+    // Next shipment is the same day of the NEXT month from plan start
+    // If plan started on Jan 15 and we're in Jan, next shipment is Feb 15
+    // If plan started on Jan 15 and we're in Feb, next shipment is Mar 15
+    let nextShipmentMonth = planStartMonth + monthsSinceStart + 1
+    let nextShipmentYear = planStartYear
+
+    // Handle year rollover
+    while (nextShipmentMonth > 11) {
+      nextShipmentMonth -= 12
+      nextShipmentYear += 1
+    }
+
+    // Create next shipment date with the same day as plan start
+    const nextShipment = new Date(nextShipmentYear, nextShipmentMonth, planStartDay)
+
+    // If the calculated date is in the past (shouldn't happen, but safety check),
+    // move to the next month
+    if (nextShipment < today) {
+      nextShipmentMonth += 1
+      if (nextShipmentMonth > 11) {
+        nextShipmentMonth = 0
+        nextShipmentYear += 1
+      }
+      nextShipment.setFullYear(nextShipmentYear)
+      nextShipment.setMonth(nextShipmentMonth)
+    }
+
+    // Handle edge case: if plan started on day 31 and next month has fewer days
+    // (e.g., Jan 31 -> Feb doesn't have 31 days, so use last day of Feb)
+    const lastDayOfMonth = new Date(nextShipmentYear, nextShipmentMonth + 1, 0).getDate()
+    if (planStartDay > lastDayOfMonth) {
+      nextShipment.setDate(lastDayOfMonth)
+    }
+
     return nextShipment
   }, [user, latestPrescription])
 
