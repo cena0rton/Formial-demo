@@ -300,7 +300,7 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
            
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-6">
+              <div className="py-6">
                
                 <UploadStep
                   uploadedPhotos={uploadedPhotos}
