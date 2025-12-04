@@ -64,7 +64,7 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
             readOnly
             className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-24 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
           />
-          <div className="absolute right-2 flex items-center gap-2">
+          <div className="absolute right-2 mt-1.5 flex items-center gap-2">
             <button
               onClick={handleCopyCode}
               className="p-2 rounded-lg hover:bg-[#7CB58D]/10 transition-colors"

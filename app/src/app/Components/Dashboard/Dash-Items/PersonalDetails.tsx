@@ -200,7 +200,7 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
               className="px-6 py-3 rounded-full bg-[#7CB58D] border border-[#1E3F2B] text-[#1E3F2B] text-sm tracking-tighter font-bold"
               style={{ fontFamily: 'var(--font-lexend-exa), sans-serif' }}
             >
-              Details
+              Personal Details
             </div>
           </div>
           <p className="text-center text-sm text-[#3D2D1F]/70 mb-6">{headerDescription}</p>

@@ -1,5 +1,5 @@
 "use client"
-import { IconBell, IconUser, IconGift, IconLogout, IconUserCircle } from '@tabler/icons-react'
+import { IconUser, IconGift, IconLogout, IconUserCircle } from '@tabler/icons-react'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -176,9 +176,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
 
         {/* Desktop Icons */}
         <div className="flex items-center gap-3">
-          <button className="flex items-center justify-center overflow-hidden rounded-full size-10 bg-white/10 hover:bg-white/20 text-white transition-colors">
-            <IconBell className="text-xl" />
-          </button>
+       
           
           {/* Refer & Earn Button with Tooltip */}
           <div className="relative">
