@@ -107,9 +107,7 @@ const ReferAndEarn = ({ contact }: ReferAndEarnProps) => {
       </div>
 
       {/* Footer */}
-      <div className="flex justify-center mt-8">
-        <p className="text-sm font-bold text-[#3D2D1F]">Payments</p>
-      </div>
+     
     </motion.div>
   )
 }

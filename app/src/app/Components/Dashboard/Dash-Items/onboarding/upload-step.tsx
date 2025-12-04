@@ -185,7 +185,7 @@ export default function UploadStep({
         transition={{ delay: 0.2, duration: 0.45 }}
         className="relative flex-1 rounded-[32px] md:px-12"
       >
-        <div className="rounded-4xl border border-black overflow-hidden bg-white/70 px-6 md:px-12 py-10 md:py-12 z-20">
+        <div className="rounded-4xl border border-black overflow-hidden bg-white px-6 md:px-12 py-10 md:py-12 z-20">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={step}

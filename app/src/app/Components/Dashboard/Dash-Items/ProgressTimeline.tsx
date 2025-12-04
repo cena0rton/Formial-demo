@@ -297,20 +297,11 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white rounded-2xl max-w-3xl w-full h-full overflow-y-auto"
+           
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-[#1E3F2B]">Upload Progress Photos</h2>
-                  <button
-                    onClick={handleCloseModal}
-                    className="text-gray-500 hover:text-gray-700 text-2xl"
-                    aria-label="Close modal"
-                  >
-                    ×
-                  </button>
-                </div>
+               
                 <UploadStep
                   uploadedPhotos={uploadedPhotos}
                   setUploadedPhotos={setUploadedPhotos}

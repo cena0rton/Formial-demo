@@ -194,7 +194,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
               <IconGift className="text-xl" />
             </button>
             {showReferTooltip && (
-              <div className="absolute right-0 top-full mt-2 px-3 py-1.5 bg-[#1E3F2B] text-white text-xs rounded-lg whitespace-nowrap z-50 shadow-lg">
+              <div className="absolute hidden md:block right-0 top-full mt-2 px-3 py-1.5 bg-[#1E3F2B] text-white text-xs rounded-lg whitespace-nowrap z-50 shadow-lg">
                 Refer and Earn
                 <div className="absolute -top-1 right-4 w-2 h-2 bg-[#1E3F2B] rotate-45"></div>
               </div>
