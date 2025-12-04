@@ -114,8 +114,8 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
   const planDescription = buildTreatmentPlan
 
   // Calculate next shipment date based on plan start date
-  // Track months from plan start: if plan started on day X of month M, 
-  // next shipment is day X of the next month from plan start
+  // Next shipment is the same day of month as plan start, recurring monthly
+  // First shipment is always one month after plan start
   const nextShipmentDate = useMemo(() => {
     if (!latestPrescription?.createdAt) {
       // Fallback: if no prescription, use current date + 30 days
@@ -127,47 +127,70 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
     }
 
     // Get plan start date from prescription createdAt
+    // Parse the date string and extract components to avoid timezone issues
     const planStartDate = new Date(latestPrescription.createdAt)
     const planStartDay = planStartDate.getDate() // Day of month (1-31)
-    const planStartMonth = planStartDate.getMonth() // Month (0-11)
+    const planStartMonth = planStartDate.getMonth()
     const planStartYear = planStartDate.getFullYear()
-
-    // Get current date
+    
+    // Create a normalized plan start date (start of day, local time)
+    const normalizedPlanStart = new Date(planStartYear, planStartMonth, planStartDay)
+    
+    // Get current date components (year, month, day only - no time)
     const today = new Date()
-    const currentMonth = today.getMonth()
-    const currentYear = today.getFullYear()
+    const todayYear = today.getFullYear()
+    const todayMonth = today.getMonth()
+    const todayDay = today.getDate()
 
-    // Calculate how many months have passed since plan start
-    const monthsSinceStart = (currentYear - planStartYear) * 12 + (currentMonth - planStartMonth)
-
-    // Next shipment is the same day of the NEXT month from plan start
-    let nextShipmentMonth = planStartMonth + monthsSinceStart + 1
-    let nextShipmentYear = planStartYear
-
-    // Handle year rollover
-    while (nextShipmentMonth > 11) {
-      nextShipmentMonth -= 12
-      nextShipmentYear += 1
+    // Helper function to compare dates (year, month, day only)
+    const isDateBefore = (date1: Date, year2: number, month2: number, day2: number) => {
+      const year1 = date1.getFullYear()
+      const month1 = date1.getMonth()
+      const day1 = date1.getDate()
+      
+      if (year1 < year2) return true
+      if (year1 > year2) return false
+      if (month1 < month2) return true
+      if (month1 > month2) return false
+      return day1 < day2
     }
 
-    // Create next shipment date with the same day as plan start
-    const nextShipment = new Date(nextShipmentYear, nextShipmentMonth, planStartDay)
+    // First shipment is always one month after plan start
+    // Calculate the first shipment date (plan start + 1 month)
+    let firstShipmentMonth = planStartMonth + 1
+    let firstShipmentYear = planStartYear
+    
+    if (firstShipmentMonth > 11) {
+      firstShipmentMonth = 0
+      firstShipmentYear += 1
+    }
+    
+    // Get the last day of the target month to handle edge cases (e.g., Jan 31 -> Feb)
+    const lastDayOfFirstMonth = new Date(firstShipmentYear, firstShipmentMonth + 1, 0).getDate()
+    const firstTargetDay = Math.min(planStartDay, lastDayOfFirstMonth)
+    
+    let nextShipment = new Date(firstShipmentYear, firstShipmentMonth, firstTargetDay)
 
-    // If the calculated date is in the past, move to the next month
-    if (nextShipment < today) {
-      nextShipmentMonth += 1
-      if (nextShipmentMonth > 11) {
-        nextShipmentMonth = 0
-        nextShipmentYear += 1
+    // If the first shipment date has passed (is today or in the past), keep moving forward
+    // until we find a future date
+    while (isDateBefore(nextShipment, todayYear, todayMonth, todayDay)) {
+      const currentMonth = nextShipment.getMonth()
+      const currentYear = nextShipment.getFullYear()
+      
+      // Move to next month
+      let nextMonth = currentMonth + 1
+      let nextYear = currentYear
+      
+      if (nextMonth > 11) {
+        nextMonth = 0
+        nextYear += 1
       }
-      nextShipment.setFullYear(nextShipmentYear)
-      nextShipment.setMonth(nextShipmentMonth)
-    }
-
-    // Handle edge case: if plan started on day 31 and next month has fewer days
-    const lastDayOfMonth = new Date(nextShipmentYear, nextShipmentMonth + 1, 0).getDate()
-    if (planStartDay > lastDayOfMonth) {
-      nextShipment.setDate(lastDayOfMonth)
+      
+      // Get the last day of the target month to handle edge cases (e.g., Jan 31 -> Feb)
+      const lastDayOfNextMonth = new Date(nextYear, nextMonth + 1, 0).getDate()
+      const nextTargetDay = Math.min(planStartDay, lastDayOfNextMonth)
+      
+      nextShipment = new Date(nextYear, nextMonth, nextTargetDay)
     }
 
     return nextShipment
@@ -178,6 +201,10 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
     if (!nextShipmentDate) return null
     const requestDate = new Date(nextShipmentDate)
     requestDate.setDate(requestDate.getDate() - 3)
+    // Ensure we don't go into negative dates (shouldn't happen, but safety check)
+    if (requestDate.getTime() < 0) {
+      return new Date(0) // Return epoch start as fallback
+    }
     return requestDate
   }, [nextShipmentDate])
 
@@ -280,11 +307,28 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
         <div>
           <p className="text-sm text-[#3D2D1F] mb-1">Expires on</p>
           <p className="text-sm font-semibold text-[#3D2D1F]">
-            {latestPrescription?.updatedAt
+            {latestPrescription?.createdAt
               ? (() => {
-                  const date = new Date(latestPrescription.updatedAt)
-                  date.setMonth(date.getMonth() + 3) // Add 3 months for expiry
-                  return date.toLocaleDateString('en-US', {
+                  const date = new Date(latestPrescription.createdAt)
+                  const year = date.getFullYear()
+                  const month = date.getMonth()
+                  const day = date.getDate()
+                  
+                  // Add 3 months, handling year rollover and month length edge cases
+                  let expiryMonth = month + 3
+                  let expiryYear = year
+                  
+                  if (expiryMonth > 11) {
+                    expiryYear += Math.floor(expiryMonth / 12)
+                    expiryMonth = expiryMonth % 12
+                  }
+                  
+                  // Handle edge case: if original date is day 31 and target month has fewer days
+                  const lastDayOfExpiryMonth = new Date(expiryYear, expiryMonth + 1, 0).getDate()
+                  const expiryDay = Math.min(day, lastDayOfExpiryMonth)
+                  
+                  const expiryDate = new Date(expiryYear, expiryMonth, expiryDay)
+                  return expiryDate.toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'

@@ -291,7 +291,7 @@ export default function LoginPage({ userName, mobileNumber }: LoginPageProps) {
                     )}
                   </div>
                   
-                  <span className="text-xs text-[#6F5B4C]">Please ensure this is your personal WhatsApp number and Check your WhatsApp on <span className="font-bold">Phone</span> for the OTP.</span>
+                  <span className="text-xs text-[#6F5B4C]">Check your WhatsApp on <span className="font-bold">Phone</span> for the OTP.</span>
                   
                   {/* OTP Input Boxes */}
                   {otpSent && (

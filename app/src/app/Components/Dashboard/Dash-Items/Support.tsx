@@ -28,12 +28,12 @@ const Support = () => {
               We can only style the container, not the content inside due to cross-origin restrictions.
               To customize the chat widget appearance, check SagePilot dashboard for theme/customization options. */}
           <div 
-            className="w-full rounded-3xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD]" 
+            className="w-full rounded-3xl overflow-hidden" 
             style={{ height: 'calc(100vh - 250px)', minHeight: '600px' }}
           >
             <iframe
               src="https://app.sagepilot.ai/chat-widget-iframe.html?key=54dd14e1-fed6-4990-8a1b-a181967f50b2:46d8b50c-9414-4e6b-a3a8-feaa061dc9cb&host=https://app.sagepilot.ai"
-              className="w-full h-full border-none outline-none"
+              className="w-full h-full border-none outline-none shadow-none"
               style={{ 
                 width: '100%', 
                 height: '100%', 

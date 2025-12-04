@@ -24,6 +24,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
   const [userName, setUserName] = useState<string | null>(null)
   const [userPhone, setUserPhone] = useState<string | null>(null)
   const [showReferTooltip, setShowReferTooltip] = useState(false)
+  const [isHoveringUser, setIsHoveringUser] = useState(false)
 
   // Fetch user details for dropdown
   useEffect(() => {
@@ -50,6 +51,29 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
     }
     fetchUserDetails()
   }, [])
+
+  // Handle outside clicks/touches to close menu
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement
+      // Check if click is outside the dropdown
+      if (showLogoutMenu && !target.closest('[data-user-dropdown]')) {
+        setShowLogoutMenu(false)
+        setIsHoveringUser(false)
+      }
+    }
+
+    if (showLogoutMenu) {
+      // Add both mouse and touch event listeners
+      document.addEventListener('mousedown', handleOutsideClick)
+      document.addEventListener('touchstart', handleOutsideClick)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+      document.removeEventListener('touchstart', handleOutsideClick)
+    }
+  }, [showLogoutMenu])
 
   // Handle logout
   const handleLogout = () => {
@@ -178,10 +202,33 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
           </div>
           
           {/* User Button with Dropdown */}
-          <div className="relative">
+          <div 
+            className="relative"
+            data-user-dropdown
+            onMouseEnter={() => {
+              // Only enable hover on non-touch devices
+              if (window.matchMedia('(hover: hover)').matches) {
+                setIsHoveringUser(true)
+              }
+            }}
+            onMouseLeave={() => {
+              if (window.matchMedia('(hover: hover)').matches) {
+                setIsHoveringUser(false)
+              }
+            }}
+          >
             <button
-              onClick={() => setShowLogoutMenu(!showLogoutMenu)}
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 text-white bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowLogoutMenu(!showLogoutMenu)
+                // On mobile, disable hover when clicking
+                if (!window.matchMedia('(hover: hover)').matches) {
+                  setIsHoveringUser(false)
+                }
+              }}
+              className={`bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 text-white bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors ${
+                showLogoutMenu || isHoveringUser ? 'bg-white/20' : ''
+              }`}
               aria-label="User menu"
             >
               <IconUser className="text-xl" />
@@ -189,52 +236,85 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
             
             {/* User Details Dropdown Menu */}
             <AnimatePresence>
-              {showLogoutMenu && (
+              {(showLogoutMenu || isHoveringUser) && (
                 <>
-                  {/* Backdrop to close menu on outside click */}
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setShowLogoutMenu(false)}
-                  />
                   <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 top-12 bg-white rounded-xl shadow-lg border border-[#CBBEAD] py-3 min-w-[200px] z-50"
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute -right-4 top-12 backdrop-blur-xl backdrop-saturate-150 rounded-2xl shadow-2xl border border-white/20 py-0 min-w-[240px] z-50 overflow-hidden pb-1.5"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.75) 100%)',
+                      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(255, 255, 255, 0.5)'
+                    }}
+                    onMouseEnter={() => {
+                      if (window.matchMedia('(hover: hover)').matches) {
+                        setIsHoveringUser(true)
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (window.matchMedia('(hover: hover)').matches) {
+                        setIsHoveringUser(false)
+                      }
+                    }}
+                    onClick={(e) => {
+                      // Prevent clicks inside dropdown from closing it
+                      e.stopPropagation()
+                    }}
+                    data-user-dropdown
                   >
-                    {/* User Details Box */}
+                    {/* User Details Box - Glassmorphism Styling */}
                     {(userName || userPhone) && (
-                      <div className="px-4 py-3 border-b border-[#CBBEAD]/30 mb-2">
+                      <div className="px-4 py-3.5 to-transparent border-b border-white/30 backdrop-blur-sm">
                         {userName && (
-                          <div className="text-sm font-semibold text-[#1E3F2B] mb-1">
-                            {userName}
+                          <div className="flex items-center gap-3">
+                         
+                            <div className="text-lg w-full font-medium tracking-tight text-[#1E3F2B] truncate font-instrument-serif italic">
+                              Hi{""}, {userName}
+                            </div>
                           </div>
                         )}
-                        {userPhone && (
-                          <div className="text-xs text-[#6F5B4C]">
-                            {userPhone}
-                          </div>
-                        )}
+                        
                       </div>
                     )}
                     
-                    {/* Personal Details Button */}
-                    <button
-                      onClick={handlePersonalDetailsClick}
-                      className="w-full px-4 py-2 text-left text-sm text-[#1E3F2B] hover:bg-[#F2F0E0] transition-colors flex items-center gap-2"
-                    >
-                      <IconUserCircle className="h-4 w-4" />
-                      <span>Personal Details</span>
-                    </button>
-                    
-                    {/* Logout Button */}
-                    <button
-                      onClick={handleLogout}
-                      className="w-full px-4 py-2 text-left text-sm text-[#1E3F2B] hover:bg-[#F2F0E0] transition-colors flex items-center gap-2"
-                    >
-                      <IconLogout className="h-4 w-4" />
-                      <span>Logout</span>
-                    </button>
+                    <div className="px-2 py-1">
+                      {/* Personal Details Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handlePersonalDetailsClick()
+                          setShowLogoutMenu(false)
+                          setIsHoveringUser(false)
+                        }}
+                        className="w-full px-3 py-2.5 text-left text-sm text-[#1E3F2B] hover:bg-gradient-to-r hover:from-[#7CB58D]/20 hover:to-[#7CB58D]/10 rounded-lg transition-all duration-200 flex items-center gap-3 group"
+                      >
+                        <div className="p-1.5 rounded-full group-hover:bg-white/60 backdrop-blur-sm transition-all">
+                          <IconUserCircle className="h-4 w-4 text-[#6F5B4C] group-hover:text-[#1E3F2B] transition-colors" />
+                        </div>
+                        <span className="font-medium">Personal Details</span>
+                      </button>
+                      
+                      {/* Divider */}
+                      <div className="border-t border-white/20 mx-2"></div>
+                      
+                      {/* Logout Button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleLogout()
+                          setShowLogoutMenu(false)
+                          setIsHoveringUser(false)
+                        }}
+                        className="w-full px-3 py-2.5 text-left text-sm text-[#DC2626] hover:bg-gradient-to-r hover:from-red-50/80 hover:to-red-50/60 rounded-lg transition-all duration-200 flex items-center gap-3 group"
+                      >
+                        <div className="p-1.5 rounded-lg bg-white/40 group-hover:bg-red-50/60 backdrop-blur-sm transition-all">
+                          <IconLogout className="h-4 w-4 group-hover:rotate-12 transition-transform" />
+                        </div>
+                        <span className="font-medium">Logout</span>
+                      </button>
+                    </div>
                   </motion.div>
                 </>
               )}
