@@ -113,9 +113,9 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
 
   const planDescription = buildTreatmentPlan
 
-  // Calculate next shipment date based on plan start date
-  // Next shipment is the same day of month as plan start, recurring monthly
-  // First shipment is always one month after plan start
+  // Calculate next shipment date based on monthly deliveries
+  // Uses the day from createdAt for consistent monthly shipments
+  // Starts from createdAt or today, whichever is later
   const nextShipmentDate = useMemo(() => {
     if (!latestPrescription?.createdAt) {
       // Fallback: if no prescription, use current date + 30 days
@@ -126,73 +126,29 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
       return nextShipment
     }
 
-    // Get plan start date from prescription createdAt
-    // Parse the date string and extract components to avoid timezone issues
-    const planStartDate = new Date(latestPrescription.createdAt)
-    const planStartDay = planStartDate.getDate() // Day of month (1-31)
-    const planStartMonth = planStartDate.getMonth()
-    const planStartYear = planStartDate.getFullYear()
-    
-    // Create a normalized plan start date (start of day, local time)
-    const normalizedPlanStart = new Date(planStartYear, planStartMonth, planStartDay)
-    
-    // Get current date components (year, month, day only - no time)
+    const created = new Date(latestPrescription.createdAt)
     const today = new Date()
-    const todayYear = today.getFullYear()
-    const todayMonth = today.getMonth()
-    const todayDay = today.getDate()
-
-    // Helper function to compare dates (year, month, day only)
-    const isDateBefore = (date1: Date, year2: number, month2: number, day2: number) => {
-      const year1 = date1.getFullYear()
-      const month1 = date1.getMonth()
-      const day1 = date1.getDate()
-      
-      if (year1 < year2) return true
-      if (year1 > year2) return false
-      if (month1 < month2) return true
-      if (month1 > month2) return false
-      return day1 < day2
-    }
-
-    // First shipment is always one month after plan start
-    // Calculate the first shipment date (plan start + 1 month)
-    let firstShipmentMonth = planStartMonth + 1
-    let firstShipmentYear = planStartYear
     
-    if (firstShipmentMonth > 11) {
-      firstShipmentMonth = 0
-      firstShipmentYear += 1
+    // Get the day of month from creation date for consistent monthly shipments
+    const shipmentDay = created.getDate()
+    
+    // Start from the created date or today, whichever is later
+    const baseDate = created > today ? created : today
+    
+    // Calculate next shipment date
+    const nextShipment = new Date(baseDate)
+    nextShipment.setDate(shipmentDay)
+    
+    // If the calculated date is in the past or today, move to next month
+    if (nextShipment <= today) {
+      nextShipment.setMonth(nextShipment.getMonth() + 1)
     }
     
-    // Get the last day of the target month to handle edge cases (e.g., Jan 31 -> Feb)
-    const lastDayOfFirstMonth = new Date(firstShipmentYear, firstShipmentMonth + 1, 0).getDate()
-    const firstTargetDay = Math.min(planStartDay, lastDayOfFirstMonth)
-    
-    let nextShipment = new Date(firstShipmentYear, firstShipmentMonth, firstTargetDay)
-
-    // If the first shipment date has passed (is today or in the past), keep moving forward
-    // until we find a future date
-    while (isDateBefore(nextShipment, todayYear, todayMonth, todayDay)) {
-      const currentMonth = nextShipment.getMonth()
-      const currentYear = nextShipment.getFullYear()
-      
-      // Move to next month
-      let nextMonth = currentMonth + 1
-      let nextYear = currentYear
-      
-      if (nextMonth > 11) {
-        nextMonth = 0
-        nextYear += 1
-      }
-      
-      // Get the last day of the target month to handle edge cases (e.g., Jan 31 -> Feb)
-      const lastDayOfNextMonth = new Date(nextYear, nextMonth + 1, 0).getDate()
-      const nextTargetDay = Math.min(planStartDay, lastDayOfNextMonth)
-      
-      nextShipment = new Date(nextYear, nextMonth, nextTargetDay)
+    // Handle edge case where day doesn't exist in target month (e.g., Jan 31 -> Feb 28)
+    if (nextShipment.getDate() !== shipmentDay) {
+      nextShipment.setDate(0) // Set to last day of previous month
     }
-
+    
     return nextShipment
   }, [user, latestPrescription])
 
@@ -309,26 +265,12 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
           <p className="text-sm font-semibold text-[#3D2D1F]">
             {latestPrescription?.createdAt
               ? (() => {
-                  const date = new Date(latestPrescription.createdAt)
-                  const year = date.getFullYear()
-                  const month = date.getMonth()
-                  const day = date.getDate()
+                  // Calculate expiry date (30 days from creation)
+                  const created = new Date(latestPrescription.createdAt)
+                  const expiry = new Date(created)
+                  expiry.setDate(expiry.getDate() + 30)
                   
-                  // Add 3 months, handling year rollover and month length edge cases
-                  let expiryMonth = month + 3
-                  let expiryYear = year
-                  
-                  if (expiryMonth > 11) {
-                    expiryYear += Math.floor(expiryMonth / 12)
-                    expiryMonth = expiryMonth % 12
-                  }
-                  
-                  // Handle edge case: if original date is day 31 and target month has fewer days
-                  const lastDayOfExpiryMonth = new Date(expiryYear, expiryMonth + 1, 0).getDate()
-                  const expiryDay = Math.min(day, lastDayOfExpiryMonth)
-                  
-                  const expiryDate = new Date(expiryYear, expiryMonth, expiryDay)
-                  return expiryDate.toLocaleDateString('en-US', {
+                  return expiry.toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'
