@@ -42,22 +42,29 @@ const DashHome = ({
               latestPrescription={latestPrescription}
               isLoading={isLoading}
             />
-            {/* View Consultancy and Pharmacy Notes */}
-            <div className="w-full flex items-center justify-center my-6">
-              <button
-                className="group w-full max-w-md px-6 py-4 rounded-2xl bg-white border border-[#CBBEAD] text-[#3D2D1F] text-sm font-semibold hover:bg-[#F8F6EE] transition-colors duration-200 shadow-sm hover:shadow-md flex items-center justify-between"
-                style={{ fontFamily: "var(--font-lexend-exa), sans-serif" }}
-              >
-                <span className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-[#3D2D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            {/* Consultancy and Pharmacy Notes */}
+            <div className="w-full space-y-4 my-6 mb-8 tracking-tight">
+              
+             
+              {/* Pharmacy Notes Card */}
+              <div className="bg-[#F8F6EE] rounded-2xl border border-[#644a34] border-dashed p-5 flex items-center gap-4  transition-shadow duration-200">
+                <div className="flex-shrink-0">
+                  <svg className="w-6 h-6 text-[#3D2D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                   </svg>
-                  <span>View consultancy and pharmacy notes</span>
-                </span>
-                <svg className="w-4 h-4 text-[#3D2D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-bold text-[#3D2D1F] mb-1">Pharmacy Notes</h3>
+                  <p className="text-sm text-[#3D2D1F]">
+                    Access your prescription details, formulation information, and pharmacy instructions.
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  <button className="px-5 py-2 cursor-pointer bg-[#644a34] text-white text-sm font-medium rounded-full hover:bg-[#1E3F2B] transition-colors duration-200">
+                    View
+                  </button>
+                </div>
+              </div>
             </div>
             <ProgressTimeline 
               prescriptions={prescriptions} 

@@ -291,7 +291,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
       </header>
 
       {/* Centered Navigation Bar - Sticky below green header */}
-      <nav className="sticky top-[72px] md:top-[72px] z-40 bg-[#FEFCE8] border-b border-black/20">
+      <nav className="sticky top-[72px] md:top-[72px] z-40 bg-[#eae8d8] border- border-black/20">
         <div className="max-w-7xl mx-auto px-0 md:px-6 ">
         
           <div className="flex items-center justify-center">
