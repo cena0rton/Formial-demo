@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react'
+import { IconChevronDown, IconChevronUp, IconBrandInstagram, IconBrandLinkedin, IconWorld, IconBrandWhatsapp } from '@tabler/icons-react'
 
 interface FAQItem {
   id: string
@@ -11,6 +11,7 @@ interface FAQItem {
 
 const Discover = () => {
   const [openFAQ, setOpenFAQ] = useState<string | null>(null)
+  const [showAllFAQs, setShowAllFAQs] = useState(false)
 
   const faqs: FAQItem[] = [
     {
@@ -103,7 +104,7 @@ const Discover = () => {
 
             {/* FAQ Accordion Items */}
             <div className="space-y-4">
-              {faqs.map((faq) => (
+              {(showAllFAQs ? faqs : faqs.slice(0, 5)).map((faq) => (
                 <div key={faq.id} className="space-y-0">
                   {/* Question - Green Background */}
                   <button
@@ -175,6 +176,18 @@ const Discover = () => {
                 </div>
               ))}
             </div>
+
+            {/* Show More / Show Less Button */}
+            {faqs.length > 5 && (
+              <div className="flex items-center justify-center pt-2">
+                <button
+                  onClick={() => setShowAllFAQs(!showAllFAQs)}
+                  className="text-sm text-[#6F5B4C] hover:text-[#1E3F2B] font-medium underline decoration-[#7CB58D] underline-offset-2 transition-colors"
+                >
+                  {showAllFAQs ? 'Show Less' : 'Show More'}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Media Section */}
@@ -186,6 +199,128 @@ const Discover = () => {
               >
                 Media
               </div>
+            </div>
+
+            {/* Instagram Reels Video Embeds */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* First Reel - Left */}
+              <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
+                <iframe
+                  src="https://www.instagram.com/reel/DIBlv5HP8bF/embed"
+                  className="w-full h-full absolute top-0 left-0"
+                  style={{
+                    border: 'none',
+                    overflow: 'hidden'
+                  }}
+                  scrolling="no"
+                  allow="encrypted-media"
+                  title="Instagram Reel 1"
+                />
+              </div>
+
+              {/* Second Reel - Center */}
+              <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
+                <iframe
+                  src="https://www.instagram.com/reel/DK_XXGbP32M/embed"
+                  className="w-full h-full absolute top-0 left-0"
+                  style={{
+                    border: 'none',
+                    overflow: 'hidden'
+                  }}
+                  scrolling="no"
+                  allow="encrypted-media"
+                  title="Instagram Reel 2"
+                />
+              </div>
+
+              {/* Third Reel */}
+              <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
+                <iframe
+                  src="https://www.instagram.com/reel/DI_UKZXvUno/embed"
+                  className="w-full h-full absolute top-0 left-0"
+                  style={{
+                    border: 'none',
+                    overflow: 'hidden'
+                  }}
+                  scrolling="no"
+                  allow="encrypted-media"
+                  title="Instagram Reel 3"
+                />
+              </div>
+
+              {/* Fourth Reel */}
+              <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
+                <iframe
+                  src="https://www.instagram.com/reel/DNkwwKrv6Jj/embed"
+                  className="w-full h-full absolute top-0 left-0"
+                  style={{
+                    border: 'none',
+                    overflow: 'hidden'
+                  }}
+                  scrolling="no"
+                  allow="encrypted-media"
+                  title="Instagram Reel 4"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Social Media Section */}
+          <div className="space-y-6">
+            {/* Social Media Button */}
+            <div className="flex items-center justify-center">
+              <div className="px-6 py-3 rounded-full bg-[#7CB58D] border border-[#1E3F2B] text-[#1E3F2B] text-sm tracking-tighter font-bold uppercase"
+                style={{ fontFamily: "var(--font-lexend-exa), sans-serif" }}
+              >
+                Connect With Us
+              </div>
+            </div>
+
+            {/* Social Media Links */}
+            <div className="flex items-center justify-center gap-4">
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/918217816693"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-transparent border-0 border-[#3D2D1F] text-[#3D2D1F] hover:bg-[#3D2D1F]/10 hover:scale-110 transition-all shadow-sm"
+                aria-label="Contact us on WhatsApp"
+              >
+                <IconBrandWhatsapp className="h-6 w-6 stroke-[#3D2D1F]" strokeWidth={1.5} />
+              </a>
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/formiallabs?igsh=cnJxb3kyODZiNWQz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-transparent border-0 border-[#3D2D1F] text-[#3D2D1F] hover:bg-[#3D2D1F]/10 hover:scale-110 transition-all shadow-sm"
+                aria-label="Follow us on Instagram"
+              >
+                <IconBrandInstagram className="h-6 w-6 stroke-[#3D2D1F]" strokeWidth={1.5} />
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com/company/formiallabs/posts/?feedView=all"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-transparent border-0 border-[#3D2D1F] text-[#3D2D1F] hover:bg-[#3D2D1F]/10 hover:scale-110 transition-all shadow-sm"
+                aria-label="Follow us on LinkedIn"
+              >
+                <IconBrandLinkedin className="h-6 w-6 stroke-[#3D2D1F]" strokeWidth={1.5} />
+              </a>
+
+              {/* Website */}
+              <a
+                href="https://formial.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-transparent border-0 border-[#3D2D1F] text-[#3D2D1F] hover:bg-[#3D2D1F]/10 hover:scale-110 transition-all shadow-sm"
+                aria-label="Visit our website"
+              >
+                <IconWorld className="h-6 w-6 stroke-[#3D2D1F]" strokeWidth={1.5} />
+              </a>
             </div>
           </div>
         </motion.div>

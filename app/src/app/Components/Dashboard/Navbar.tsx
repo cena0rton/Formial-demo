@@ -23,7 +23,6 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
   const [showLogoutMenu, setShowLogoutMenu] = useState(false)
   const [userName, setUserName] = useState<string | null>(null)
   const [userPhone, setUserPhone] = useState<string | null>(null)
-  const [showReferTooltip, setShowReferTooltip] = useState(false)
   const [isHoveringUser, setIsHoveringUser] = useState(false)
 
   // Fetch user details for dropdown
@@ -96,7 +95,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
     setShowLogoutMenu(false)
   }
 
-  // Navigation items - 4 tabs for mobile, Personal Details moved to user dropdown
+  // Navigation items - Refer and Earn added back to tabs
   const navItems: { 
     id: string; 
     label: string; 
@@ -105,9 +104,11 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
     itemIndex?: number 
   }[] = [
     { id: 'treatment', label: 'Home', type: 'section', sectionId: 'treatment' },
+ 
     { id: 'support', label: 'Consult / Support', type: 'page', itemIndex: 4 },
     { id: 'discover', label: 'Discover', type: 'page', itemIndex: 2 },
     { id: 'payments', label: 'Payments', type: 'page', itemIndex: 7 },
+    { id: 'refer', label: 'Refer and Earn', type: 'section', sectionId: 'refer' },
     // Personal Details removed from tabs - now in user dropdown
   ]
   
@@ -119,15 +120,6 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
       setActiveSection('treatment')
     }
     setShowLogoutMenu(false)
-  }
-
-  // Handle Refer & Earn click
-  const handleReferEarnClick = () => {
-    if (setActiveSection) {
-      setActiveSection('refer')
-    }
-    setActiveItem(0)
-    ref.current = 0
   }
 
   const handleNavClick = (item: typeof navItems[0]) => {
@@ -176,29 +168,6 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
 
         {/* Desktop Icons */}
         <div className="flex items-center gap-3">
-       
-          
-          {/* Refer & Earn Button with Tooltip */}
-          <div className="relative">
-            <button
-              onClick={handleReferEarnClick}
-              onMouseEnter={() => setShowReferTooltip(true)}
-              onMouseLeave={() => setShowReferTooltip(false)}
-              className={`flex items-center justify-center overflow-hidden rounded-full size-10 bg-white/10 hover:bg-white/20 text-white transition-colors ${
-                activeSection === 'refer' && activeItem === 0 ? 'bg-white/20' : ''
-              }`}
-              aria-label="Refer & Earn"
-            >
-              <IconGift className="text-xl" />
-            </button>
-            {showReferTooltip && (
-              <div className="absolute hidden md:block right-0 top-full mt-2 px-3 py-1.5 bg-[#1E3F2B] text-white text-xs rounded-lg whitespace-nowrap z-50 shadow-lg">
-                Refer and Earn
-                <div className="absolute -top-1 right-4 w-2 h-2 bg-[#1E3F2B] rotate-45"></div>
-              </div>
-            )}
-          </div>
-          
           {/* User Button with Dropdown */}
           <div 
             className="relative"
