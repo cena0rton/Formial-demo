@@ -6,6 +6,7 @@ import SkinProgress from './Dash-Items/SkinProgress'
 import PersonalDetails from './Dash-Items/PersonalDetails'
 import Support from './Dash-Items/Support'
 import Discover from './Dash-Items/Discover'
+import Orders from './Dash-Items/Orders'
 import Navbar from './Navbar'
 import { useDashboardData } from '../../hooks/useDashboardData'
 import { FormialUser, updateUserByContact } from '../../utils/formialApi'
@@ -100,6 +101,7 @@ const Page = () => {
               onSave={handleSavePersonalDetails}
             />
           )}
+          {ref.current === 7 && <Orders />}
         </Dash>
       </div>
     </div>

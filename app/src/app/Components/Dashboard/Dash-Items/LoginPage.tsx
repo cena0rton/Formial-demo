@@ -186,7 +186,6 @@ export default function LoginPage({ userName, mobileNumber }: LoginPageProps) {
       // Save JWT token if provided
       if (response.token) {
         setAuthToken(response.token)
-        console.log('[LoginPage] JWT token saved to localStorage')
       }
       
       // Save contact

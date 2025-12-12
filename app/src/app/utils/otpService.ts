@@ -167,10 +167,11 @@ export const verifyWhatsAppOtp = async ({
   // CRITICAL: Validate that the response indicates successful verification
   // According to API docs, successful response should have message "User is Verified!!"
   const message = payload.message?.toLowerCase() || ''
-  console.log('[verifyWhatsAppOtp] Response payload:', { 
+  // Log response for debugging
+  console.log('[verifyWhatsAppOtp] Response:', { 
     message: payload.message, 
     profile: payload.profile, 
-    hasToken: !!payload.token 
+    hasToken: !!payload.token
   })
   
   // Strict validation: Message must contain "verified" (case-insensitive)

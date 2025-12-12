@@ -13,12 +13,13 @@ const withLeadingSlash = (path: string) => (path.startsWith("/") ? path : `/${pa
 const buildUrl = (path: string) =>
   `${normalizeBaseUrl(DEFAULT_API_BASE_URL)}${withLeadingSlash(path)}`
 
-const defaultHeaders = () => {
-  const headers = new Headers()
+const getDefaultHeaders = (): Record<string, string> => {
   const token = getAuthToken()
+  const headers: Record<string, string> = {}
 
   if (token) {
-    headers.set("Authorization", `Bearer ${token}`)
+    // Send just the token without "Bearer " prefix (backend expects raw JWT)
+    headers['Authorization'] = token
   }
 
   return headers
@@ -33,30 +34,53 @@ async function apiRequest<TResponse = unknown>(
   { parseJson = true, ...init }: RequestOptions = {}
 ): Promise<TResponse> {
   const url = buildUrl(path)
-  const headers = defaultHeaders()
-
-  if (init.headers) {
-    const initHeaders = new Headers(init.headers)
-    initHeaders.forEach((value, key) => headers.set(key, value))
+  
+  // Get default headers with auth token
+  const defaultHeaders = getDefaultHeaders()
+  
+  // Merge with any custom headers from init, preserving Authorization
+  const customHeaders = init.headers 
+    ? (init.headers instanceof Headers 
+        ? Object.fromEntries(init.headers.entries())
+        : init.headers as Record<string, string>)
+    : {}
+  
+  // Final headers: custom headers first, then default headers (so Authorization is preserved)
+  const headers: Record<string, string> = {
+    ...customHeaders,
+    ...defaultHeaders, // This ensures Authorization from token is always included
   }
 
   const response = await fetch(url, {
-    ...init,
-    headers,
+    method: init.method || 'GET',
+    headers: headers,
+    body: init.body,
     cache: "no-store",
   })
 
   if (!response.ok) {
     let errorMessage = `Request failed with status ${response.status}`
     try {
-      const errorData = await response.json()
-      errorMessage = errorData?.message || errorMessage
-    } catch {
+      // Read response as text first, then try to parse as JSON
       const text = await response.text()
       if (text) {
-        errorMessage = text
+        try {
+          const errorData = JSON.parse(text)
+          errorMessage = errorData?.message || errorData?.error || errorMessage
+        } catch {
+          // If JSON parsing fails, use the text as error message
+          errorMessage = text
+        }
       }
+    } catch {
+      // If reading fails, use the default error message
     }
+    
+    // Special handling for 401 errors
+    if (response.status === 401) {
+      errorMessage = 'Authentication failed. Please log out and log in again.'
+    }
+    
     throw new Error(errorMessage)
   }
 
@@ -157,6 +181,45 @@ export interface CreatePrescriptionResponse {
   prescription: FormialPrescription
 }
 
+export interface BillingAddress {
+  first_name?: string
+  last_name?: string
+  company?: string | null
+  address1?: string
+  address2?: string
+  city?: string
+  province?: string
+  zip?: string
+  country?: string
+  phone?: string
+}
+
+export interface FormialOrder {
+  _id: string
+  user: string
+  shopify_user_id?: string
+  shopify_order_id?: string
+  order_date?: string
+  email?: string
+  total_price?: string
+  total_orders?: number
+  contact?: string
+  first_name?: string
+  last_name?: string
+  name?: string
+  order_status_url?: string
+  fillout_id?: string
+  billing_address?: BillingAddress
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface GetOrdersResponse {
+  success: boolean
+  count: number
+  orders: FormialOrder[]
+}
+
 /**
  * Upload photos and create a prescription record
  * @param contact User's contact number
@@ -172,10 +235,11 @@ export const createPrescription = async (
   }
 ): Promise<CreatePrescriptionResponse> => {
   const url = buildUrl(`/prescription?number=${encodeContact(contact)}`)
-  const headers = defaultHeaders()
   
-  // Don't set Content-Type - browser will set it with boundary for multipart/form-data
-  headers.delete("Content-Type")
+  // Get headers with auth token - don't include Content-Type for multipart/form-data
+  const headers = getDefaultHeaders()
+  // Remove Content-Type if present - browser will set it with boundary for multipart/form-data
+  delete headers['Content-Type']
 
   const formData = new FormData()
   formData.append("front_image", files.front_image)
@@ -205,4 +269,93 @@ export const createPrescription = async (
 
   return (await response.json()) as CreatePrescriptionResponse
 }
+
+export const getOrders = () =>
+  apiRequest<GetOrdersResponse>('/getOrders')
+
+// Subscription API interfaces and functions
+export interface StartSubscriptionResponse {
+  success: boolean
+  message: string
+  subscription_id: string
+  payment_link: string
+  start_date: string
+  final_end_date: string
+}
+
+export interface GetSubscriptionResponse {
+  success: boolean
+  subscription?: {
+    subscription_id?: string
+    status?: string
+    start_date?: string
+    final_end_date?: string
+    next_billing?: string | number
+    plan_ends?: number
+    valid_until?: string
+    payment_link?: string
+  }
+}
+
+export interface PauseSubscriptionResponse {
+  success: boolean
+  message: string
+  status: string
+  next_billing: string
+}
+
+export interface ResumeSubscriptionResponse {
+  success: boolean
+  message: string
+  status: string
+  next_billing: number
+  plan_ends: number
+}
+
+export interface CancelSubscriptionResponse {
+  success: boolean
+  message: string
+  status: string
+  valid_until: string
+}
+
+export interface CancelSubscriptionRequest {
+  cancel_at_cycle_end?: boolean
+}
+
+export const getSubscription = () =>
+  apiRequest<GetSubscriptionResponse>('/get-subscription', {
+    method: 'GET',
+  })
+
+export const startSubscription = () =>
+  apiRequest<StartSubscriptionResponse>('/start-subscription', {
+    method: 'POST',
+    // No body required - JWT token in Authorization header identifies the user
+  })
+
+export const pauseSubscription = () =>
+  apiRequest<PauseSubscriptionResponse>('/pause-subscription', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+export const resumeSubscription = () =>
+  apiRequest<ResumeSubscriptionResponse>('/resume-subscription', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+export const cancelSubscription = (cancelAtCycleEnd: boolean = false) =>
+  apiRequest<CancelSubscriptionResponse>('/cancel-subscription', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ cancel_at_cycle_end: cancelAtCycleEnd }),
+  })
 
