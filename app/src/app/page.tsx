@@ -14,18 +14,18 @@ export default function Home() {
   // Check if user already has a valid JWT token (already logged in)
   useEffect(() => {
     const checkAuthAndRedirect = async () => {
-      const token = getAuthToken()
-      const contact = getUserContact()
-      
-      if (token && contact) {
+    const token = getAuthToken()
+    const contact = getUserContact()
+    
+    if (token && contact) {
         try {
           // Verify JWT token is valid
           const authResult = await verifyUserAuth(contact)
           if (authResult.isValid) {
             // JWT is valid - redirect to dashboard
-            const mobileForUrl = contact.replace(/^\+/, '')
+      const mobileForUrl = contact.replace(/^\+/, '')
             window.location.href = `/dashboard/${mobileForUrl}`
-            return
+      return
           } else {
             // JWT is invalid - clear it and show mobile number modal
             console.log('[Home] JWT token invalid, clearing')
@@ -33,8 +33,8 @@ export default function Home() {
         } catch (error) {
           console.error('[Home] JWT verification error:', error)
         }
-      }
-      setIsChecking(false)
+    }
+    setIsChecking(false)
     }
     
     checkAuthAndRedirect()

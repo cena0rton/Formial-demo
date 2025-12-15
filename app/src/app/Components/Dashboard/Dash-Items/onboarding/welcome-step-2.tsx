@@ -7,7 +7,6 @@ import { sendWhatsAppOtp, verifyWhatsAppOtp } from "../../../../utils/otpService
 import { setAuthToken } from "../../../../utils/authToken"
 import { setUserContact } from "../../../../utils/userContact"
 import { getUser, updateUserByContact } from "../../../../utils/formialApi"
-import { useRouter } from "next/navigation"
 
 interface WelcomeStep2Props {
   userDetails: {
@@ -41,7 +40,6 @@ const timeline = [
 ]
 
 export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber }: WelcomeStep2Props) {
-  const router = useRouter()
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(4).fill(""))
   const [firstName, setFirstName] = useState(userDetails.firstName)
   const [lastName, setLastName] = useState(userDetails.lastName)
@@ -224,67 +222,53 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
 
       const normalizedMobile = `+${sanitizedPhone}`
       
-      // Handle Case A & B: User exists + OTP match (profile: true, token provided)
-      if (response?.profile === true) {
-        // Store token and contact for existing users
-        if (response.token) {
-          setAuthToken(response.token)
-          setUserContact(normalizedMobile)
-        } else {
-          // Token missing for existing user - unexpected but handle gracefully
-          console.warn("Token not provided for existing user profile")
-        }
-
-        // Check if user data has changed and needs to be updated
-        const hasChanges = firstName !== originalData.firstName || lastName !== originalData.lastName || sanitizedPhone !== originalData.phone.replace(/\D/g, "")
-        
-        // Always update if there are changes
-        if (hasChanges && normalizedMobile) {
-          setIsUpdating(true)
-          try {
-            const updatePayload: { first_name?: string; last_name?: string; contact?: string } = {}
-            if (firstName !== originalData.firstName) {
-              updatePayload.first_name = firstName.trim()
-            }
-            if (lastName !== originalData.lastName) {
-              updatePayload.last_name = lastName.trim()
-            }
-            if (sanitizedPhone !== originalData.phone.replace(/\D/g, "")) {
-              updatePayload.contact = normalizedMobile
-            }
-            
-            // Send PATCH request to update user details
-            await updateUserByContact(normalizedMobile, updatePayload)
-            
-            // Update original data after successful save
-            setOriginalData({ firstName, lastName, phone: sanitizedPhone })
-          } catch (updateError) {
-            console.error("Failed to update user data:", updateError)
-            // Continue even if update fails - don't block user progress
-          } finally {
-            setIsUpdating(false)
-          }
-        }
-
-        setOtpMessage(response?.message || "OTP verified successfully.")
-
-        // Existing user - redirect to dashboard route
-        const mobileForUrl = sanitizedPhone
-        setTimeout(() => {
-          router.push(`/dashboard/${mobileForUrl}`)
-        }, 1000)
-      } else {
-        // Handle Case C: User does not exist + OTP match (profile: false, no token)
-        // New user - store contact and continue with onboarding
-        // Still save token if provided (API might return token even for new users)
-        if (response.token) {
-          setAuthToken(response.token)
-          console.log('[WelcomeStep2] JWT token saved to localStorage for new user')
-        }
-        setUserContact(normalizedMobile)
-        setOtpMessage(response?.message || "OTP verified. Please complete your profile.")
-        onNext()
+      // Store token and contact
+      if (response.token) {
+        setAuthToken(response.token)
+        console.log('[WelcomeStep2] JWT token saved to localStorage')
       }
+      setUserContact(normalizedMobile)
+
+      // Check if user data has changed and needs to be updated
+      const hasChanges = firstName !== originalData.firstName || lastName !== originalData.lastName || sanitizedPhone !== originalData.phone.replace(/\D/g, "")
+      
+      // Always update if there are changes
+      if (hasChanges && normalizedMobile) {
+        setIsUpdating(true)
+        try {
+          const updatePayload: { first_name?: string; last_name?: string; contact?: string } = {}
+          if (firstName !== originalData.firstName) {
+            updatePayload.first_name = firstName.trim()
+          }
+          if (lastName !== originalData.lastName) {
+            updatePayload.last_name = lastName.trim()
+          }
+          if (sanitizedPhone !== originalData.phone.replace(/\D/g, "")) {
+            updatePayload.contact = normalizedMobile
+          }
+          
+          // Send PATCH request to update user details
+          await updateUserByContact(normalizedMobile, updatePayload)
+          
+          // Update original data after successful save
+          setOriginalData({ firstName, lastName, phone: sanitizedPhone })
+        } catch (updateError) {
+          console.error("Failed to update user data:", updateError)
+          // Continue even if update fails - don't block user progress
+        } finally {
+          setIsUpdating(false)
+        }
+      }
+
+      setOtpMessage(response?.message || "OTP verified successfully.")
+
+      // After OTP verification, ALWAYS continue to next step (step 3 - photo upload)
+      // The onNext function will handle:
+      // - If user has already uploaded images (userHasImages prop), it will redirect to dashboard
+      // - Otherwise, it will proceed to step 3 for photo upload
+      setTimeout(() => {
+        onNext()
+      }, 800)
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "OTP verification failed. Please try again."

@@ -306,12 +306,12 @@ const Orders = () => {
             )}
 
             {/* Subscription Buttons */}
-            <div className="flex gap-3">
+            <div className="flex gap-3 h-[30px] my-1.5">
               {/* Subscribe Button */}
               <button
                 onClick={handleStartSubscription}
-                disabled={isSubscriptionLoading || subscriptionStatus !== null}
-                className="px-5 py-2.5 bg-[#1E3F2B] text-white text-xs font-semibold rounded-full hover:bg-[#2A5A3F] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 tracking-wide"
+                disabled={isSubscriptionLoading || (subscriptionStatus !== null && subscriptionStatus !== 'created')}
+                className="px-5 py-[10px] h-[30px] bg-[#1E3F2B] text-white text-xs font-semibold rounded-full hover:bg-[#2A5A3F] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 tracking-wide"
               >
                 {isSubscriptionLoading ? (
                   <>
@@ -326,208 +326,129 @@ const Orders = () => {
               {/* Manage Subscription Button */}
               <button
                 onClick={() => {
-                  if (subscriptionStatus) {
-                    // If subscription exists, toggle management view
-                    setShowManageSubscription(!showManageSubscription)
-                    setShowCancelConfirm(false)
-                  } else {
-                    // If no subscription, show error
-                    setSubscriptionError('Please subscribe first to manage your subscription.')
-                  }
+                  setShowManageSubscription(!showManageSubscription)
+                  setShowCancelConfirm(false)
                 }}
-                disabled={subscriptionStatus === null}
-                className="px-5 py-2.5 bg-[#1E3F2B] text-white text-xs font-semibold rounded-full hover:bg-[#2A5A3F] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 tracking-wide"
+                className="px-5 py-[10px] h-[30px] bg-[#1E3F2B] text-white text-xs font-semibold rounded-full hover:bg-[#2A5A3F] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 tracking-wide"
               >
                 MANAGE SUBSCRIPTION
               </button>
             </div>
 
-            {/* Subscription Details - Show when subscription exists and manage button is clicked */}
-            {subscriptionStatus && showManageSubscription && (
-              <div className="mt-6 bg-white rounded-xl border border-[#CBBEAD]/40 p-5 shadow-sm">
-                <div className="space-y-4">
-                  {/* Status */}
-                  <div className="flex items-center justify-between pb-4 border-b border-[#CBBEAD]/20">
-                    <div>
-                      <p className="text-xs text-[#6B6B6B] mb-1 uppercase tracking-wide">Status</p>
-                      <p className="text-base font-semibold text-[#1E3F2B] capitalize">{subscriptionStatus}</p>
-                    </div>
-                    {subscriptionStatus === 'created' && (
-                      <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F8F6EE] text-[#644B34] border border-[#CBBEAD]/50">
-                        Payment Pending
-                      </span>
-                    )}
-                    {subscriptionStatus === 'active' && (
-                      <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#7CB58D]/20 text-[#1E3F2B] border border-[#7CB58D]/30">
-                        Active
-                      </span>
-                    )}
-                    {subscriptionStatus === 'paused' && (
-                      <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#CBBEAD]/20 text-[#644B34] border border-[#CBBEAD]/40">
-                        Paused
-                      </span>
-                    )}
+            {/* Manage Subscription Section */}
+            {showManageSubscription && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+
+                {/* Card */}
+                <div className="bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-6 py-6 mt-6">
+                  {/* Top Row: Current Plan with Status */}
+                  <div className="flex items-center justify-between mb-4 tracking-tight">
+                    <p className="text-sm font-semibold text-[#3D2D1F]">Current Plan</p>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium border capitalize ${
+                      subscriptionStatus === 'active' 
+                        ? 'bg-green-100 text-green-600 border-green-400'
+                        : subscriptionStatus === 'paused'
+                        ? 'bg-yellow-100 text-yellow-700 border-yellow-400'
+                        : subscriptionStatus === 'created'
+                        ? 'bg-orange-100 text-orange-600 border-orange-400'
+                        : subscriptionStatus === 'cancelled'
+                        ? 'bg-red-100 text-red-600 border-red-400'
+                        : 'bg-slate-200 text-slate-700 border-slate-400'
+                    }`}>
+                      {subscriptionStatus || 'inactive'}
+                    </span>
                   </div>
 
-                  {/* Subscription Dates */}
-                  {subscriptionDetails && (
-                    <div className="space-y-3">
-                        {subscriptionDetails.start_date && (
-                          <div className="flex items-center gap-3 text-sm">
-                            <div className="w-8 h-8 rounded-lg bg-white/60 border border-[#CBBEAD]/30 flex items-center justify-center flex-shrink-0">
-                              <IconCalendar className="h-4 w-4 text-[#644B34]" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs text-[#6B6B6B] mb-0.5">Start Date</p>
-                              <p className="text-sm font-semibold text-[#3D2D1F]">{formatDate(subscriptionDetails.start_date)}</p>
-                            </div>
-                          </div>
-                        )}
-                        {subscriptionDetails.final_end_date && (
-                          <div className="flex items-center gap-3 text-sm">
-                            <div className="w-8 h-8 rounded-lg bg-white/60 border border-[#CBBEAD]/30 flex items-center justify-center flex-shrink-0">
-                              <IconCalendar className="h-4 w-4 text-[#644B34]" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs text-[#6B6B6B] mb-0.5">End Date</p>
-                              <p className="text-sm font-semibold text-[#3D2D1F]">{formatDate(subscriptionDetails.final_end_date)}</p>
-                            </div>
-                          </div>
-                        )}
-                        {subscriptionDetails.next_billing && (
-                          <div className="flex items-center gap-3 text-sm">
-                            <div className="w-8 h-8 rounded-lg bg-white/60 border border-[#CBBEAD]/30 flex items-center justify-center flex-shrink-0">
-                              <IconCalendar className="h-4 w-4 text-[#644B34]" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs text-[#6B6B6B] mb-0.5">Next Billing</p>
-                              <p className="text-sm font-semibold text-[#3D2D1F]">
-                                {typeof subscriptionDetails.next_billing === 'number' 
-                                  ? formatTimestamp(subscriptionDetails.next_billing)
-                                  : formatDate(subscriptionDetails.next_billing)}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        {subscriptionDetails.plan_ends && (
-                          <div className="flex items-center gap-3 text-sm">
-                            <div className="w-8 h-8 rounded-lg bg-white/60 border border-[#CBBEAD]/30 flex items-center justify-center flex-shrink-0">
-                              <IconCalendar className="h-4 w-4 text-[#644B34]" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs text-[#6B6B6B] mb-0.5">Plan Ends</p>
-                              <p className="text-sm font-semibold text-[#3D2D1F]">{formatTimestamp(subscriptionDetails.plan_ends)}</p>
-                            </div>
-                          </div>
-                        )}
-                        {subscriptionDetails.valid_until && (
-                          <div className="flex items-center gap-3 text-sm">
-                            <div className="w-8 h-8 rounded-lg bg-white/60 border border-[#CBBEAD]/30 flex items-center justify-center flex-shrink-0">
-                              <IconCalendar className="h-4 w-4 text-[#644B34]" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs text-[#6B6B6B] mb-0.5">Valid Until</p>
-                              <p className="text-sm font-semibold text-[#3D2D1F]">{formatDate(subscriptionDetails.valid_until)}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                  {/* Plan Description */}
+                  <div className="mb-6">
+                    <p className="text-sm text-[#3D2D1F]">
+                      Personalized skincare treatment with prescription-strength ingredients, delivered monthly for 6 months.
+                    </p>
+                  </div>
 
-                  {/* Payment Pending Notice */}
-                  {subscriptionStatus === 'created' && (
-                    <div className="p-4 bg-[#F8F6EE] border border-[#CBBEAD]/40 rounded-xl">
-                      <p className="text-xs text-[#644B34] font-medium mb-1">
-                        Payment link opened in a new tab
-                      </p>
-                      <p className="text-xs text-[#6B6B6B] leading-relaxed">
-                        Complete the payment to activate your subscription. Your subscription will start after payment confirmation.
+                  {/* Plan Dates - Two Column Layout */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <p className="text-sm text-[#3D2D1F] mb-1">Plan Started on</p>
+                      <p className="text-sm font-semibold text-[#3D2D1F]">
+                        {subscriptionDetails?.start_date ? formatDate(subscriptionDetails.start_date) : 'TBD'}
                       </p>
                     </div>
-                  )}
+                    <div>
+                      <p className="text-sm text-[#3D2D1F] mb-1">Plan Ends on</p>
+                      <p className="text-sm font-semibold text-[#3D2D1F]">
+                        {subscriptionDetails?.final_end_date 
+                          ? formatDate(subscriptionDetails.final_end_date) 
+                          : subscriptionDetails?.next_billing
+                            ? (typeof subscriptionDetails.next_billing === 'number'
+                                ? formatTimestamp(subscriptionDetails.next_billing)
+                                : formatDate(subscriptionDetails.next_billing))
+                            : 'TBD'}
+                      </p>
+                    </div>
+                  </div>
 
                   {/* Action Buttons */}
-                  {subscriptionStatus === 'active' && (
-                    <div className="flex gap-3 pt-2">
-                      <button
-                        onClick={handlePauseSubscription}
-                        disabled={isSubscriptionLoading}
-                        className="flex-1 px-4 py-3 bg-white border border-[#CBBEAD]/50 text-[#3D2D1F] text-sm font-medium rounded-xl hover:bg-[#F8F6EE] hover:border-[#CBBEAD] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                      >
-                        <IconPlayerPause className="h-4 w-4" />
-                        <span>Pause</span>
-                      </button>
-                      <button
-                        onClick={() => setShowCancelConfirm(true)}
-                        disabled={isSubscriptionLoading}
-                        className="flex-1 px-4 py-3 bg-white border border-red-200 text-red-600 text-sm font-medium rounded-xl hover:bg-red-50 hover:border-red-300 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                      >
-                        <IconX className="h-4 w-4" />
-                        <span>Cancel</span>
-                      </button>
-                    </div>
-                  )}
-
-                  {subscriptionStatus === 'paused' && (
-                    <div className="flex gap-3 pt-2">
-                      <button
-                        onClick={handleResumeSubscription}
-                        disabled={isSubscriptionLoading}
-                        className="flex-1 px-4 py-3 bg-[#7CB58D] text-[#1E3F2B] text-sm font-semibold rounded-xl hover:bg-[#6BA57C] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
-                      >
-                        <IconPlayerPlay className="h-4 w-4" />
-                        <span>Resume</span>
-                      </button>
+                  {!showCancelConfirm ? (
+                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#CBBEAD]/40">
+                      {subscriptionStatus === 'paused' ? (
+                        <button
+                          onClick={handleResumeSubscription}
+                          disabled={isSubscriptionLoading}
+                          className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Resume Subscription
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handlePauseSubscription}
+                          disabled={isSubscriptionLoading}
+                          className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Pause Subscription
+                        </button>
+                      )}
                       <button
                         onClick={() => setShowCancelConfirm(true)}
                         disabled={isSubscriptionLoading}
-                        className="flex-1 px-4 py-3 bg-white border border-red-200 text-red-600 text-sm font-medium rounded-xl hover:bg-red-50 hover:border-red-300 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <IconX className="h-4 w-4" />
-                        <span>Cancel</span>
+                        Stop Plan
                       </button>
                     </div>
-                  )}
-
-                  {subscriptionStatus === 'cancelled' && (
-                    <div className="text-center py-4">
-                      <p className="text-sm text-[#6B6B6B]">Your subscription has been cancelled.</p>
-                    </div>
-                  )}
-
-                  {/* Cancel Confirmation Modal */}
-                  {showCancelConfirm && (
-                    <div className="p-5 bg-[#F8F6EE] border border-[#CBBEAD]/40 rounded-xl space-y-4">
-                      <div>
-                        <p className="text-sm font-semibold text-[#3D2D1F] mb-1">Cancel Subscription</p>
-                        <p className="text-xs text-[#6B6B6B]">Choose how you&apos;d like to cancel your subscription.</p>
-                      </div>
-                      <div className="flex gap-3">
+                  ) : (
+                    <div className="pt-4 border-t border-[#CBBEAD]/40">
+                      <p className="text-sm text-[#3D2D1F] mb-4">How would you like to stop your plan?</p>
+                      <div className="grid grid-cols-2 gap-4 mb-4">
                         <button
                           onClick={() => handleCancelSubscription(true)}
                           disabled={isSubscriptionLoading}
-                          className="flex-1 px-4 py-3 bg-white border border-[#CBBEAD]/50 text-[#3D2D1F] text-sm font-medium rounded-xl hover:bg-[#F8F6EE] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
+                          className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           End of Cycle
                         </button>
                         <button
                           onClick={() => handleCancelSubscription(false)}
                           disabled={isSubscriptionLoading}
-                          className="flex-1 px-4 py-3 bg-[#644B34] text-white text-sm font-semibold rounded-xl hover:bg-[#1E3F2B] active:scale-[0.98] transition-all duration-200 disabled:opacity-50"
+                          className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          Cancel Now
+                          Stop Now
                         </button>
                       </div>
                       <button
                         onClick={() => setShowCancelConfirm(false)}
-                        className="w-full px-4 py-2.5 bg-white border border-[#CBBEAD]/50 text-[#3D2D1F] text-sm font-medium rounded-xl hover:bg-[#F8F6EE] active:scale-[0.98] transition-all duration-200"
+                        className="text-xs text-[#777] hover:text-[#3D2D1F] transition-colors"
                       >
-                        Back
+                        ← Back
                       </button>
                     </div>
                   )}
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
 

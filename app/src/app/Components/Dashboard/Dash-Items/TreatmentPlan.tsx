@@ -208,7 +208,7 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
               <p className="text-sm text-[#3D2D1F]">
                 Hey {userFirstName}, Your plan is
               </p>
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-600 border border-green-400">
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-600 border border-green-400 capitalize">
                 {statusLabel}
               </span>
             </div>

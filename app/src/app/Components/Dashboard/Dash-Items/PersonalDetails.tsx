@@ -1,8 +1,9 @@
 'use client'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { IconEdit } from '@tabler/icons-react'
 import { FormialUser } from '../../../utils/formialApi'
+import AddressAutocomplete, { AddressComponents } from '../../AddressAutocomplete'
 
 interface PersonalDetailsProps {
   user?: FormialUser | null
@@ -24,6 +25,7 @@ interface AddressObject {
 }
 
 export interface AddressFormData {
+  flatFloor: string
   address1: string
   address2: string
   city: string
@@ -31,8 +33,52 @@ export interface AddressFormData {
   pincode: string
 }
 
+// Helper to parse flatFloor from combined address1
+const parseFlatFloorFromAddress = (address1: string): { flatFloor: string; streetAddress: string } => {
+  if (!address1) return { flatFloor: '', streetAddress: '' }
+  
+  // Common patterns that indicate flat/floor info
+  const flatPatterns = [
+    /^(flat\s*(?:no\.?|number)?\.?\s*\d+[a-z]?)/i,
+    /^(\d+[a-z]?\s*(?:st|nd|rd|th)?\s*floor)/i,
+    /^(floor\s*\d+)/i,
+    /^(apartment\s*(?:no\.?|number)?\.?\s*\d+[a-z]?)/i,
+    /^(apt\.?\s*\d+[a-z]?)/i,
+    /^(unit\s*\d+[a-z]?)/i,
+    /^(room\s*(?:no\.?)?\s*\d+)/i,
+    /^(#\s*\d+[a-z]?)/i,
+  ]
+  
+  // Try to match patterns
+  for (const pattern of flatPatterns) {
+    const match = address1.match(pattern)
+    if (match) {
+      const flatPart = match[1].trim()
+      const remaining = address1.substring(match[0].length).replace(/^[,\s]+/, '').trim()
+      return { flatFloor: flatPart, streetAddress: remaining }
+    }
+  }
+  
+  // If address contains comma, try splitting on first comma
+  // Check if first part looks like flat/floor info (shorter than 30 chars and contains numbers)
+  const commaIndex = address1.indexOf(',')
+  if (commaIndex > 0 && commaIndex < 40) {
+    const firstPart = address1.substring(0, commaIndex).trim()
+    const restPart = address1.substring(commaIndex + 1).trim()
+    
+    // If first part contains numbers and is relatively short, treat as flat/floor
+    if (/\d/.test(firstPart) && firstPart.length < 40) {
+      return { flatFloor: firstPart, streetAddress: restPart }
+    }
+  }
+  
+  // No flat/floor detected, return all as street address
+  return { flatFloor: '', streetAddress: address1 }
+}
+
 const extractAddressData = (user?: FormialUser | null): AddressFormData => {
   const defaultAddress: AddressFormData = {
+    flatFloor: '',
     address1: '',
     address2: '',
     city: '',
@@ -45,14 +91,19 @@ const extractAddressData = (user?: FormialUser | null): AddressFormData => {
   
   const first = addresses[0]
   if (typeof first === 'string') {
-    // Legacy string format - put it in address1
-    return { ...defaultAddress, address1: first }
+    // Legacy string format - try to parse flat/floor
+    const { flatFloor, streetAddress } = parseFlatFloorFromAddress(first)
+    return { ...defaultAddress, flatFloor, address1: streetAddress }
   }
   
   if (first && typeof first === 'object') {
     const addrObj = first as AddressObject
+    // Parse flat/floor from stored address1
+    const { flatFloor, streetAddress } = parseFlatFloorFromAddress(addrObj.address1 || '')
+    
     return {
-      address1: addrObj.address1 || '',
+      flatFloor,
+      address1: streetAddress,
       address2: addrObj.address2 || '',
       city: addrObj.city || '',
       state: addrObj.province || '',
@@ -76,6 +127,7 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
     whatsapp: '',
   })
   const [addressData, setAddressData] = useState<AddressFormData>({
+    flatFloor: '',
     address1: '',
     address2: '',
     city: '',
@@ -87,6 +139,7 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
     lastName: '',
     whatsapp: '',
     address: {
+      flatFloor: '',
       address1: '',
       address2: '',
       city: '',
@@ -102,7 +155,7 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
   const firstNameInputRef = useRef<HTMLInputElement>(null)
   const lastNameInputRef = useRef<HTMLInputElement>(null)
   const whatsappInputRef = useRef<HTMLInputElement>(null)
-  const address1InputRef = useRef<HTMLInputElement>(null)
+  const flatFloorInputRef = useRef<HTMLInputElement>(null)
   const address2InputRef = useRef<HTMLInputElement>(null)
   const cityInputRef = useRef<HTMLInputElement>(null)
   const stateInputRef = useRef<HTMLInputElement>(null)
@@ -134,11 +187,23 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
     setAddressData((prev) => ({ ...prev, [field]: value }))
   }
 
+  const handleAddressAutocomplete = useCallback((address: AddressComponents) => {
+    setAddressData((prev) => ({
+      flatFloor: prev.flatFloor, // Preserve user-entered flat/floor
+      address1: address.address1,
+      address2: address.address2,
+      city: address.city,
+      state: address.state,
+      pincode: address.pincode,
+    }))
+  }, [])
+
   const hasChanges = useMemo(() => {
     return (
       formData.firstName !== originalData.firstName ||
       formData.lastName !== originalData.lastName ||
       formData.whatsapp !== originalData.whatsapp ||
+      addressData.flatFloor !== originalData.address.flatFloor ||
       addressData.address1 !== originalData.address.address1 ||
       addressData.address2 !== originalData.address.address2 ||
       addressData.city !== originalData.address.city ||
@@ -283,28 +348,37 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
             <div className="space-y-4">
               <label className="text-sm font-medium text-[#3D2D1F]">Address</label>
               
-              {/* Address Line 1 */}
+              {/* Flat / Floor Number */}
               <div className="relative">
                 <input
-                  ref={address1InputRef}
+                  ref={flatFloorInputRef}
                   type="text"
-                  value={addressData.address1}
-                  onChange={(e) => handleAddressChange('address1', e.target.value)}
+                  value={addressData.flatFloor}
+                  onChange={(e) => handleAddressChange('flatFloor', e.target.value)}
                   disabled={isLoading}
-                  placeholder="Address Line 1"
+                  placeholder="Flat No. / Floor (e.g., Flat 401, 4th Floor)"
                   className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
                 />
                 <button
                   type="button"
-                  onClick={() => address1InputRef.current?.focus()}
+                  onClick={() => flatFloorInputRef.current?.focus()}
                   className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
-                  aria-label="Edit address line 1"
+                  aria-label="Edit flat/floor"
                 >
                   <IconEdit className="h-5 w-5" strokeWidth={2} />
                 </button>
               </div>
 
-              {/* Address Line 2 */}
+              {/* Address with Autocomplete */}
+              <AddressAutocomplete
+                value={addressData.address1}
+                onChange={(value) => handleAddressChange('address1', value)}
+                onAddressSelect={handleAddressAutocomplete}
+                placeholder="Search for your building/street address..."
+                disabled={isLoading}
+              />
+
+              {/* Address Line 2 (Landmark/Area) */}
               <div className="relative">
                 <input
                   ref={address2InputRef}
@@ -312,14 +386,14 @@ const PersonalDetails = ({ user, isLoading, onSave }: PersonalDetailsProps) => {
                   value={addressData.address2}
                   onChange={(e) => handleAddressChange('address2', e.target.value)}
                   disabled={isLoading}
-                  placeholder="Address Line 2 (Optional)"
+                  placeholder="Landmark / Area (Optional)"
                   className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
                 />
                 <button
                   type="button"
                   onClick={() => address2InputRef.current?.focus()}
                   className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center h-5 mt-1 w-5 text-[#6F5B4C] hover:opacity-70 transition-opacity cursor-pointer"
-                  aria-label="Edit address line 2"
+                  aria-label="Edit landmark/area"
                 >
                   <IconEdit className="h-5 w-5" strokeWidth={2} />
                 </button>

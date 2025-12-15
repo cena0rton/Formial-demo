@@ -120,6 +120,8 @@ export interface FormialUser {
   addresses?: unknown[]
   onboardingCompleted?: boolean // Explicit flag for onboarding completion
   onboardingCompletedAt?: string // Timestamp when onboarding was completed
+  shopify_user_id?: string // Shopify customer ID
+  shopify_order_id?: string // First/latest Shopify order ID
   createdAt?: string
   updatedAt?: string
   [key: string]: unknown

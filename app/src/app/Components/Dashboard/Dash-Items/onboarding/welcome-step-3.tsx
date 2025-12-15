@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback, useRef } from "react"
 import { motion } from "framer-motion"
 import { IconUser, IconCamera, IconRocket, IconEdit } from "@tabler/icons-react"
 import { getUser, updateUserByContact, FormialUser } from "../../../../utils/formialApi"
 import { getUserContact } from "../../../../utils/userContact"
+import AddressAutocomplete, { AddressComponents } from "../../../AddressAutocomplete"
 
 interface AddressObject {
   first_name?: string
@@ -36,6 +37,7 @@ interface AddressObject {
 // }
 
 interface AddressFormData {
+  flatFloor: string
   address1: string
   address2: string
   city: string
@@ -43,8 +45,52 @@ interface AddressFormData {
   pincode: string
 }
 
+// Helper to parse flatFloor from combined address1
+const parseFlatFloorFromAddress = (address1: string): { flatFloor: string; streetAddress: string } => {
+  if (!address1) return { flatFloor: '', streetAddress: '' }
+  
+  // Common patterns that indicate flat/floor info
+  const flatPatterns = [
+    /^(flat\s*(?:no\.?|number)?\.?\s*\d+[a-z]?)/i,
+    /^(\d+[a-z]?\s*(?:st|nd|rd|th)?\s*floor)/i,
+    /^(floor\s*\d+)/i,
+    /^(apartment\s*(?:no\.?|number)?\.?\s*\d+[a-z]?)/i,
+    /^(apt\.?\s*\d+[a-z]?)/i,
+    /^(unit\s*\d+[a-z]?)/i,
+    /^(room\s*(?:no\.?)?\s*\d+)/i,
+    /^(#\s*\d+[a-z]?)/i,
+  ]
+  
+  // Try to match patterns
+  for (const pattern of flatPatterns) {
+    const match = address1.match(pattern)
+    if (match) {
+      const flatPart = match[1].trim()
+      const remaining = address1.substring(match[0].length).replace(/^[,\s]+/, '').trim()
+      return { flatFloor: flatPart, streetAddress: remaining }
+    }
+  }
+  
+  // If address contains comma, try splitting on first comma
+  // Check if first part looks like flat/floor info (shorter than 40 chars and contains numbers)
+  const commaIndex = address1.indexOf(',')
+  if (commaIndex > 0 && commaIndex < 40) {
+    const firstPart = address1.substring(0, commaIndex).trim()
+    const restPart = address1.substring(commaIndex + 1).trim()
+    
+    // If first part contains numbers and is relatively short, treat as flat/floor
+    if (/\d/.test(firstPart) && firstPart.length < 40) {
+      return { flatFloor: firstPart, streetAddress: restPart }
+    }
+  }
+  
+  // No flat/floor detected, return all as street address
+  return { flatFloor: '', streetAddress: address1 }
+}
+
 const extractAddressData = (user: FormialUser | null | undefined): AddressFormData => {
   const defaultAddress: AddressFormData = {
+    flatFloor: '',
     address1: '',
     address2: '',
     city: '',
@@ -58,13 +104,19 @@ const extractAddressData = (user: FormialUser | null | undefined): AddressFormDa
   
   const firstAddress = user.addresses[0]
   if (typeof firstAddress === 'string') {
-    return { ...defaultAddress, address1: firstAddress }
+    // Legacy string format - try to parse flat/floor
+    const { flatFloor, streetAddress } = parseFlatFloorFromAddress(firstAddress)
+    return { ...defaultAddress, flatFloor, address1: streetAddress }
   }
   
   if (firstAddress && typeof firstAddress === 'object') {
     const addrObj = firstAddress as AddressObject
+    // Parse flat/floor from stored address1
+    const { flatFloor, streetAddress } = parseFlatFloorFromAddress(addrObj.address1 || '')
+    
     return {
-      address1: addrObj.address1 || '',
+      flatFloor,
+      address1: streetAddress,
       address2: addrObj.address2 || '',
       city: addrObj.city || '',
       state: addrObj.province || '',
@@ -107,6 +159,7 @@ const timeline = [
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack, mobileNumber }: WelcomeStep3Props) {
   const [addressData, setAddressData] = useState<AddressFormData>({
+    flatFloor: '',
     address1: '',
     address2: '',
     city: '',
@@ -114,6 +167,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
     pincode: '',
   })
   const [originalAddress, setOriginalAddress] = useState<AddressFormData>({
+    flatFloor: '',
     address1: '',
     address2: '',
     city: '',
@@ -122,6 +176,13 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
   })
   const [isUpdating, setIsUpdating] = useState(false)
   const [updateMessage, setUpdateMessage] = useState<string | null>(null)
+
+  // Refs for input fields
+  const flatFloorInputRef = useRef<HTMLInputElement>(null)
+  const address2InputRef = useRef<HTMLInputElement>(null)
+  const cityInputRef = useRef<HTMLInputElement>(null)
+  const stateInputRef = useRef<HTMLInputElement>(null)
+  const pincodeInputRef = useRef<HTMLInputElement>(null)
 
   // Fetch user data when component mounts
   useEffect(() => {
@@ -148,8 +209,20 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
     setAddressData((prev) => ({ ...prev, [field]: value }))
   }
 
+  const handleAddressAutocomplete = useCallback((address: AddressComponents) => {
+    setAddressData((prev) => ({
+      flatFloor: prev.flatFloor, // Preserve user-entered flat/floor
+      address1: address.address1,
+      address2: address.address2,
+      city: address.city,
+      state: address.state,
+      pincode: address.pincode,
+    }))
+  }, [])
+
   const hasAddressChanged = () => {
     return (
+      addressData.flatFloor !== originalAddress.flatFloor ||
       addressData.address1 !== originalAddress.address1 ||
       addressData.address2 !== originalAddress.address2 ||
       addressData.city !== originalAddress.city ||
@@ -222,37 +295,49 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
           <div className="space-y-4">
             <span className="text-sm font-semibold text-[#6F5B4C] tracking-tight">Address</span>
             
-            {/* Address Line 1 */}
+            {/* Flat / Floor Number */}
             <div className="relative">
               <input
+                ref={flatFloorInputRef}
                 type="text"
-                value={addressData.address1}
-                onChange={(e) => handleAddressChange('address1', e.target.value)}
+                value={addressData.flatFloor}
+                onChange={(e) => handleAddressChange('flatFloor', e.target.value)}
                 className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
-                placeholder="Address Line 1"
+                placeholder="Flat No. / Floor (e.g., Flat 401, 4th Floor)"
               />
               <button
                 type="button"
+                onClick={() => flatFloorInputRef.current?.focus()}
                 className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
-                aria-label="Edit address"
+                aria-label="Edit flat/floor"
               >
                 <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
               </button>
             </div>
 
-            {/* Address Line 2 */}
+            {/* Address with Autocomplete */}
+            <AddressAutocomplete
+              value={addressData.address1}
+              onChange={(value) => handleAddressChange('address1', value)}
+              onAddressSelect={handleAddressAutocomplete}
+              placeholder="Search for your building/street address..."
+            />
+
+            {/* Address Line 2 (Landmark/Area) */}
             <div className="relative">
               <input
+                ref={address2InputRef}
                 type="text"
                 value={addressData.address2}
                 onChange={(e) => handleAddressChange('address2', e.target.value)}
                 className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white px-5 py-3 pr-10 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
-                placeholder="Address Line 2 (Optional)"
+                placeholder="Landmark / Area (Optional)"
               />
               <button
                 type="button"
+                onClick={() => address2InputRef.current?.focus()}
                 className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
-                aria-label="Edit address"
+                aria-label="Edit landmark/area"
               >
                 <IconEdit size={18} className="text-[#6F5B4C]" strokeWidth={2} />
               </button>
@@ -263,6 +348,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
               {/* City */}
               <div className="relative">
                 <input
+                  ref={cityInputRef}
                   type="text"
                   value={addressData.city}
                   onChange={(e) => handleAddressChange('city', e.target.value)}
@@ -271,6 +357,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
                 />
                 <button
                   type="button"
+                  onClick={() => cityInputRef.current?.focus()}
                   className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
                   aria-label="Edit city"
                 >
@@ -281,6 +368,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
               {/* State */}
               <div className="relative">
                 <input
+                  ref={stateInputRef}
                   type="text"
                   value={addressData.state}
                   onChange={(e) => handleAddressChange('state', e.target.value)}
@@ -289,6 +377,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
                 />
                 <button
                   type="button"
+                  onClick={() => stateInputRef.current?.focus()}
                   className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
                   aria-label="Edit state"
                 >
@@ -299,6 +388,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
               {/* Pincode */}
               <div className="relative">
                 <input
+                  ref={pincodeInputRef}
                   type="text"
                   value={addressData.pincode}
                   onChange={(e) => handleAddressChange('pincode', e.target.value.replace(/\D/g, ''))}
@@ -308,6 +398,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
                 />
                 <button
                   type="button"
+                  onClick={() => pincodeInputRef.current?.focus()}
                   className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 p-1 hover:opacity-70 transition-opacity cursor-pointer"
                   aria-label="Edit pincode"
                 >
@@ -345,8 +436,13 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
                 setIsUpdating(true)
                 setUpdateMessage(null)
                 try {
+                  // Combine flatFloor with address1 for storage
+                  const fullAddress1 = addressData.flatFloor.trim() 
+                    ? `${addressData.flatFloor.trim()}, ${addressData.address1.trim()}`
+                    : addressData.address1.trim()
+                  
                   const addressUpdate: AddressObject = {
-                    address1: addressData.address1.trim() || '',
+                    address1: fullAddress1 || '',
                     address2: addressData.address2.trim() || '',
                     city: addressData.city.trim() || '',
                     province: addressData.state.trim() || '',
@@ -382,7 +478,7 @@ export default function WelcomeStep3({ userDetails: _userDetails, onNext, onBack
                 onNext()
               }
             }}
-            disabled={!addressData.address1.trim() || isUpdating}
+            disabled={!addressData.flatFloor.trim() || !addressData.address1.trim() || isUpdating}
             className="box-border px-6 py-3 bg-[#1E3F2B] border-[0.767442px] border-[#1F3F2A] shadow-[0px_3.06977px_3.06977px_rgba(0,0,0,0.25)] rounded-full font-medium text-white flex items-center justify-center transition-opacity hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed text-sm uppercase ml-auto"
           >
             {isUpdating ? "Updating..." : hasAddressChanged() ? "Update & Next" : "Next"}

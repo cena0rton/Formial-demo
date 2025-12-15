@@ -29,7 +29,7 @@ const Page = () => {
   const prescriptions = data?.prescriptions || []
 
   const handleSavePersonalDetails = useCallback(
-    async (payload: { firstName: string; lastName: string; whatsapp: string; address?: { address1: string; address2: string; city: string; state: string; pincode: string } }) => {
+    async (payload: { firstName: string; lastName: string; whatsapp: string; address?: { flatFloor: string; address1: string; address2: string; city: string; state: string; pincode: string } }) => {
       if (!contact) throw new Error('Contact not available. Please verify your number again.')
 
       const updatePayload: Partial<FormialUser> = {}
@@ -41,8 +41,13 @@ const Page = () => {
       
       // Update address in new format
       if (payload.address) {
+        // Combine flatFloor with address1 for storage
+        const fullAddress1 = payload.address.flatFloor?.trim() 
+          ? `${payload.address.flatFloor.trim()}, ${payload.address.address1?.trim() || ''}`
+          : payload.address.address1?.trim() || ''
+        
         updatePayload.addresses = [{
-          address1: payload.address.address1 || '',
+          address1: fullAddress1,
           address2: payload.address.address2 || '',
           city: payload.address.city || '',
           province: payload.address.state || '',

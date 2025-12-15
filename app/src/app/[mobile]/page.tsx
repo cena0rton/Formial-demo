@@ -90,10 +90,16 @@ export default function UserPage() {
 
         // FIRST: Check if user exists in the system
         let userExists = false
+        let userHasShopifyOrder = false
         try {
           const user = await getUser(normalizedMobile)
           if (user && user._id) {
             userExists = true
+            
+            // Check if user has a Shopify order ID - required for onboarding
+            // User must have purchased from Formial to proceed
+            userHasShopifyOrder = !!(user.shopify_order_id || user.shopify_user_id || user.purchases && user.purchases > 0)
+            
             if (user?.first_name || user?.last_name || user?.name) {
               const fullName = user.first_name && user.last_name 
                 ? `${user.first_name} ${user.last_name}`.trim()
@@ -117,6 +123,14 @@ export default function UserPage() {
 
         // If user doesn't exist, show error page
         if (!userExists) {
+          setUserNotFound(true)
+          setIsLoading(false)
+          return
+        }
+
+        // If user exists but has no Shopify order, they can't onboard
+        // They need to purchase from Formial first
+        if (!userHasShopifyOrder) {
           setUserNotFound(true)
           setIsLoading(false)
           return

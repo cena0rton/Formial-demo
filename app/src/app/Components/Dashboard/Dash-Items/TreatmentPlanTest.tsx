@@ -89,9 +89,9 @@ const TreatmentPlanTest = ({ user, latestPrescription, isLoading }: TreatmentPla
     if (!latestPrescription?.createdAt) {
       // Fallback: if no prescription, use current date + 30 days
       if (!user) return null
-      const today = new Date()
-      const nextShipment = new Date(today)
-      nextShipment.setDate(today.getDate() + 30)
+    const today = new Date()
+    const nextShipment = new Date(today)
+    nextShipment.setDate(today.getDate() + 30)
       return nextShipment
     }
 

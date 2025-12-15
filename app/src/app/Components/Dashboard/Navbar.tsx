@@ -1,5 +1,5 @@
 "use client"
-import { IconUser, IconGift, IconLogout, IconUserCircle } from '@tabler/icons-react'
+import { IconUser, IconLogout, IconUserCircle } from '@tabler/icons-react'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -193,12 +193,17 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
                   setIsHoveringUser(false)
                 }
               }}
-              className={`bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 text-white bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors ${
-                showLogoutMenu || isHoveringUser ? 'bg-white/20' : ''
+              className={`flex flex-col items-center gap-0.5 text-white hover:text-white/90 transition-colors ${
+                showLogoutMenu || isHoveringUser ? 'text-white/90' : ''
               }`}
               aria-label="User menu"
             >
-              <IconUser className="text-xl" />
+              <div className={`bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors ${
+                showLogoutMenu || isHoveringUser ? 'bg-white/20' : ''
+              }`}>
+                <IconUser className="text-xl" />
+              </div>
+              <span className="text-[10px] tracking-tight font-medium">Personal Details</span>
             </button>
             
             {/* User Details Dropdown Menu */}
