@@ -203,17 +203,16 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            disabled={true}
-            placeholder="Address autocomplete unavailable"
-            className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white pl-11 pr-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all disabled:opacity-60"
+            placeholder={placeholder}
+            className="w-full rounded-3xl mt-2 border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] bg-white pl-11 pr-5 py-3 text-base text-[#3D2D1F] focus:outline-none focus:ring-2 focus:ring-[#7CB58D] transition-all"
             autoComplete="off"
           />
           <div className="absolute left-4 top-1/2 -translate-y-1/2 mt-1 flex items-center justify-center pointer-events-none">
             <IconMapPin className="h-5 w-5 text-[#6F5B4C]" />
           </div>
         </div>
-        <p className="text-xs text-red-600 mt-1 ml-2">
-          Geoapify API key not configured
+        <p className="text-xs text-[#6B6B6B] mt-1 ml-2">
+          Manual address entry (autocomplete unavailable)
         </p>
       </div>
     )

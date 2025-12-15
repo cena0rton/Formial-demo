@@ -42,6 +42,7 @@ const Orders = () => {
   const [subscriptionError, setSubscriptionError] = useState<string | null>(null)
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [showManageSubscription, setShowManageSubscription] = useState(false)
+  const [isActiveToggle, setIsActiveToggle] = useState(true) // Toggle state for testing
 
   useEffect(() => {
     const fetchData = async () => {
@@ -348,19 +349,32 @@ const Orders = () => {
                   {/* Top Row: Current Plan with Status */}
                   <div className="flex items-center justify-between mb-4 tracking-tight">
                     <p className="text-sm font-semibold text-[#3D2D1F]">Current Plan</p>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium border capitalize ${
-                      subscriptionStatus === 'active' 
-                        ? 'bg-green-100 text-green-600 border-green-400'
-                        : subscriptionStatus === 'paused'
-                        ? 'bg-yellow-100 text-yellow-700 border-yellow-400'
-                        : subscriptionStatus === 'created'
-                        ? 'bg-orange-100 text-orange-600 border-orange-400'
-                        : subscriptionStatus === 'cancelled'
-                        ? 'bg-red-100 text-red-600 border-red-400'
-                        : 'bg-slate-200 text-slate-700 border-slate-400'
-                    }`}>
-                      {subscriptionStatus || 'inactive'}
-                    </span>
+                    {!subscriptionStatus || subscriptionStatus === 'inactive' ? (
+                      <button
+                        onClick={() => setIsActiveToggle(!isActiveToggle)}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border capitalize transition-all duration-200 ${
+                          isActiveToggle
+                            ? 'bg-green-100 text-green-600 border-green-400'
+                            : 'bg-slate-200 text-slate-700 border-slate-400'
+                        }`}
+                      >
+                        {isActiveToggle ? 'active' : 'inactive'}
+                      </button>
+                    ) : (
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border capitalize ${
+                        subscriptionStatus === 'active' 
+                          ? 'bg-green-100 text-green-600 border-green-400'
+                          : subscriptionStatus === 'paused'
+                          ? 'bg-yellow-100 text-yellow-700 border-yellow-400'
+                          : subscriptionStatus === 'created'
+                          ? 'bg-orange-100 text-orange-600 border-orange-400'
+                          : subscriptionStatus === 'cancelled'
+                          ? 'bg-red-100 text-red-600 border-red-400'
+                          : 'bg-slate-200 text-slate-700 border-slate-400'
+                      }`}>
+                        {subscriptionStatus}
+                      </span>
+                    )}
                   </div>
 
                   {/* Plan Description */}
@@ -394,32 +408,44 @@ const Orders = () => {
 
                   {/* Action Buttons */}
                   {!showCancelConfirm ? (
-                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#CBBEAD]/40">
-                      {subscriptionStatus === 'paused' ? (
+                    (!subscriptionStatus || subscriptionStatus === 'inactive') && !isActiveToggle ? (
+                      <div className="pt-4 border-t border-[#CBBEAD]/40">
                         <button
-                          onClick={handleResumeSubscription}
+                          onClick={handleStartSubscription}
+                          disabled={isSubscriptionLoading}
+                          className="w-full px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Start your Subscription now
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#CBBEAD]/40">
+                        {subscriptionStatus === 'paused' ? (
+                          <button
+                            onClick={handleResumeSubscription}
+                            disabled={isSubscriptionLoading}
+                            className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Resume Subscription
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handlePauseSubscription}
+                            disabled={isSubscriptionLoading}
+                            className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Pause Subscription
+                          </button>
+                        )}
+                        <button
+                          onClick={() => setShowCancelConfirm(true)}
                           disabled={isSubscriptionLoading}
                           className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          Resume Subscription
+                          Stop Plan
                         </button>
-                      ) : (
-                        <button
-                          onClick={handlePauseSubscription}
-                          disabled={isSubscriptionLoading}
-                          className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Pause Subscription
-                        </button>
-                      )}
-                      <button
-                        onClick={() => setShowCancelConfirm(true)}
-                        disabled={isSubscriptionLoading}
-                        className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Stop Plan
-                      </button>
-                    </div>
+                      </div>
+                    )
                   ) : (
                     <div className="pt-4 border-t border-[#CBBEAD]/40">
                       <p className="text-sm text-[#3D2D1F] mb-4">How would you like to stop your plan?</p>
