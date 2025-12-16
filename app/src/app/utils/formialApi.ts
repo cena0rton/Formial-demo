@@ -420,17 +420,13 @@ export const startSubscription = () =>
 export const pauseSubscription = () =>
   apiRequest<PauseSubscriptionResponse>('/pause-subscription', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    // No body required - JWT token in Authorization header identifies the user
   })
 
 export const resumeSubscription = () =>
   apiRequest<ResumeSubscriptionResponse>('/resume-subscription', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    // No body required - JWT token in Authorization header identifies the user
   })
 
 export const cancelSubscription = (cancelAtCycleEnd: boolean = false) =>

@@ -176,8 +176,23 @@ const Orders = () => {
       // Check if API call was successful
       if (response.success) {
         if (response.payment_link) {
-          // Open payment link in new tab
-          window.open(response.payment_link, '_blank')
+          // Open payment link in new tab/window
+          const paymentWindow = window.open(response.payment_link, '_blank', 'noopener,noreferrer')
+          
+          // Check if popup was blocked and provide fallback
+          if (!paymentWindow || paymentWindow.closed || typeof paymentWindow.closed === 'undefined') {
+            // Popup blocked - redirect current window as fallback
+            const shouldRedirect = window.confirm(
+              'Please allow popups for this site, or click OK to be redirected to the payment page.'
+            )
+            if (shouldRedirect) {
+              window.location.href = response.payment_link
+              return // Don't continue with state updates since we're redirecting
+            }
+          } else {
+            // Successfully opened - focus the new window
+            paymentWindow.focus()
+          }
         }
         // Store subscription details - status is 'created' when payment is pending
         setSubscriptionStatus('created')
@@ -297,9 +312,8 @@ const Orders = () => {
 
           {/* Subscription Section */}
           <div className="mb-8 flex flex-col items-center justify-center">
-            <h2 className="md:text-xl text-lg font-Medium tracking-tight text-[#3D2D1F] mb-1">Subscription</h2>
-            <p className="md:text-base text-sm tracking-tight text-[#6B6B6B] mb-4">Manage your 6 month subscription plan here</p>
-            
+            <h2 className="md:text-xl text-lg font-Medium tracking-tight text-[#3D2D1F] mb-6">Subscription</h2>
+           
             {subscriptionError && (
               <div className="mb-4 p-3 bg-red-50/80 border border-red-200/60 rounded-lg text-red-700 text-xs">
                 {subscriptionError}
@@ -307,37 +321,10 @@ const Orders = () => {
             )}
 
             {/* Subscription Buttons */}
-            <div className="flex gap-3 h-[30px] my-1.5">
-              {/* Subscribe Button */}
-              <button
-                onClick={handleStartSubscription}
-                disabled={isSubscriptionLoading || (subscriptionStatus !== null && subscriptionStatus !== 'created')}
-                className="px-5 py-[10px] h-[30px] bg-[#1E3F2B] text-white text-xs font-semibold rounded-full hover:bg-[#2A5A3F] active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 tracking-wide"
-              >
-                {isSubscriptionLoading ? (
-                  <>
-                    <IconRefresh className="h-3.5 w-3.5 animate-spin" />
-                    <span>STARTING...</span>
-                  </>
-                ) : (
-                  <span>SUBSCRIBE</span>
-                )}
-              </button>
-
-              {/* Manage Subscription Button */}
-              <button
-                onClick={() => {
-                  setShowManageSubscription(!showManageSubscription)
-                  setShowCancelConfirm(false)
-                }}
-                className="px-5 py-[10px] h-[30px] bg-[#1E3F2B] text-white text-xs font-semibold rounded-full hover:bg-[#2A5A3F] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 tracking-wide"
-              >
-                MANAGE SUBSCRIPTION
-              </button>
-            </div>
+           
 
             {/* Manage Subscription Section */}
-            {showManageSubscription && (
+           
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -345,7 +332,7 @@ const Orders = () => {
               >
 
                 {/* Card */}
-                <div className="bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-6 py-6 mt-6">
+                <div className="bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-6 py-6 mt-0">
                   {/* Top Row: Current Plan with Status */}
                   <div className="flex items-center justify-between mb-4 tracking-tight">
                     <p className="text-sm font-semibold text-[#3D2D1F]">Current Plan</p>
@@ -384,24 +371,47 @@ const Orders = () => {
                     </p>
                   </div>
 
-                  {/* Plan Dates - Two Column Layout */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <p className="text-sm text-[#3D2D1F] mb-1">Plan Started on</p>
+                  {/* Subscription Details - Four Field Layout */}
+                  <div className="flex flex-wrap gap-8 mb-6">
+                    {/* Plan Started on */}
+                    <div className="flex flex-col">
+                      <p className="text-sm text-[#3D2D1F] mb-1">Plan Started:</p>
                       <p className="text-sm font-semibold text-[#3D2D1F]">
                         {subscriptionDetails?.start_date ? formatDate(subscriptionDetails.start_date) : 'TBD'}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-sm text-[#3D2D1F] mb-1">Plan Ends on</p>
+
+                    {/* Plan Ends on */}
+                    <div className="flex flex-col">
+                      <p className="text-sm text-[#3D2D1F] mb-1">Plan Ends:</p>
                       <p className="text-sm font-semibold text-[#3D2D1F]">
                         {subscriptionDetails?.final_end_date 
                           ? formatDate(subscriptionDetails.final_end_date) 
-                          : subscriptionDetails?.next_billing
-                            ? (typeof subscriptionDetails.next_billing === 'number'
-                                ? formatTimestamp(subscriptionDetails.next_billing)
-                                : formatDate(subscriptionDetails.next_billing))
+                          : subscriptionDetails?.plan_ends
+                            ? formatTimestamp(subscriptionDetails.plan_ends)
                             : 'TBD'}
+                      </p>
+                    </div>
+
+                    {/* Next Delivery */}
+                    <div className="flex flex-col">
+                      <p className="text-sm text-[#3D2D1F] mb-1">Next Delivery:</p>
+                      <p className="text-sm font-semibold text-[#3D2D1F]">
+                        {subscriptionDetails?.next_billing
+                          ? (typeof subscriptionDetails.next_billing === 'number'
+                              ? formatTimestamp(subscriptionDetails.next_billing)
+                              : formatDate(subscriptionDetails.next_billing))
+                          : 'TBD'}
+                      </p>
+                    </div>
+
+                    {/* Subscription ID */}
+                    <div className="flex flex-col">
+                      <p className="text-sm text-[#3D2D1F] mb-1">Subscription ID:</p>
+                      <p className="text-sm font-semibold text-[#3D2D1F]">
+                        {subscriptionDetails?.subscription_id 
+                          ? `#${subscriptionDetails.subscription_id}` 
+                          : 'N/A'}
                       </p>
                     </div>
                   </div>
@@ -434,13 +444,13 @@ const Orders = () => {
                             disabled={isSubscriptionLoading}
                             className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            Pause Subscription
+                            Pause Plan
                           </button>
                         )}
                         <button
                           onClick={() => setShowCancelConfirm(true)}
                           disabled={isSubscriptionLoading}
-                          className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#7CB58D]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="px-4 py-2.5 text-sm font-semibold text-[#1E3F2B] bg-[#f01010]/20 border border-[#1E3F2B] rounded-full hover:bg-[#7CB58D]/30 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           Stop Plan
                         </button>
@@ -475,30 +485,35 @@ const Orders = () => {
                   )}
                 </div>
               </motion.div>
-            )}
+            
           </div>
 
-          {/* Orders Section - Empty State with Dashed Border */}
-          <div className="mt-10">
+          {/* Orders Section */}
+          <div className="mt-6">
+            {/* Section Header */}
+            <div className="flex items-center justify-center mb-6">
+            <h2 className="md:text-xl text-lg font-Medium tracking-tight text-[#3D2D1F]">Orders</h2>
+            </div>
+
             {/* Loading State */}
             {isLoading && (
               <div className="space-y-4 animate-pulse">
                 {[1, 2].map((item) => (
-                  <div key={item} className="h-48 bg-gray-200 rounded-2xl" />
+                  <div key={item} className="h-48 bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD]" />
                 ))}
               </div>
             )}
 
             {/* Error State */}
             {error && !isLoading && (
-              <div className="bg-white rounded-2xl border-2 border-dashed border-[#CBBEAD] px-6 py-4">
-                <div className="text-red-600 text-sm text-center">{error}</div>
+              <div className="bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-6 py-8 text-center">
+                <div className="text-red-600 text-sm tracking-tight">{error}</div>
               </div>
             )}
 
             {/* Empty State */}
             {!isLoading && !error && orders.length === 0 && (
-              <div className="bg-white rounded-2xl border-2 border-dashed border-[#CBBEAD] px-6 py-16 text-center">
+              <div className="bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] px-6 py-16 text-center">
                 <div className="w-14 h-14 mx-auto mb-5 rounded-full bg-[#E8E6DD] flex items-center justify-center">
                   <IconShoppingBag className="h-6 w-6 text-[#6B6B6B]" />
                 </div>
@@ -516,61 +531,42 @@ const Orders = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="bg-white rounded-2xl border-2 border-dashed border-[#CBBEAD] overflow-hidden"
+                  className="bg-white rounded-3xl border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] overflow-hidden"
                 >
                   {/* Order Header */}
-                  <div className="px-6 py-5 border-b border-[#CBBEAD]/20">
+                  <div className="px-6 py-5 border-[#CBBEAD]/20">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#7CB58D]/10 to-[#7CB58D]/5 flex items-center justify-center flex-shrink-0">
                           <IconShoppingBag className="h-6 w-6 text-[#1E3F2B]" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-base font-bold text-[#1E3F2B] mb-1 tracking-tight">
-                            {order.name || `Order #${order.shopify_order_id || order._id.slice(-6)}`}
+                          <h3 className="text-sm md:text-base font-medium text-[#1E3F2B] mb-1 tracking-tight">
+                            Order ID : {order.name || `Order #${order.shopify_order_id || order._id.slice(-6)}`}
                           </h3>
-                          <div className="flex items-center gap-2 text-xs text-[#6B6B6B]">
-                            <IconCalendar className="h-3.5 w-3.5 flex-shrink-0" />
-                            <span>{formatDate(order.order_date || order.createdAt)}</span>
+                          <div className="flex items-center justify-start gap-2 text-xs text-[#6B6B6B] tracking-tight">
+                            <IconCalendar className="size-3 flex-shrink-0" />
+                            <span>Placed on : {formatDate(order.order_date || order.createdAt)}</span>
                           </div>
                         </div>
                       </div>
                       <div className="flex-shrink-0 text-right">
-                        <div className="flex items-center gap-1 text-[#1E3F2B] font-bold">
-                          <IconCurrencyRupee className="h-4 w-4" />
-                          <span className="text-lg">{formatPrice(order.total_price)}</span>
-                        </div>
+                        
                       </div>
                     </div>
                   </div>
 
                   {/* Order Details */}
-                  <div className="px-6 py-5 space-y-4">
-                    {/* Contact Info */}
-                    {(order.email || order.contact) && (
-                      <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-[#6B6B6B]">
-                        {order.email && (
-                          <div className="flex items-center gap-2">
-                            <IconMail className="h-4 w-4 flex-shrink-0" />
-                            <span className="break-all">{order.email}</span>
-                          </div>
-                        )}
-                        {order.contact && (
-                          <div className="flex items-center gap-2">
-                            <IconPhone className="h-4 w-4 flex-shrink-0" />
-                            <span>{order.contact}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
+                  <div className="px-6 py-5 space-y-4 -mt-4">
+                
+                   <span className="text-sm font-medium text-[#3D2D1F] mb-2">Delivering To:</span>
                     {/* Billing Address */}
                     {order.billing_address && (
                       <div className="pt-3 border-t border-[#CBBEAD]/20">
                         <div className="flex items-start gap-3">
                           <IconMapPin className="h-4 w-4 text-[#6B6B6B] mt-0.5 flex-shrink-0" />
-                          <div className="text-xs text-[#6B6B6B] space-y-1 flex-1">
-                            <div className="font-semibold text-[#3D2D1F] text-sm mb-1">
+                          <div className="text-xs text-[#6B6B6B] space-y-1 flex-1 tracking-tight">
+                            <div className="font-Medium text-[#3D2D1F] text-sm mb-1">
                               {order.billing_address.first_name} {order.billing_address.last_name}
                             </div>
                             <div className="leading-relaxed">
@@ -599,7 +595,7 @@ const Orders = () => {
                           href={order.order_status_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-[#7CB58D] hover:text-[#1E3F2B] font-medium transition-colors group"
+                          className="inline-flex items-center gap-1.5 text-xs text-[#7CB58D] hover:text-[#1E3F2B] font-medium transition-colors group tracking-tight"
                         >
                           <span>View Order Status</span>
                           <IconExternalLink className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />

@@ -57,7 +57,7 @@ const DashHome = ({
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-base font-bold text-[#3D2D1F] mb-1">Clinical Notes</h3>
-                  <p className="text-sm text-[#3D2D1F]">
+                  <p className="md:text-sm text-xs text-[#3D2D1F]">
                     Access your prescription details, formulation information, and pharmacy instructions.
                   </p>
                 </div>
