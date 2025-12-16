@@ -163,20 +163,93 @@ export interface UserWithAllDataResponse {
 
 const encodeContact = (contact: string) => encodeURIComponent(contact)
 
-export const getUser = (contact: string) =>
-  apiRequest<FormialUser>(`/get-user/${encodeContact(contact)}`)
+// Mock data for test mode
+const getMockUser = (): FormialUser => ({
+  _id: 'test-user-123',
+  first_name: 'Test',
+  last_name: 'User',
+  name: 'Test User',
+  contact: '+919876543210',
+  email: 'test@formial.in',
+  shopify_user_id: 'test-shopify-123',
+  shopify_order_id: 'test-order-123',
+  image_uploaded: true,
+  prescribed: true,
+  concerns: ['acne', 'hyperpigmentation'],
+  skin_issues: ['acne'],
+  addresses: [{
+    address1: '123 Test Street',
+    address2: 'Apt 4B',
+    city: 'Mumbai',
+    province: 'Maharashtra',
+    zip: '400001',
+    country: 'India'
+  }],
+  onboardingCompleted: true,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+})
 
-export const getUserWithAllData = (contact: string) =>
-  apiRequest<UserWithAllDataResponse>(`/get-user/${encodeContact(contact)}/with-all-data`)
+const getMockPrescriptions = () => [{
+  _id: 'prescription-1',
+  createdAt: new Date().toISOString(),
+  front_image: 'https://via.placeholder.com/300x400?text=Front+Image',
+  left_image: 'https://via.placeholder.com/300x400?text=Left+Image',
+  right_image: 'https://via.placeholder.com/300x400?text=Right+Image',
+  prescription_completed: true,
+  formulation_completed: true,
+  clinician_name: 'Dr. Test Dermatologist',
+  clinician_remarks: 'Test prescription remarks',
+  azelaic_acid: 5,
+  niacinamide: 4,
+  tretinoin: 0.025
+}]
 
-export const updateUserByContact = (contact: string, payload: Partial<FormialUser>) =>
-  apiRequest<FormialUser>(`/update-user/${encodeContact(contact)}`, {
+const getMockConversations = () => [{
+  _id: 'conv-1',
+  remark: 'Test conversation message',
+  clinical: true,
+  createdAt: new Date().toISOString()
+}]
+
+const isTestMode = () => {
+  if (typeof window === 'undefined') return false
+  return !!(window as any).__FORMIAL_TEST_MODE__
+}
+
+export const getUser = async (contact: string) => {
+  if (isTestMode()) {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return getMockUser()
+  }
+  return apiRequest<FormialUser>(`/get-user/${encodeContact(contact)}`)
+}
+
+export const getUserWithAllData = async (contact: string) => {
+  if (isTestMode()) {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return {
+      user: getMockUser(),
+      prescriptions: getMockPrescriptions(),
+      conversations: getMockConversations()
+    }
+  }
+  return apiRequest<UserWithAllDataResponse>(`/get-user/${encodeContact(contact)}/with-all-data`)
+}
+
+export const updateUserByContact = async (contact: string, payload: Partial<FormialUser>) => {
+  if (isTestMode()) {
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return { ...getMockUser(), ...payload }
+  }
+  return apiRequest<FormialUser>(`/update-user/${encodeContact(contact)}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
   })
+}
 
 export interface CreatePrescriptionResponse {
   success: boolean
@@ -236,6 +309,14 @@ export const createPrescription = async (
     right_image: File
   }
 ): Promise<CreatePrescriptionResponse> => {
+  if (isTestMode()) {
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    return {
+      success: true,
+      prescription: getMockPrescriptions()[0]
+    }
+  }
+
   const url = buildUrl(`/prescription?number=${encodeContact(contact)}`)
   
   // Get headers with auth token - don't include Content-Type for multipart/form-data

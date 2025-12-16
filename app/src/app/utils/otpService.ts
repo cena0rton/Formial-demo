@@ -18,6 +18,11 @@ const ensureBaseUrl = () => {
 
 const sanitizePhoneNumber = (value: string) => value.replace(/\D/g, "")
 
+const isTestMode = () => {
+  if (typeof window === 'undefined') return false
+  return !!(window as any).__FORMIAL_TEST_MODE__
+}
+
 export const sendWhatsAppOtp = async ({
   phoneNumber,
   name,
@@ -25,6 +30,14 @@ export const sendWhatsAppOtp = async ({
   phoneNumber: string
   name?: string
 }) => {
+  if (isTestMode()) {
+    await new Promise(resolve => setTimeout(resolve, 800))
+    return {
+      success: true,
+      message: 'OTP sent successfully (TEST MODE)'
+    }
+  }
+
   const baseUrl = ensureBaseUrl()
   const sanitizedPhone = sanitizePhoneNumber(phoneNumber)
 
@@ -64,6 +77,21 @@ export const verifyWhatsAppOtp = async ({
   phoneNumber: string
   code: string
 }) => {
+  if (isTestMode()) {
+    // Accept any 4-digit code for testing
+    const trimmedCode = code.trim()
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    if (trimmedCode.length === 4 && /^\d{4}$/.test(trimmedCode)) {
+      return {
+        message: 'User is Verified!!',
+        profile: true,
+        token: 'mock-jwt-token-for-testing-' + Date.now()
+      }
+    }
+    throw new Error('Invalid OTP (TEST MODE: Use any 4 digits)')
+  }
+
   const baseUrl = ensureBaseUrl()
   const sanitizedPhone = sanitizePhoneNumber(phoneNumber)
   const trimmedCode = code.trim()

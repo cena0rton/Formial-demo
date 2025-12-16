@@ -438,7 +438,7 @@ export default function WelcomeStep2({ userDetails, onNext, onBack, mobileNumber
                     type="button"
                     onClick={handleSendOtp}
                     disabled={isSendingOtp || resendCooldown > 0}
-                    className="text-xs text-[#6F5B4C] pt-3 sm:pt-5 text-center underline-offset-2 hover:underline disabled:opacity-50 disabled:no-underline"
+                    className="text-xs text-[#6F5B4C] pt-2 sm:pt-2 sm:mt-2 mt-1 text-center underline-offset-2 hover:bg-white/50 transition-all duration-200 disabled:opacity-50 disabled:no-underline border border-[#6F5B4C]/70 rounded-full px-4 py-2 cursor-pointer"
                   >
                     {isSendingOtp
                       ? "Sending..."

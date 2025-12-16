@@ -242,7 +242,7 @@ const Discover = () => {
               {/* First Reel - Left */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DIBlv5HP8bF/embed"
+                  src="https://www.instagram.com/reel/DSFX6v0j9pl/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',
@@ -257,7 +257,7 @@ const Discover = () => {
               {/* Second Reel - Center */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DK_XXGbP32M/embed"
+                  src="https://www.instagram.com/reel/DR7ARKKj61g/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',
@@ -272,7 +272,7 @@ const Discover = () => {
               {/* Third Reel */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DI_UKZXvUno/embed"
+                  src="https://www.instagram.com/reel/DJWihYhvWr1/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',
@@ -287,7 +287,7 @@ const Discover = () => {
               {/* Fourth Reel */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DNkwwKrv6Jj/embed"
+                  src="https://www.instagram.com/reel/DIBlv5HP8bF/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',

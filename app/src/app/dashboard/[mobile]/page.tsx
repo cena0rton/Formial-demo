@@ -5,6 +5,7 @@ import Page from '../../Components/Dashboard/Page'
 import { getAuthToken } from '../../utils/authToken'
 import { getUserContact, setUserContact } from '../../utils/userContact'
 import { verifyUserAuth, normalizeMobileFromUrl } from '../../utils/auth'
+import { getUserWithAllData } from '../../utils/formialApi'
 
 export default function DashboardPage() {
   const params = useParams()
@@ -44,12 +45,41 @@ export default function DashboardPage() {
           return
         }
 
-        // JWT is valid - ensure contact is stored
+        // CRITICAL: Check if user has valid shopify_user_id from /with-all-data endpoint
+        // Only users who have made payment (have shopify_user_id) can access dashboard
+        try {
+          const allData = await getUserWithAllData(normalizedMobile)
+          const user = allData?.user
+          
+          if (!user || !user._id) {
+            console.log('[DashboardPage] User not found, redirecting to login')
+            router.push(`/${mobileParam}`)
+            return
+          }
+
+          // Check if user has a valid shopify_user_id - required for dashboard access
+          const hasValidShopifyUserId = !!(user.shopify_user_id && user.shopify_user_id.trim() !== '')
+          
+          if (!hasValidShopifyUserId) {
+            console.log('[DashboardPage] User exists but has no valid shopify_user_id, denying access')
+            router.push(`/${mobileParam}`)
+            return
+          }
+
+          console.log('[DashboardPage] User has valid shopify_user_id, access granted')
+        } catch (err) {
+          console.error('[DashboardPage] Error checking shopify_user_id:', err)
+          // If we can't verify shopify_user_id, deny access for security
+          router.push(`/${mobileParam}`)
+          return
+        }
+
+        // JWT is valid and user has shopify_user_id - ensure contact is stored
         if (contact !== normalizedMobile) {
           setUserContact(normalizedMobile)
         }
 
-        console.log('[DashboardPage] JWT verified successfully, showing dashboard')
+        console.log('[DashboardPage] JWT verified and shopify_user_id validated, showing dashboard')
         setIsChecking(false)
       } catch (error) {
         console.error('[DashboardPage] Error during auth check:', error)
