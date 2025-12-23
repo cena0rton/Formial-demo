@@ -23,60 +23,65 @@ const Discover = () => {
     {
       id: '2',
       question: 'Formial has a short expiry, what happens when my current Formial pump is near expiry?',
-      answer: 'Formial formulations are freshly made and have a short shelf life of about 35 days. To make sure your treatment continues without any gaps, we plan your next pump before your current one expires.\n\nWe\'ll send you a quick follow-up message to check in and see how your skin is doing. This is your chance to tell us about any side effects, concerns, or changes (like a new delivery address).\n\nIf we don\'t hear back from you, or if you let us know everything is going well, we\'ll go ahead and send your next pump as planned—usually with a slightly higher strength to support your skin\'s progress.\n\nIf you\'re already subscribed for your next pump, please remember to get back to us about 7 days before your current pump expires if you\'ve had any side effects, concerns, or updates. This helps us keep your treatment safe, effective, and personalised for you.\n\n**What if I miss responding to the follow-up message?**\n\nIf we don\'t hear back from you within the required time, we\'ll assume everything is going well and proceed with your next pump as planned. This helps ensure there\'s no break in your treatment.\n\nIf you do have any concerns, side effects, or changes you\'d like us to consider, please make sure to let us know before your current pump expires.\n\nRest assured, every formulation is reviewed with safety in mind, and your treatment progression is carefully planned. If you realise later that you missed responding, don\'t worry—you can always reach out to us, and our team will be happy to help.',
+      answer: 'Formial formulations are freshly made and have a short shelf life of about 35 days. To make sure your treatment continues without any gaps, we plan your next pump before your current one expires.\n\nWe\'ll send you a quick follow-up message to check in and see how your skin is doing. This is your chance to tell us about any side effects, concerns, or changes (like a new delivery address).\n\nIf we don\'t hear back from you, or if you let us know everything is going well, we\'ll go ahead and send your next pump as planned—usually with a slightly higher strength to support your skin\'s progress.\n\nIf you\'re already subscribed for your next pump, please remember to get back to us about 7 days before your current pump expires if you\'ve had any side effects, concerns, or updates. This helps us keep your treatment safe, effective, and personalised for you.',
     },
     {
       id: '3',
+      question: 'What if I miss responding to the follow-up message?',
+      answer: 'If we don\'t hear back from you within the required time, we\'ll assume everything is going well and proceed with your next pump as planned. This helps ensure there\'s no break in your treatment.\n\nIf you do have any concerns, side effects, or changes you\'d like us to consider, please make sure to let us know before your current pump expires.\n\nRest assured, every formulation is reviewed with safety in mind, and your treatment progression is carefully planned. If you realise later that you missed responding, don\'t worry—you can always reach out to us, and our team will be happy to help.',
+    },
+    {
+      id: '4',
       question: 'What is the diagnostic process?',
       answer: 'To gain a comprehensive understanding of your skin, the medical team analyzes your answers to your medical history questionnaire and carefully evaluates the images.\n\nNaturally, your data and images are subject to medical confidentiality and are accessible only to the medical team.\n\nBased on your skin issues and skin type, the medical team will develop an individualized treatment plan that includes skincare, cleansing, and a medical formula.',
     },
     {
-      id: '4',
+      id: '5',
       question: 'Do you use AI to diagnose and manage me?',
       answer: 'At Formial Labs, personal care is our top priority. Our team of doctors and support staff are real people who individually address every message and diagnosis.\n\nYou can be sure: Every response you receive has been written by an experienced professional – with extensive expertise and genuine care. 💙\n\nWhile we do use an AI chatbot that can help with some questions and guide users, if you don\'t get the answer you need your query does get escalated to a human.\n\nYou\'ll always be assisted by our support team – competent, personal, and 100% human.\n\nIn short: At Formial you are in the best hands with real experts – and not with a machine!\n\nBut please note we are not an emergency service and the human service takes time - that\'s what humans do!',
     },
     {
-      id: '5',
+      id: '6',
       question: 'How does Formial differ from other products?',
       answer: 'Our products combine prescription and over-the-counter active ingredients to target your skin imperfections more effectively.\n\nOur doctors adhere strictly to evidence-based guidelines (meaning: making the best possible decisions in pharmaceutical matters) and combine the ingredients to be individually tailored to you and your skin.',
     },
     {
-      id: '6',
+      id: '7',
       question: 'Why does Formial have such a short expiry date? Can I use the product after the expiry date?',
       answer: 'Formial formulations are freshly compounded, made-to-order, and designed without heavy preservatives—so they naturally have a shorter, safety-focused expiry period.\n\nThis ensures the actives remain potent and the product stays microbiologically stable.\n\nWe don\'t recommend using your formulation past its expiry date. For best results and safety, please refill with a fresh batch.',
     },
     {
-      id: '7',
+      id: '8',
       question: 'What are my payment options?',
       answer: 'If you are not a new user of Formial you can purchase Formial directly through the product page on our website if you wish to purchase the product on an ad hoc basis.\n\nHowever, skin issues are chronic conditions and skincare should be ongoing hence to reward consistency we have a very convenient autopay system which works out much cheaper and better for you.\n\nYou can pause or cancel your subscription anytime but please do give us feedback on what we can do to improve our service.',
     },
     {
-      id: '8',
+      id: '9',
       question: 'How do I apply my treatment?',
       answer: 'Use treatment once a day, at night. Do not use it during the day.\n\n• Wash your face with a mild cleanser and dry your face.\n• Use 1-2 pumps. Spread it thinly across your whole face (forehead, cheeks and chin) with your fingertip.\n• Wash hands immediately after application.\n\nTry to avoid applying the treatment close to your eyelids, mouth, lips, or the angles of your nose because these areas are sensitive.\n\nIf you experience side effects, apply a moisturiser 10 minutes before and after applying your treatment. This will help to buffer the strength of the treatment.\n\n**Storage Instructions**\n\nStore this medication in a cool, dry place, below 25°C. In summer climates and hot areas the formula can be stored in the fridge (never freeze it). Keep out of reach of children.\n\n**Patch Testing**\n\nPlease note: Conducting a patch test can help predict if you may have a negative initial reaction to a new product.\n\nTherefore, we recommended you perform a patch test before incorporating this new product into your routine by following the instructions below:\n\nApply the product as directed to a small area once a day for three days to test if you are sensitive to this product.\n\nIf you develop severe irritation, hives, swelling of the eyes and mouth, blistering, or difficulty breathing, rinse off, cease use and consult a physician right away.',
     },
     {
-      id: '9',
+      id: '10',
       question: 'Acne treatment during pregnancy and breastfeeding?',
       answer: 'There\'s nothing wrong with acne treatment during pregnancy, even while breastfeeding. However, not all active ingredients can be used during this time.\n\nThere are no studies in which pregnant women were or are given pharmaceuticals. What we do know comes from women who underwent acne treatment during pregnancy.\n\nMany dermatologists believe that the safest options for acne treatment during pregnancy are creams containing either benzoyl peroxide, azelaic acid, or anti-inflammatory agents.\n\n**Important:** At Formial we do not advise using retinoids, spironolactone and antibiotics during pregnancy.\n\nAbove all, we recommend discussing everything with your gynecologist and general practitioner and following their advice.',
     },
     {
-      id: '10',
+      id: '11',
       question: 'Where is Formial manufactured?',
       answer: 'Your formulation is made in our accredited pharmaceutical lab in Bangalore.',
     },
     {
-      id: '11',
+      id: '12',
       question: 'Can I combine this formula with other skin treatments?',
       answer: 'In the initial stages of treatment with Formial we do not recommend that you use Formial with other actives or cosmetic procedures.\n\nOnce your skin adjusts you may be able to cycle other actives although in most cases this is not necessary.\n\nIf your formulation contains tretinoin this is a useful blog about using it when considering procedures:\n\nhttps://formial.in/blogs/skindeep/can-you-combine-tretinoin-with-cosmetic-procedures-heres-what-you-should-know',
     },
     {
-      id: '12',
+      id: '13',
       question: 'I am not seeing progress. What do I do?',
       answer: 'Please note that using customised skincare is a journey and there can be ups and downs.\n\nMost people start seeing changes in their skin by 3 - 4 weeks of regular use. As we start on a low dose to allow your skin to adjust this can take slightly longer in some people.\n\nBut 8 - 12 weeks of regular usage is a good time to judge whether any progress has been made.\n\nIn case you have concerns please reach out to us in the support tab and we will be happy to help.',
     },
     {
-      id: '13',
+      id: '14',
       question: 'What can I do about hyperpigmentation and redness?',
       answer: 'Hyperpigmentation and redness are often remnants of old acne breakouts, which can take several months to heal completely.\n\nSome ingredients, such as azelaic acid, can support and accelerate this healing process.\n\n**Sun Protection is Key**\n\nSince the sun promotes hyperpigmentation, you should always apply sunscreen (at least SPF 30, ideally SPF 50).\n\nEven on cloudy days, UV rays still penetrate the cloud cover. Therefore, we recommend using sunscreen even in bad weather and during the winter.\n\nStill have questions? Please message us in the support tab.',
     },
@@ -242,7 +247,7 @@ const Discover = () => {
               {/* First Reel - Left */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DSFX6v0j9pl/embed"
+                  src="https://www.instagram.com/p/DJ4FkAFvA3r/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',
@@ -250,14 +255,14 @@ const Discover = () => {
                   }}
                   scrolling="no"
                   allow="encrypted-media"
-                  title="Instagram Reel 1"
+                  title="Instagram Post 1"
                 />
               </div>
 
               {/* Second Reel - Center */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DR7ARKKj61g/embed"
+                  src="https://www.instagram.com/p/DMxc5MCv8N6/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',
@@ -265,14 +270,14 @@ const Discover = () => {
                   }}
                   scrolling="no"
                   allow="encrypted-media"
-                  title="Instagram Reel 2"
+                  title="Instagram Post 2"
                 />
               </div>
 
               {/* Third Reel */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DJWihYhvWr1/embed"
+                  src="https://www.instagram.com/p/DLO2pFGvoWK/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',
@@ -280,14 +285,14 @@ const Discover = () => {
                   }}
                   scrolling="no"
                   allow="encrypted-media"
-                  title="Instagram Reel 3"
+                  title="Instagram Post 3"
                 />
               </div>
 
               {/* Fourth Reel */}
               <div className="w-full rounded-xl overflow-hidden bg-white border border-b-2 border-b-[#CBBEAD] border-[#CBBEAD] relative h-120 md:h-120" style={{ aspectRatio: '9/16' }}>
                 <iframe
-                  src="https://www.instagram.com/reel/DIBlv5HP8bF/embed"
+                  src="https://www.instagram.com/p/DNkwwKrv6Jj/embed"
                   className="w-full h-full absolute top-0 left-0"
                   style={{
                     border: 'none',
@@ -295,7 +300,7 @@ const Discover = () => {
                   }}
                   scrolling="no"
                   allow="encrypted-media"
-                  title="Instagram Reel 4"
+                  title="Instagram Post 4"
                 />
               </div>
             </div>

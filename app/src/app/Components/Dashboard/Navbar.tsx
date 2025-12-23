@@ -107,7 +107,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
  
     { id: 'support', label: 'Consult / Support', type: 'page', itemIndex: 4 },
     { id: 'discover', label: 'Discover', type: 'page', itemIndex: 2 },
-    { id: 'orders', label: 'Orders', type: 'page', itemIndex: 7 },
+    { id: 'orders', label: 'My Subscription', type: 'page', itemIndex: 7 },
     { id: 'refer', label: 'Refer and Earn', type: 'section', sectionId: 'refer' },
     // Personal Details removed from tabs - now in user dropdown
   ]

@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { FormialPrescription, createPrescription } from '../../../utils/formialApi'
-import { IconArrowUp, IconCheck } from '@tabler/icons-react'
+import { IconArrowUp, IconCheck, IconX } from '@tabler/icons-react'
 import UploadStep from './onboarding/upload-step'
 import { getUserContact } from '../../../utils/userContact'
 
@@ -27,6 +27,7 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
   const [uploadedPhotos, setUploadedPhotos] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [enlargedImage, setEnlargedImage] = useState<string | null>(null)
 
   // Group prescriptions by date - each prescription has 3 images (front, left, right)
   const prescriptionGroups = useMemo(() => {
@@ -216,7 +217,10 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
                   {/* Front Image */}
                   <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.front_image ? (
-                      <div className="w-full h-full rounded-lg overflow-hidden relative">
+                      <div 
+                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => setEnlargedImage(group.front_image!)}
+                      >
                         <Image
                           src={group.front_image}
                           alt={`Week ${group.week} - Front`}
@@ -237,7 +241,10 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
                   {/* Left Image */}
                   <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.left_image ? (
-                      <div className="w-full h-full rounded-lg overflow-hidden relative">
+                      <div 
+                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => setEnlargedImage(group.left_image!)}
+                      >
                         <Image
                           src={group.left_image}
                           alt={`Week ${group.week} - Left`}
@@ -258,7 +265,10 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
                   {/* Right Image */}
                   <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.right_image ? (
-                      <div className="w-full h-full rounded-lg overflow-hidden relative">
+                      <div 
+                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => setEnlargedImage(group.right_image!)}
+                      >
                         <Image
                           src={group.right_image}
                           alt={`Week ${group.week} - Right`}
@@ -311,6 +321,48 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
                   isUploading={isUploading}
                   uploadError={uploadError}
                   hideTimeline={true}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Enlarged Image Modal */}
+      <AnimatePresence>
+        {enlargedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+            onClick={() => setEnlargedImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="relative max-w-4xl max-h-[90vh] w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setEnlargedImage(null)}
+                className="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-sm transition-colors"
+              >
+                <IconX className="h-6 w-6 text-white" />
+              </button>
+              
+              {/* Enlarged Image */}
+              <div className="relative w-full h-full rounded-lg overflow-hidden">
+                <Image
+                  src={enlargedImage}
+                  alt="Enlarged progress photo"
+                  width={1200}
+                  height={1200}
+                  className="w-full h-auto max-h-[90vh] object-contain"
+                  unoptimized
                 />
               </div>
             </motion.div>
