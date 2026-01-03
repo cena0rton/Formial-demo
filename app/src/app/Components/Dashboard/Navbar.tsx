@@ -101,14 +101,15 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
     label: string; 
     type: 'section' | 'page'; 
     sectionId?: SectionType; 
-    itemIndex?: number 
+    itemIndex?: number;
+    disabled?: boolean;
   }[] = [
     { id: 'treatment', label: 'Home', type: 'section', sectionId: 'treatment' },
  
     { id: 'support', label: 'Consult / Support', type: 'page', itemIndex: 4 },
     { id: 'discover', label: 'Discover', type: 'page', itemIndex: 2 },
     { id: 'orders', label: 'My Subscription', type: 'page', itemIndex: 7 },
-    { id: 'refer', label: 'Refer and Earn', type: 'section', sectionId: 'refer' },
+    { id: 'refer', label: 'Refer and Earn', type: 'section', sectionId: 'refer', disabled: true },
     // Personal Details removed from tabs - now in user dropdown
   ]
   
@@ -123,6 +124,11 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
   }
 
   const handleNavClick = (item: typeof navItems[0]) => {
+    // Don't handle click if item is disabled
+    if (item.disabled) {
+      return
+    }
+    
     if (item.type === 'section' && item.sectionId) {
       if (setActiveSection) {
         setActiveSection(item.sectionId)
@@ -308,8 +314,13 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
                   <button
                     key={item.id}
                     onClick={() => handleNavClick(item)}
-                    className={`relative flex-1 px-3 pb-4 mt-2 text-xs md:text-sm text-black font-medium transition-all focus:outline-none z-10 ${
-                      isActive ? 'text-[#1E3F2B]' : 'text-black'
+                    disabled={item.disabled}
+                    className={`relative flex-1 px-3 pb-4 mt-2 text-xs md:text-sm font-medium transition-all focus:outline-none z-10 ${
+                      item.disabled 
+                        ? 'text-gray-400 cursor-not-allowed opacity-50' 
+                        : isActive 
+                          ? 'text-[#1E3F2B]' 
+                          : 'text-black'
                     }`}
                   >
                     {item.label}
@@ -318,7 +329,7 @@ const Navbar = ({activeItem, setActiveItem, ref, activeSection, setActiveSection
               })}
               
               {(() => {
-                const activeIndex = navItems.findIndex(item => isItemActive(item))
+                const activeIndex = navItems.findIndex(item => isItemActive(item) && !item.disabled)
                 if (activeIndex === -1) return null
                 
                 return (

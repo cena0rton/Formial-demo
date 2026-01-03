@@ -218,17 +218,23 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
                   <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.front_image ? (
                       <div 
-                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer group"
                         onClick={() => setEnlargedImage(group.front_image!)}
                       >
                         <Image
                           src={group.front_image}
                           alt={`Week ${group.week} - Front`}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-opacity group-hover:opacity-70"
                           sizes="(max-width: 768px) 33vw, 33vw"
                           unoptimized
                         />
+                        {/* Hover Overlay with Text */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-20">
+                          <p className="text-white text-xs font-medium text-center px-2 tracking-tight">
+                            Click on image to enlarge
+                          </p>
+                        </div>
                         {/* Checkmark icon */}
                         <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#7CB58D] flex items-center justify-center shadow-sm z-10">
                           <IconCheck className="h-3 w-3 text-white" strokeWidth={3} />
@@ -242,17 +248,23 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
                   <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.left_image ? (
                       <div 
-                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer group"
                         onClick={() => setEnlargedImage(group.left_image!)}
                       >
                         <Image
                           src={group.left_image}
                           alt={`Week ${group.week} - Left`}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-opacity group-hover:opacity-70"
                           sizes="(max-width: 768px) 33vw, 33vw"
                           unoptimized
                         />
+                        {/* Hover Overlay with Text */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-20">
+                          <p className="text-white text-xs font-medium text-center px-2 tracking-tight">
+                            Click on image to enlarge
+                          </p>
+                        </div>
                         {/* Checkmark icon */}
                         <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#7CB58D] flex items-center justify-center shadow-sm z-10">
                           <IconCheck className="h-3 w-3 text-white" strokeWidth={3} />
@@ -266,17 +278,23 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
                   <div className="flex-1 min-w-0 aspect-square rounded-xl bg-white border border-[#CBBEAD] p-1.5 shadow-sm relative">
                     {group.right_image ? (
                       <div 
-                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                        className="w-full h-full rounded-lg overflow-hidden relative cursor-pointer group"
                         onClick={() => setEnlargedImage(group.right_image!)}
                       >
                         <Image
                           src={group.right_image}
                           alt={`Week ${group.week} - Right`}
                           fill
-                          className="object-cover"
+                          className="object-cover transition-opacity group-hover:opacity-70"
                           sizes="(max-width: 768px) 33vw, 33vw"
                           unoptimized
                         />
+                        {/* Hover Overlay with Text */}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center z-20">
+                          <p className="text-white text-xs font-medium text-center px-2 tracking-tight">
+                            Click on image to enlarge
+                          </p>
+                        </div>
                         {/* Checkmark icon */}
                         <div className="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-[#7CB58D] flex items-center justify-center shadow-sm z-10">
                           <IconCheck className="h-3 w-3 text-white" strokeWidth={3} />
@@ -349,9 +367,9 @@ const ProgressTimeline = ({ prescriptions = [], isLoading, onRefetch, contact }:
               {/* Close Button */}
               <button
                 onClick={() => setEnlargedImage(null)}
-                className="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-sm transition-colors"
+                className="absolute top-4 right-4 z-10 p-2 bg-red-200 hover:bg-red-200/50 rounded-full backdrop-blur-sm transition-colors"
               >
-                <IconX className="h-6 w-6 text-white" />
+                <IconX className="md:h-6 md:w-6 h-4 w-4 text-white" />
               </button>
               
               {/* Enlarged Image */}
