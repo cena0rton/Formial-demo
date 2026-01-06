@@ -283,11 +283,10 @@ const TreatmentPlan = ({ user, latestPrescription, orders = [], isLoading }: Tre
         <div>
           <p className="text-sm text-[#3D2D1F] mb-1">Expires on</p>
           <p className="text-sm font-semibold text-[#3D2D1F]">
-            {latestPrescription?.createdAt
+            {nextShipmentDate
               ? (() => {
-                  // Calculate expiry date (30 days from creation)
-                  const created = new Date(latestPrescription.createdAt)
-                  const expiry = new Date(created)
+                  // Calculate expiry date (30 days from next shipment date)
+                  const expiry = new Date(nextShipmentDate)
                   expiry.setDate(expiry.getDate() + 30)
                   
                   return expiry.toLocaleDateString('en-US', {
