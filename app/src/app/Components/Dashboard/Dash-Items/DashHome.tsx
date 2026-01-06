@@ -1,11 +1,11 @@
 'use client'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { IconX } from '@tabler/icons-react'
 import TreatmentPlan from './TreatmentPlan'
 import ProgressTimeline from './ProgressTimeline'
 import ReferAndEarn from './ReferAndEarn'
-import { FormialPrescription, FormialUser } from '../../../utils/formialApi'
+import { FormialPrescription, FormialUser, FormialOrder, getOrders } from '../../../utils/formialApi'
 
 type SectionType = 'treatment' | 'progress' | 'refer'
 
@@ -25,6 +25,26 @@ const DashHome = ({
   onRefetch,
 }: DashHomeProps) => {
   const [showPharmacyNotes, setShowPharmacyNotes] = useState(false)
+  const [orders, setOrders] = useState<FormialOrder[]>([])
+  const [ordersLoading, setOrdersLoading] = useState(true)
+
+  // Fetch orders on component mount
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setOrdersLoading(true)
+        const ordersResponse = await getOrders()
+        setOrders(ordersResponse.orders || [])
+      } catch (err) {
+        // If orders endpoint fails, just set empty array (graceful degradation)
+        console.warn('Failed to fetch orders for TreatmentPlan:', err)
+        setOrders([])
+      } finally {
+        setOrdersLoading(false)
+      }
+    }
+    fetchOrders()
+  }, [])
 
   // Get the latest prescription (most recent by createdAt)
   const latestPrescription = useMemo(() => {
@@ -44,7 +64,8 @@ const DashHome = ({
             <TreatmentPlan
               user={user}
               latestPrescription={latestPrescription}
-              isLoading={isLoading}
+              orders={orders}
+              isLoading={isLoading || ordersLoading}
             />
             {/* Consultancy and Pharmacy Notes */}
             <div className="w-full space-y-4 my-6 mb-8 tracking-tight">
@@ -169,13 +190,13 @@ const DashHome = ({
                       </ul>
                     </div>
 
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
+                    <div className="mt-3">
                       <p className="text-sm mb-2">There is a risk of experiencing increased pigmentation when first initiating tretinoin treatment (particularly for darker skin types). This is due to a dermatitis or inflammation reaction when first using the treatment that in turn leads to a temporary increase in pigmentation. This process is normal and it will resolve with ongoing treatment once the initial dermatitis or inflammation settles down.</p>
                       <p className="text-sm mb-2">It is important that you carefully follow the instructions for using and increasing your treatment and listen to your skin, with reduced use if you experience any irritation. Once your skin adjusts to treatment, with continued use of tretinoin your pigmentation will continue to lighten including any original pigmentation that was present before starting treatment.</p>
                     </div>
 
-                    <div>
-                      <h4 className="font-semibold text-[#644B34] mb-2 mt-4">Recommended Products</h4>
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+                      <h4 className="font-semibold text-[#644B34] mb-2">Recommended Products</h4>
                       <p className="text-sm font-medium mb-1">Make sure you use a simple cleanser such as:</p>
                       <ul className="list-disc list-inside text-sm space-y-1 ml-2">
                         <li>CeraVe hydrating or foaming cleanser</li>

@@ -1,11 +1,12 @@
 'use client'
 import React, { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { FormialUser, FormialPrescription } from '../../../utils/formialApi'
+import { FormialUser, FormialPrescription, FormialOrder } from '../../../utils/formialApi'
 
 interface TreatmentPlanProps {
   user?: FormialUser | null
   latestPrescription?: FormialPrescription | null
+  orders?: FormialOrder[]
   isLoading?: boolean
 }
 
@@ -44,7 +45,7 @@ function getFirstName(user: FormialUser | null | undefined): string {
   return "there"
 }
 
-const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanProps) => {
+const TreatmentPlan = ({ user, latestPrescription, orders = [], isLoading }: TreatmentPlanProps) => {
   const userFirstName = getFirstName(user)
 
   const treatmentTags = useMemo(() => {
@@ -113,12 +114,31 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
 
   const planDescription = buildTreatmentPlan
 
+  // Get latest order by order_date
+  const latestOrder = useMemo(() => {
+    if (!orders || orders.length === 0) return null
+    
+    // Filter orders that have order_date and sort by order_date (newest first)
+    const ordersWithDate = orders
+      .filter(order => order.order_date)
+      .sort((a, b) => {
+        const dateA = new Date(a.order_date!).getTime()
+        const dateB = new Date(b.order_date!).getTime()
+        return dateB - dateA // Descending order (newest first)
+      })
+    
+    return ordersWithDate.length > 0 ? ordersWithDate[0] : null
+  }, [orders])
+
   // Calculate next shipment date based on monthly deliveries
-  // Uses the day from createdAt for consistent monthly shipments
-  // Starts from createdAt or today, whichever is later
+  // Uses the day from order_date for consistent monthly shipments
+  // Starts from order_date or today, whichever is later
   const nextShipmentDate = useMemo(() => {
-    if (!latestPrescription?.createdAt) {
-      // Fallback: if no prescription, use current date + 30 days
+    // Use order_date from latest order if available
+    const baseDateString = latestOrder?.order_date || latestPrescription?.createdAt
+    
+    if (!baseDateString) {
+      // Fallback: if no order or prescription, use current date + 30 days
       if (!user) return null
       const today = new Date()
       const nextShipment = new Date(today)
@@ -126,17 +146,17 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
       return nextShipment
     }
 
-    const created = new Date(latestPrescription.createdAt)
+    const baseDate = new Date(baseDateString)
     const today = new Date()
     
-    // Get the day of month from creation date for consistent monthly shipments
-    const shipmentDay = created.getDate()
+    // Get the day of month from order_date for consistent monthly shipments
+    const shipmentDay = baseDate.getDate()
     
-    // Start from the created date or today, whichever is later
-    const baseDate = created > today ? created : today
+    // Start from the base date or today, whichever is later
+    const startDate = baseDate > today ? baseDate : today
     
     // Calculate next shipment date
-    const nextShipment = new Date(baseDate)
+    const nextShipment = new Date(startDate)
     nextShipment.setDate(shipmentDay)
     
     // If the calculated date is in the past or today, move to next month
@@ -150,7 +170,7 @@ const TreatmentPlan = ({ user, latestPrescription, isLoading }: TreatmentPlanPro
     }
     
     return nextShipment
-  }, [user, latestPrescription])
+  }, [user, latestPrescription, latestOrder])
 
   // Calculate request changes by date: next shipment - 3 days
   const requestChangesByDate = useMemo(() => {
