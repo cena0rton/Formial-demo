@@ -99,7 +99,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 
   const apiKey = process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY || ''
 
-  // Close dropdown when clicking outside
+ 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

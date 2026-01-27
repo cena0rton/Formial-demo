@@ -122,6 +122,7 @@ export interface FormialUser {
   onboardingCompletedAt?: string // Timestamp when onboarding was completed
   shopify_user_id?: string // Shopify customer ID
   shopify_order_id?: string // First/latest Shopify order ID
+  sagepilot_user_hash?: string // Sagepilot user hash for identity verification
   createdAt?: string
   updatedAt?: string
   [key: string]: unknown
