@@ -30,8 +30,17 @@ export const sendWhatsAppOtp = async ({
   phoneNumber: string
   name?: string
 }) => {
+  console.log('[sendWhatsAppOtp] 🚀 Starting OTP send request', {
+    phoneNumberLength: phoneNumber.length,
+    hasName: !!name,
+    nameLength: name?.length || 0,
+    isTestMode: isTestMode()
+  })
+
   if (isTestMode()) {
+    console.log('[sendWhatsAppOtp] 🧪 TEST MODE - Simulating OTP send')
     await new Promise(resolve => setTimeout(resolve, 800))
+    console.log('[sendWhatsAppOtp] ✅ TEST MODE - OTP sent successfully')
     return {
       success: true,
       message: 'OTP sent successfully (TEST MODE)'
@@ -41,7 +50,22 @@ export const sendWhatsAppOtp = async ({
   const baseUrl = ensureBaseUrl()
   const sanitizedPhone = sanitizePhoneNumber(phoneNumber)
 
+  console.log('[sendWhatsAppOtp] 📱 Phone number processing', {
+    originalLength: phoneNumber.length,
+    sanitizedLength: sanitizedPhone.length,
+    sanitizedPhone: sanitizedPhone.substring(0, 3) + '***' + sanitizedPhone.substring(sanitizedPhone.length - 2) // Mask for privacy
+  })
+
   if (!sanitizedPhone) {
+    console.error('[sendWhatsAppOtp] ❌ Invalid phone number - empty after sanitization')
+    throw new Error("Please provide a valid phone number with country code.")
+  }
+
+  if (sanitizedPhone.length < 10) {
+    console.error('[sendWhatsAppOtp] ❌ Invalid phone number - too short', {
+      length: sanitizedPhone.length,
+      minRequired: 10
+    })
     throw new Error("Please provide a valid phone number with country code.")
   }
 
@@ -51,22 +75,92 @@ export const sendWhatsAppOtp = async ({
 
   if (name?.trim()) {
     params.append("name", name.trim())
+    console.log('[sendWhatsAppOtp] ✅ Name included in request')
   }
 
-  const response = await fetch(`${baseUrl}/sendWAOTPUser?${params.toString()}`, {
-    method: "GET",
-    cache: "no-store",
+  const requestUrl = `${baseUrl}/sendWAOTPUser?${params.toString()}`
+  console.log('[sendWhatsAppOtp] 📡 Making API request', {
+    baseUrl,
+    endpoint: '/sendWAOTPUser',
+    method: 'GET',
+    hasName: !!name?.trim(),
+    phoneLength: sanitizedPhone.length
   })
 
-  if (!response.ok) {
-    const errorMessage = await response.text()
-    throw new Error(errorMessage || "Failed to send OTP. Please try again.")
-  }
-
   try {
-    return await response.json()
-  } catch {
-    return await response.text()
+    const response = await fetch(requestUrl, {
+      method: "GET",
+      cache: "no-store",
+    })
+
+    console.log('[sendWhatsAppOtp] 📥 Received response', {
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      headers: Object.fromEntries(response.headers.entries())
+    })
+
+    if (!response.ok) {
+      let errorMessage = ''
+      try {
+        const errorText = await response.text()
+        errorMessage = errorText || `HTTP ${response.status}: ${response.statusText}`
+        console.error('[sendWhatsAppOtp] ❌ API Error Response', {
+          status: response.status,
+          statusText: response.statusText,
+          errorMessage,
+          requestUrl: requestUrl.replace(sanitizedPhone, '***') // Mask phone in logs
+        })
+      } catch (parseError) {
+        errorMessage = `HTTP ${response.status}: ${response.statusText}`
+        console.error('[sendWhatsAppOtp] ❌ Failed to read error response', parseError)
+      }
+      throw new Error(errorMessage || "Failed to send OTP. Please try again.")
+    }
+
+    // Try to parse JSON response
+    let responseData
+    const contentType = response.headers.get('content-type') || ''
+    
+    try {
+      if (contentType.includes('application/json')) {
+        responseData = await response.json()
+        console.log('[sendWhatsAppOtp] ✅ Successfully parsed JSON response', {
+          hasMessage: !!responseData.message,
+          hasSuccess: !!responseData.success,
+          responseKeys: Object.keys(responseData)
+        })
+      } else {
+        const textResponse = await response.text()
+        console.log('[sendWhatsAppOtp] 📄 Received text response', {
+          contentType,
+          textLength: textResponse.length,
+          preview: textResponse.substring(0, 100)
+        })
+        try {
+          responseData = JSON.parse(textResponse)
+        } catch {
+          responseData = { message: textResponse || 'OTP sent successfully' }
+        }
+      }
+    } catch (parseError) {
+      console.error('[sendWhatsAppOtp] ⚠️ Failed to parse response', parseError)
+      // Return a success response even if parsing fails, as the status was OK
+      responseData = { message: 'OTP sent successfully' }
+    }
+
+    console.log('[sendWhatsAppOtp] ✅ OTP sent successfully', {
+      response: responseData
+    })
+
+    return responseData
+  } catch (error) {
+    console.error('[sendWhatsAppOtp] ❌ Request failed', {
+      error: error instanceof Error ? error.message : String(error),
+      errorType: error instanceof Error ? error.constructor.name : typeof error,
+      stack: error instanceof Error ? error.stack : undefined
+    })
+    throw error
   }
 }
 
